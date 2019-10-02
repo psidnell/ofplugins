@@ -1,0 +1,33 @@
+/*{
+    "type": "action",
+    "targets": ["omnifocus"],
+    "author": "Paul Sidnell",
+    "identifier": "https://github.com/psidnell/ofplugins",
+    "version": "1.0",
+    "description": "Early experimentation.",
+    "label": "Experiment",
+    "shortLabel": "Experiment"
+}*/
+(() => {
+    var action = new PlugIn.Action((selection, sender) => {
+        var processTag = function(tag, setActive) {
+            console.log(tag);
+            // PSIDNELL-TODO 02/10/2019 toggle on hold status of tag
+            if (tag.children) {
+                tag.children.forEach((child) => {
+                    processTag(child, setActive);
+                });
+            }
+        }
+        var tag = tagNamed('🏢');
+        if (tag) {
+            processTag(tag, true)
+        }
+    });
+
+    action.validate = (selection, sender) => {
+        return (true)
+    };
+
+    return action;
+})();
