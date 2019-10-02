@@ -11,11 +11,11 @@
 
 (() => {
     var action = new PlugIn.Action((selection, sender) => {
-        console.log(selection.tags);
+        console.log('Selection:' + JSON.stringify(selection));
     });
 
     action.validate = (selection, sender) => {
-        return (selection.tags.length > 0)
+        return (selection)
     };
 
     return action;
