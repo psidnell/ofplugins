@@ -12,9 +12,11 @@
 processTag = function(tag, setActive) {
     console.log(tag);
     // PSIDNELL-TODO 02/10/2019 toggle on hold status of tag
-    tag.children.forEach((child)=>{
-        processTag(child, setActive);
-    });
+    if (tag.children) {
+        tag.children.forEach((child) => {
+            processTag(child, setActive);
+        });
+    }
 }
 
 (() => {
