@@ -9,13 +9,20 @@
     "shortLabel": "Experiment"
 }*/
 
+processTag = function(tag, setActive) {
+    console.log(tag);
+    // PSIDNELL-TODO 02/10/2019 toggle on hold status of tag
+    tag.children.forEach((child)=>{
+        processTag(child, setActive);
+    });
+}
+
 (() => {
     var action = new PlugIn.Action((selection, sender) => {
         var tag = tagNamed('🏢');
-        console.log(tag);
-        tag.children.forEach((child)=>{
-            console.log(child);
-        });
+        if (tag) {
+            processTag(tag, true)
+        }
     });
 
     action.validate = (selection, sender) => {
