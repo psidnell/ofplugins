@@ -11,11 +11,15 @@
 
 (() => {
     var action = new PlugIn.Action((selection, sender) => {
-        console.log('Selection:' + JSON.stringify(selection));
+        var tag = tagNamed('🏢');
+        console.log(tag);
+        tag.children.forEach((child)=>{
+            console.log(child);
+        });
     });
 
     action.validate = (selection, sender) => {
-        return (selection)
+        return (true)
     };
 
     return action;
