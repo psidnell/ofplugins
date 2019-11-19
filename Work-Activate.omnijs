@@ -2,7 +2,7 @@
     "type": "action",
     "targets": ["omnifocus"],
     "author": "Paul Sidnell",
-    "identifier": "https://github.com/psidnell/ofplugins",
+    "identifier": "Work-Activate.omnijs",
     "version": "1.0",
     "description": "Activate Work Folder and nested projects",
     "label": "Work Activate",
@@ -38,7 +38,7 @@
     });
 
     action.validate = (selection, sender) => {
-        return (true)
+        return (true);
     };
 
     return action;

@@ -2,7 +2,7 @@
     "type": "action",
     "targets": ["omnifocus"],
     "author": "Paul Sidnell",
-    "identifier": "https://github.com/psidnell/ofplugins",
+    "identifier": "Work-Deactivate.omnijs",
     "version": "1.0",
     "description": "Deactivate Work Folder and nested projects",
     "label": "Work Deactivate",
@@ -38,7 +38,7 @@
     });
 
     action.validate = (selection, sender) => {
-        return (true)
+        return (true);
     };
 
     return action;
