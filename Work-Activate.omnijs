@@ -11,14 +11,20 @@
 (() => {
     var action = new PlugIn.Action((selection, sender) => {
     
+        var deactivatedTag = tagNamed("DEACTIVATED") || new Tag("DEACTIVATED");
+    
         var activate = function(child) {
-            if (child instanceof Project && child.status === Project.Status.OnHold) {
+            if (child instanceof Project
+                && child.status === Project.Status.OnHold
+                && child.task.tags.includes(deactivatedTag)) {
+                child.task.removeTag(deactivatedTag);
                 child.status = Project.Status.Active;
             }
         }
         
         var deactivate = function(child) {
             if (child instanceof Project && child.status === Project.Status.Active) {
+                child.task.addTag(deactivatedTag);
                 child.status = Project.Status.OnHold;
             }
         }
