@@ -11,7 +11,11 @@
 (() => {
     var action = new PlugIn.Action((selection, sender) => {
     
-        var deactivatedTag = tagNamed("DEACTIVATED") || new Tag("DEACTIVATED");
+        var hiddenTagName = "HIDDEN";
+        var hiddenTagGroup = tagNamed(hiddenTagName) || new Tag(hiddenTagName);
+    
+        var deactivatedTagName = "DEACTIVATED";
+        var deactivatedTag = hiddenTagGroup.tagNamed(deactivatedTagName) || new Tag(deactivatedTagName, hiddenTagGroup);
     
         var activate = function(child) {
             if (child instanceof Project
