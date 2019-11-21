@@ -21,9 +21,20 @@
             return result;
         }
         
+        var replaceVariableInTask = function(task, variables) {
+            console.log('processing ' + task.name);
+            task.name = replaceVariables(task.name, variables);
+            task.note = replaceVariables(task.note, variables);
+        }
+        
         var process = function(template, form) {
             var project = duplicateSections([template], template.before)[0];
-            project.name = replaceVariables(project.name, form.values);
+            
+            // project.name = replaceVariables(project.name, form.values);
+            
+            project.task.apply((task) => {
+                replaceVariableInTask(task, form.values);
+            })
         };
         
         var template = projectNamed('TestProject ${Name}');
