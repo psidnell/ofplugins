@@ -2,11 +2,11 @@
     "type": "action",
     "targets": ["omnifocus"],
     "author": "Paul Sidnell",
-    "identifier": "Experiment.omnijs",
+    "identifier": "Template.omnijs",
     "version": "1.0",
-    "description": "Experiment",
-    "label": "Experiment",
-    "shortLabel": "Experiment"
+    "description": "Expand a Template Project",
+    "label": "Template",
+    "shortLabel": "Template"
 }*/
 (() => {
     var action = new PlugIn.Action((selection, sender) => {
@@ -30,29 +30,26 @@
         var process = function(template, form) {
             var project = duplicateSections([template], template.before)[0];
             
-            // project.name = replaceVariables(project.name, form.values);
-            
             project.task.apply((task) => {
                 replaceVariableInTask(task, form.values);
             })
         };
         
-        var template = projectNamed('TestProject ${Name}');
+        var template = selection.projects[0];
+        console.log('Template project is ' + template);
 
-        if (template) {
-        
-            inputForm = new Form()
-            inputForm.addField(new Form.Field.String("${Name}", "Name", null), 0);
-            formPrompt = "This is the form prompt"
-            buttonTitle = "OK"
-            inputForm.show(formPrompt, buttonTitle).then(
-                (form) => process(template, form),
-                (error) => console.log(error));
-        }
+        inputForm = new Form()
+        inputForm.addField(new Form.Field.String("${Ticket}", "Ticket", null), 0);
+        inputForm.addField(new Form.Field.String("${Description}", "Description", null), 1);
+        formPrompt = "Provide values for the template"
+        buttonTitle = "OK"
+        inputForm.show(formPrompt, buttonTitle).then(
+            (form) => process(template, form),
+            (error) => console.log(error));
     });
 
     action.validate = (selection, sender) => {
-        return (true);
+        return (selection.projects.length === 1)
     };
 
     return action;
