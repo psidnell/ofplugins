@@ -1,0 +1,51 @@
+/*{
+    "type": "action",
+    "targets": ["omnifocus"],
+    "author": "Paul Sidnell",
+    "identifier": "Experiment.omnijs",
+    "version": "1.0",
+    "description": "Experiment",
+    "label": "Experiment",
+    "shortLabel": "Experiment"
+}*/
+(() => {
+    var action = new PlugIn.Action((selection, sender) => {
+        
+        var process = function(template) {
+            var project = duplicateSections([template], template.before)[0];
+            project.name = template.name + ' copy';
+        };
+        
+        var template = projectNamed('TestProject');
+
+        if (template) {
+        
+            inputForm = new Form()
+            textInput = new Form.Field.String("name", "Name", null)
+            dateInput = new Form.Field.Date("date", "Date", null)
+            popupMenu = new Form.Field.Option(
+                "menu",
+                "Position",
+                [1,2,3],
+                ["Top", "Middle", "Bottom"],
+                1
+            )
+            checkbox = new Form.Field.Checkbox("checkbox", "Append", false)
+            inputForm.addField(textInput, 0)
+            inputForm.addField(dateInput, 1)
+            inputForm.addField(popupMenu, 2)
+            inputForm.addField(checkbox, 3)
+            formPrompt = "This is the form prompt"
+            buttonTitle = "OK"
+            inputForm.show(formPrompt, buttonTitle)
+
+            process(template);
+        }
+    });
+
+    action.validate = (selection, sender) => {
+        return (true);
+    };
+
+    return action;
+})();

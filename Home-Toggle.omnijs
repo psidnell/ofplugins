@@ -32,7 +32,6 @@
         
         
         var process = function(folder) {
-            console.log(folder);
             folder.apply(child => {
                 toggle(child);
             });
