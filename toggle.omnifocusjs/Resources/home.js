@@ -1,7 +1,7 @@
 var _ = (function() {
     var action = new PlugIn.Action((selection, sender) => {
 
-        var toggleLib = PlugIn.find("com.PaulSidnell.Toggle").library("toggleLib");
+        var toggleLib = PlugIn.find("com.PaulSidnell.Toggle").library("lib");
 
         var folder = folderNamed('Home');
 

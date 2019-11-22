@@ -1,7 +1,7 @@
 var _ = function() {
-	var toggleLib = new PlugIn.Library(new Version("0.1"));
+	var lib = new PlugIn.Library(new Version("0.1"));
 
-	toggleLib.createDeactivatedTag = () => {
+	lib.createDeactivatedTag = () => {
 
 		var hiddenTagName = "HIDDEN";
 		var hiddenTagGroup = tagNamed(hiddenTagName) || new Tag(hiddenTagName);
@@ -12,7 +12,7 @@ var _ = function() {
 		return deactivatedTag;
 	};
 
-	toggleLib.toggle = function(child, deactivatedTag) {
+	lib.toggle = function(child, deactivatedTag) {
 		if (child instanceof Project) {
 			if (child.status === Project.Status.OnHold
 				&& child.task.tags.includes(deactivatedTag)) {
@@ -25,13 +25,13 @@ var _ = function() {
 		}
 	};
 
-	toggleLib.toggleFolderOrProject = function(item) {
-		var deactivatedTag = toggleLib.createDeactivatedTag();
+	lib.toggleFolderOrProject = function(item) {
+		var deactivatedTag = lib.createDeactivatedTag();
 		item.apply(child => {
-			toggleLib.toggle(child, deactivatedTag);
+			lib.toggle(child, deactivatedTag);
 		});
 	};
 
-	return toggleLib;
+	return lib;
 }();
 _;
