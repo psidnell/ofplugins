@@ -30,6 +30,8 @@
         var process = function(template, form) {
             var project = duplicateSections([template], template.before)[0];
             
+            project.status = Project.Status.Active;
+            
             project.task.apply((task) => {
                 replaceVariableInTask(task, form.values);
             })
