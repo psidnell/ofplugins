@@ -1,9 +1,9 @@
 var _ = (function() {
     var action = new PlugIn.Action((selection, sender) => {
 
-        var toggleLib = this.ToggleLib;
+        var config = this.delegationConfig;
 
-        var deactivatedTag = toggleLib.createDeactivatedTag();
+        var deactivatedTag = config.createDeactivatedTag();
     
         var toggle = function(child) {
             if (child instanceof Project) {
