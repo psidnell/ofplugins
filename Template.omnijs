@@ -15,7 +15,7 @@
         var findVariables = function(text, formFields) {
             substrings = text.match(/\$\{[^\}]*\}/gm);
             if (substrings != null) {
-                for (variable in substrings) {
+                for (variable in substrings.keys()) {
                     console.log("Found variable " + variable);
                     formFields[variable] = new Form.Field.String(variable, variable, null);
                 }
