@@ -1,6 +1,17 @@
 var _ = function() {
 	var ApplicationLib = new PlugIn.Library(new Version("1.0"));
 
+	var createDeactivatedTag = function () {
+
+		var hiddenTagName = "HIDDEN";
+		var hiddenTagGroup = tagNamed(hiddenTagName) || new Tag(hiddenTagName);
+
+		var deactivatedTagName = "DEACTIVATED";
+		var deactivatedTag = hiddenTagGroup.tagNamed(deactivatedTagName) || new Tag(deactivatedTagName, hiddenTagGroup);
+
+		return deactivatedTag;
+	};
+
 	ApplicationLib.isBeforeCurVers = function(versStrToCheck){
 		curVersStr = app.version
 		curVers = new Version(curVersStr)

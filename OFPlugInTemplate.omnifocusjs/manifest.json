@@ -16,6 +16,10 @@
     {
       "image": "icon.png",
       "identifier": "addFolderForEachMonth"
+    },
+    {
+      "image": "icon.png",
+      "identifier": "work"
     }
   ],
   "defaultLocale": "en"
