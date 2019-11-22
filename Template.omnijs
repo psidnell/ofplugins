@@ -12,14 +12,15 @@
     var action = new PlugIn.Action((selection, sender) => {
 
         // Find variables in text (thanks to Thomas Kern)
-        var findVariables = function(text, formFields) {
+        var findVariables = function(text, variablesFound) {
             substrings = text.match(/\$\{[^\}]*\}/gm);
             if (substrings != null) {
-                for (variable in substrings.keys()) {
-                    console.log("Found variable " + variable);
-                    formFields[variable] = new Form.Field.String(variable, variable, null);
+                for (var i = 0; i < substrings.length; i++) {
+                    var variable = substrings[i];
+                    if (!variablesFound.includes(variable))
+                        console.log("Found variable " + variable);
+                        variablesFound.push(variable);
                 }
-                return substrings;
             }
         };
 
@@ -66,10 +67,10 @@
         console.log('Template project is ' + template);
 
         // Find the variables used in the template
-        var formFields = {};
+        var templateVariables = [];
         template.task.apply((task) => {
-            findVariables(task.name, formFields);
-            findVariables(task.note, formFields)
+            findVariables(task.name, templateVariables);
+            findVariables(task.note, templateVariables)
         });
 
         // Open a form to collect values for variables in the template
