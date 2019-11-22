@@ -24,13 +24,14 @@
         
         // Replace any variables in the task title or note
         var replaceVariableInTask = function(task, variables) {
-            console.log('processing ' + task.name);
+            console.log('Processing Task ' + task.name);
             task.name = replaceVariables(task.name, variables);
             task.note = replaceVariables(task.note, variables);
         }
         
         // Process the template
         var process = function(template, form) {
+            console.log('Processing Template ' + template.name);
             // Duplicate the template project
             var project = duplicateSections([template], template.before)[0];
             
@@ -43,8 +44,13 @@
             })
         };
         
-        // the selected project is the template to be used
-        var template = selection.projects[0];
+        // The selected project is the template to be used
+        // TODO
+        // Can't select a project on a phone yet
+        // var template = selection.projects[0];
+        var template = folderNamed('Work')
+            .folderNamed('WebView')
+            .projectNamed('${Ticket} - ${Description}');
         console.log('Template project is ' + template);
 
         // Open a form to collect values for variables in the template
@@ -59,7 +65,10 @@
     });
 
     action.validate = (selection, sender) => {
-        return (selection.projects.length === 1)
+        // TODO
+        // Can't select a project on a phone yet
+        // return (selection.projects.length === 1)
+        return true;
     };
 
     return action;
