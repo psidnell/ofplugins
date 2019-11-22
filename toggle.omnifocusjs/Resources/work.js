@@ -1,9 +1,22 @@
 var _ = (function() {
     var action = new PlugIn.Action((selection, sender) => {
 
-        var toggleLib = this.toggleLib;
+        var createDeactivatedTag = () => {
 
-        var deactivatedTag = toggleLib.createDeactivatedTag();
+            var hiddenTagName = "HIDDEN";
+            var hiddenTagGroup = tagNamed(hiddenTagName) || new Tag(hiddenTagName);
+
+            var deactivatedTagName = "DEACTIVATED";
+            var deactivatedTag = hiddenTagGroup.tagNamed(deactivatedTagName) || new Tag(deactivatedTagName, hiddenTagGroup);
+
+            return deactivatedTag;
+        };
+
+        // TODO seems broken
+        // var toggleLib = this.toggleLib;
+        //
+        // var deactivatedTag = toggleLib.createDeactivatedTag();
+        var deactivatedTag = createDeactivatedTag();
 
         var toggle = function(child) {
             if (child instanceof Project) {
