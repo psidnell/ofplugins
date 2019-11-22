@@ -1,0 +1,19 @@
+{
+	"defaultLocale": "en",
+	"identifier": "com.KaitlinSalzke.Delegation",
+	"author": "Kaitlin Salzke",
+	"description": "A series of waiting/followup actions for OmniFocus",
+	"version": "1.0.0",
+	"actions": [
+		{
+			"identifier": "waitingFor"
+		},
+		{
+			"identifier": "followUp"
+		}
+	],
+	"libraries": [
+		{ "identifier": "delegationConfig" },
+		{ "identifier": "delegationLib" }
+	]
+}
