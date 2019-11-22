@@ -2,7 +2,8 @@ var _ = (function() {
     var action = new PlugIn.Action((selection, sender) => {
 
         config = this.delegationConfig;
-        console.log(config);
+        pluginLibraries = this.plugIn.libraries;
+        console.log("Libraries: " + pluginLibraries.length);
 
         // configuration
         deactivatedTag = config.waitingTag();
