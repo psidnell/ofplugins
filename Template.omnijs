@@ -75,8 +75,10 @@
 
         // Open a form to collect values for variables in the template
         inputForm = new Form();
-        inputForm.addField(new Form.Field.String("${Ticket}", "Ticket", null), 0);
-        inputForm.addField(new Form.Field.String("${Description}", "Description", null), 1);
+        for (var i = 0; i < templateVariables.length; i++) {
+            var variable = templateVariables[i];
+            inputForm.addField(new Form.Field.String(variable, variable, null), i);
+        }
         formPrompt = "Provide values for the template";
         buttonTitle = "OK";
         inputForm.show(formPrompt, buttonTitle).then(
