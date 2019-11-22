@@ -5,7 +5,8 @@
 	"description": "Expand a Template Project",
 	"version": "1.0",
 	"actions": [
-		{ "image":"icon.png", "identifier": "template" }
+		{ "image":"icon.png", "identifier": "ticket" },
+		{ "image":"icon.png", "identifier": "selection" }
 	],
 	"libraries": [
 		{"identifier": "lib"}

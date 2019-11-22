@@ -62,9 +62,13 @@ var _ = function() {
 
 	lib.expand = (template) => {
 		var templateVariables = lib.findVariablesInTemplate(template);
+		if (templateVariables.length == 0) {
+			throw new Error("Project is not a template, add a ${Variable} to the title or note");
+		}
 
 		// Open a form to collect values for variables in the template
 		inputForm = new Form();
+
 		for (var i = 0; i < templateVariables.length; i++) {
 			var variable = templateVariables[i];
 			inputForm.addField(new Form.Field.String(variable, variable, null), i);
