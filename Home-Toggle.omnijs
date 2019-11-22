@@ -28,8 +28,7 @@
                     child.status = Project.Status.OnHold;
                 }
             }
-        }
-        
+        };
         
         var process = function(folder) {
             folder.apply(child => {

@@ -1,0 +1,10 @@
+{
+  "name": "modules",
+  "version": "0.0.0",
+  "scripts": {},
+  "private": true,
+  "dependencies": {},
+  "devDependencies": {
+    "jasmine-node": "^3.0.0"
+  }
+}
