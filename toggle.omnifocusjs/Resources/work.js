@@ -2,6 +2,7 @@ var _ = (function() {
     var action = new PlugIn.Action((selection, sender) => {
 
         config = this.delegationConfig;
+        console.log(config);
 
         // configuration
         deactivatedTag = config.waitingTag();
