@@ -1,0 +1,13 @@
+{
+	"defaultLocale": "en",
+	"identifier": "com.PaulSidnell.Template",
+	"author": "Paul Sidnell",
+	"description": "Expand a Template Project",
+	"version": "1.0",
+	"actions": [
+		{ "image":"icon.png", "identifier": "template" }
+	],
+	"libraries": [
+		{"identifier": "lib"}
+	]
+}

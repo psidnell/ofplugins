@@ -1,14 +1,4 @@
-/*{
-    "type": "action",
-    "targets": ["omnifocus"],
-    "author": "Paul Sidnell",
-    "identifier": "Template.omnijs",
-    "version": "1.0",
-    "description": "Expand a Template Project",
-    "label": "Template",
-    "shortLabel": "Template"
-}*/
-(() => {
+var _ = (function() {
     var action = new PlugIn.Action((selection, sender) => {
 
         // Find variables in text (thanks to Thomas Kern)
@@ -96,3 +86,4 @@
 
     return action;
 })();
+_;
