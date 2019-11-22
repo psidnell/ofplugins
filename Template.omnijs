@@ -17,9 +17,10 @@
             if (substrings != null) {
                 for (var i = 0; i < substrings.length; i++) {
                     var variable = substrings[i];
-                    if (!variablesFound.includes(variable))
+                    if (!variablesFound.includes(variable)) {
                         console.log("Found variable " + variable);
                         variablesFound.push(variable);
+                    }
                 }
             }
         };

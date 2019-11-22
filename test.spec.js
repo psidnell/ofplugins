@@ -3,15 +3,17 @@ var findVariables = function(text, variablesFound) {
     if (substrings != null) {
         for (var i = 0; i < substrings.length; i++) {
             var variable = substrings[i];
-            if (!variablesFound.includes(variable))
+            if (!variablesFound.includes(variable)) {
+                console.log("Found variable " + variable);
                 variablesFound.push(variable);
+            }
         }
     }
 };
 
 describe('Can find variables', () => {
     it('can find variable', () => {
-        var text = "this is a ${variable1} ${variable2}";
+        var text = "this is a ${variable1} ${variable2} ${variable2}";
         let variablesFound = [];
         findVariables(text, variablesFound);
         expect(variablesFound[0]).toEqual("${variable1}");
