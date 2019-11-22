@@ -2,11 +2,12 @@
 	"defaultLocale": "en",
 	"identifier": "com.PaulSidnell.Toggle",
 	"author": "Paul Sidnell",
-	"description": "Toggle a folder/project hierarchy active/on-hold",
+	"description": "Toggle a folder hierarchy active/on-hold",
 	"version": "1.0",
 	"actions": [
 		{ "image":"icon.png", "identifier": "work" },
-		{ "image":"icon.png", "identifier": "home" }
+		{ "image":"icon.png", "identifier": "home" },
+		{ "image":"icon.png", "identifier": "selection" }
 	],
 	"libraries": [
 		{"identifier": "lib"}

@@ -25,7 +25,7 @@ var _ = function() {
 		}
 	};
 
-	lib.toggleFolderOrProject = function(item) {
+	lib.toggleFolder = function(item) {
 		var deactivatedTag = lib.createDeactivatedTag();
 		item.apply(child => {
 			lib.toggle(child, deactivatedTag);

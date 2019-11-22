@@ -6,7 +6,7 @@ var _ = (function() {
         var folder = folderNamed('Work');
 
         if (folder) {
-            toggleLib.toggleFolderOrProject(folder);
+            toggleLib.toggleFolder(folder);
         }
     });
 

@@ -3,15 +3,13 @@ var _ = (function() {
 
         var toggleLib = PlugIn.find("com.PaulSidnell.Toggle").library("lib");
 
-        var folder = folderNamed('Home');
+        var folder = selection.folders[0];
 
-        if (folder) {
-            toggleLib.toggleFolder(folder);
-        }
+        toggleLib.toggleFolder(folder);
     });
 
     action.validate = (selection, sender) => {
-        return (true);
+        return (selection.folders.length === 1)
     };
 
     return action;
