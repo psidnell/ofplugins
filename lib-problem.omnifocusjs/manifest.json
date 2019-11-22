@@ -4,10 +4,10 @@
 	"author": "Paul Sidnell",
 	"description": "Problem",
 	"version": "1.0",
-	"actions": [
-		{ "identifier": "action" }
-	],
 	"libraries": [
 		{"identifier": "lib"}
+	],
+	"actions": [
+		{ "identifier": "action" }
 	]
 }

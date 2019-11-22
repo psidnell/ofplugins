@@ -1,0 +1,22 @@
+{
+  "author": "Otto Automator",
+  "libraries": [
+    {
+      "identifier": "ApplicationLib"
+    }
+  ],
+  "identifier": "com.omni-automation.omnifocus-plugin-example",
+  "version": "1.0",
+  "description": "A collection of Omni Automation scripts for OmniFocus.",
+  "actions": [
+    {
+      "image": "icon.png",
+      "identifier": "aboutThisPlugin"
+    },
+    {
+      "image": "icon.png",
+      "identifier": "addFolderForEachMonth"
+    }
+  ],
+  "defaultLocale": "en"
+}
