@@ -1,14 +1,4 @@
-/*{
-    "type": "action",
-    "targets": ["omnifocus"],
-    "author": "Paul Sidnell",
-    "identifier": "Work-Toggle.omnijs",
-    "version": "1.0",
-    "description": "Activate/Deactivate 'Work' Folder and nested projects",
-    "label": "Work Toggle",
-    "shortLabel": "Work Toggle"
-}*/
-(() => {
+var _ = (function() {
     var action = new PlugIn.Action((selection, sender) => {
         
         var hiddenTagName = "HIDDEN";
@@ -49,3 +39,4 @@
 
     return action;
 })();
+_;
