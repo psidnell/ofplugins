@@ -1,0 +1,13 @@
+{
+  "author":"Paul Sidnell",
+  "libraries":[
+    {"identifier":"Library"}
+  ],
+  "identifier":"com.PaulSidnell.TemplateTools",
+  "version":"0.0",
+  "description":"Template Expansion Tools",
+  "actions":[
+    {"image":"icon.png","identifier":"action"}
+  ],
+  "defaultLocale":"en"
+}
