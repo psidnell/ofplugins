@@ -20,14 +20,14 @@
             }
             
             return result;
-        }
+        };
         
         // Replace any variables in the task title or note
         var replaceVariableInTask = function(task, variables) {
             console.log('Processing Task ' + task.name);
             task.name = replaceVariables(task.name, variables);
             task.note = replaceVariables(task.note, variables);
-        }
+        };
         
         // Process the template
         var process = function(template, form) {
@@ -54,11 +54,11 @@
         console.log('Template project is ' + template);
 
         // Open a form to collect values for variables in the template
-        inputForm = new Form()
+        inputForm = new Form();
         inputForm.addField(new Form.Field.String("${Ticket}", "Ticket", null), 0);
         inputForm.addField(new Form.Field.String("${Description}", "Description", null), 1);
-        formPrompt = "Provide values for the template"
-        buttonTitle = "OK"
+        formPrompt = "Provide values for the template";
+        buttonTitle = "OK";
         inputForm.show(formPrompt, buttonTitle).then(
             (form) => process(template, form),
             (error) => console.log(error));
