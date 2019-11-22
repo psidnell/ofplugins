@@ -10,7 +10,19 @@
 }*/
 (() => {
     var action = new PlugIn.Action((selection, sender) => {
-    
+
+        // Find variables in text (thanks to Thomas Kern)
+        var findVariables = function(text, formFields) {
+            substrings = text.match(/\$\{[^\}]*\}/gm);
+            if (substrings != null) {
+                for (variable in substrings) {
+                    console.log("Found variable " + variable);
+                    formFields[variable] = new Form.Field.String(variable, variable, null);
+                }
+                return substrings;
+            }
+        };
+
         // Replace variables in the string with those from the form
         var replaceVariables = function(text, variables) {
             var result = text;
@@ -52,6 +64,13 @@
             .folderNamed('WebView')
             .projectNamed('${Ticket} - ${Description}');
         console.log('Template project is ' + template);
+
+        // Find the variables used in the template
+        var formFields = {};
+        template.task.apply((task) => {
+            findVariables(task.name, formFields);
+            findVariables(task.note, formFields)
+        });
 
         // Open a form to collect values for variables in the template
         inputForm = new Form();
