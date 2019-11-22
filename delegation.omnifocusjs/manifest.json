@@ -6,9 +6,11 @@
 	"version": "1.0.0",
 	"actions": [
 		{
+			"image":"icon.png",
 			"identifier": "waitingFor"
 		},
 		{
+			"image":"icon.png",
 			"identifier": "followUp"
 		}
 	],
