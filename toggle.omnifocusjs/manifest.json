@@ -9,7 +9,6 @@
 		{ "image":"icon.png", "identifier": "home" }
 	],
 	"libraries": [
-		{ "identifier": "delegationConfig" },
-		{ "identifier": "delegationLib" }
+		{ "identifier": "toggleLib" },
 	]
 }
