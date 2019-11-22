@@ -11,6 +11,7 @@
 (() => {
     var action = new PlugIn.Action((selection, sender) => {
     
+        // Replace variables in the string with those from the form
         var replaceVariables = function(text, variables) {
             var result = text;
             for (var variable in variables) {
@@ -21,25 +22,32 @@
             return result;
         }
         
+        // Replace any variables in the task title or note
         var replaceVariableInTask = function(task, variables) {
             console.log('processing ' + task.name);
             task.name = replaceVariables(task.name, variables);
             task.note = replaceVariables(task.note, variables);
         }
         
+        // Process the template
         var process = function(template, form) {
+            // Duplicate the template project
             var project = duplicateSections([template], template.before)[0];
             
+            // Make it active
             project.status = Project.Status.Active;
             
+            // Replace any variables in the project
             project.task.apply((task) => {
                 replaceVariableInTask(task, form.values);
             })
         };
         
+        // the selected project is the template to be used
         var template = selection.projects[0];
         console.log('Template project is ' + template);
 
+        // Open a form to collect values for variables in the template
         inputForm = new Form()
         inputForm.addField(new Form.Field.String("${Ticket}", "Ticket", null), 0);
         inputForm.addField(new Form.Field.String("${Description}", "Description", null), 1);
