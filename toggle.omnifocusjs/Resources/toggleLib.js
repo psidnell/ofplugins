@@ -1,4 +1,4 @@
-var _ = (function() {
+var _ = function() {
 	var ToggleLib = new PlugIn.Library(new Version("1.0"));
 
 	ToggleLib.createDeactivatedTag = () => {
@@ -13,5 +13,5 @@ var _ = (function() {
 	};
 
 	return ToggleLib;
-})();
+}();
 _;
