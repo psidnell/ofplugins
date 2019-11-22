@@ -1,11 +1,9 @@
 var _ = (function() {
     var action = new PlugIn.Action((selection, sender) => {
-        
-        var hiddenTagName = "HIDDEN";
-        var hiddenTagGroup = tagNamed(hiddenTagName) || new Tag(hiddenTagName);
-    
-        var deactivatedTagName = "DEACTIVATED";
-        var deactivatedTag = hiddenTagGroup.tagNamed(deactivatedTagName) || new Tag(deactivatedTagName, hiddenTagGroup);
+
+        var toggleLib = this.ToggleLib;
+
+        var deactivatedTag = toggleLib.createDeactivatedTag();
     
         var toggle = function(child) {
             if (child instanceof Project) {
