@@ -1,9 +1,12 @@
 var _ = (function() {
     var action = new PlugIn.Action((selection, sender) => {
 
-        var config = this.delegationConfig;
+        config = this.delegationConfig;
 
-        var deactivatedTag = config.createDeactivatedTag();
+        // configuration
+        deactivatedTag = config.waitingTag();
+
+        //var deactivatedTag = config.createDeactivatedTag();
     
         var toggle = function(child) {
             if (child instanceof Project) {
