@@ -1,15 +1,10 @@
 var _ = (function() {
     var action = new PlugIn.Action((selection, sender) => {
 
-        config = this.delegationConfig;
-        pluginLibraries = this.plugIn.libraries;
-        console.log("Libraries: " + pluginLibraries.length);
+        var toggleLib = this.toggleLib;
 
-        // configuration
-        deactivatedTag = config.waitingTag();
+        var deactivatedTag = toggleLib.createDeactivatedTag();
 
-        //var deactivatedTag = config.createDeactivatedTag();
-    
         var toggle = function(child) {
             if (child instanceof Project) {
                 if (child.status === Project.Status.OnHold

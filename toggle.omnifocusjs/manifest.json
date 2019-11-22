@@ -8,7 +8,7 @@
 		{ "image":"icon.png", "identifier": "work" },
 		{ "image":"icon.png", "identifier": "home" }
 	],
-	"libraries": [
-		{ "identifier": "delegationConfig" }
-	]
+	"libraries": {
+		"identifier": "toggleLib"
+	}
 }

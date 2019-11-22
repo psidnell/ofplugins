@@ -1,7 +1,7 @@
 var _ = function() {
-	var ToggleLib = new PlugIn.Library(new Version("1.0"));
+	var toggleLib = new PlugIn.Library(new Version("0.1"));
 
-	ToggleLib.createDeactivatedTag = () => {
+	toggleLib.createDeactivatedTag = () => {
 
 		var hiddenTagName = "HIDDEN";
 		var hiddenTagGroup = tagNamed(hiddenTagName) || new Tag(hiddenTagName);
@@ -12,6 +12,6 @@ var _ = function() {
 		return deactivatedTag;
 	};
 
-	return ToggleLib;
+	return toggleLib;
 }();
 _;
