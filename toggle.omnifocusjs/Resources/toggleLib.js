@@ -12,6 +12,26 @@ var _ = function() {
 		return deactivatedTag;
 	};
 
+	toggleLib.toggle = function(child, deactivatedTag) {
+		if (child instanceof Project) {
+			if (child.status === Project.Status.OnHold
+				&& child.task.tags.includes(deactivatedTag)) {
+				child.task.removeTag(deactivatedTag);
+				child.status = Project.Status.Active;
+			} else if ( child.status === Project.Status.Active) {
+				child.task.addTag(deactivatedTag);
+				child.status = Project.Status.OnHold;
+			}
+		}
+	};
+
+	toggleLib.toggleFolderOrProject = function(item) {
+		var deactivatedTag = toggleLib.createDeactivatedTag();
+		item.apply(child => {
+			toggleLib.toggle(child, deactivatedTag);
+		});
+	};
+
 	return toggleLib;
 }();
 _;
