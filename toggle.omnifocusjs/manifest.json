@@ -5,10 +5,8 @@
 	"description": "Toggle a folder/project hierarchy active/on-hold",
 	"version": "1.0",
 	"actions": [
-		{
-			"image":"icon.png",
-			"identifier": "work"
-		}
+		{ "image":"icon.png", "identifier": "work" },
+		{ "image":"icon.png", "identifier": "home" }
 	],
 	"libraries": [
 		{ "identifier": "delegationConfig" },

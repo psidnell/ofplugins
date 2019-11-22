@@ -1,22 +1,12 @@
-/*{
-    "type": "action",
-    "targets": ["omnifocus"],
-    "author": "Paul Sidnell",
-    "identifier": "Home-Toggle.omnijs",
-    "version": "1.0",
-    "description": "Activate/Deactivate 'Home' Folder and nested projects",
-    "label": "Home Toggle",
-    "shortLabel": "Home Toggle"
-}*/
-(() => {
+var _ = (function() {
     var action = new PlugIn.Action((selection, sender) => {
-        
+
         var hiddenTagName = "HIDDEN";
         var hiddenTagGroup = tagNamed(hiddenTagName) || new Tag(hiddenTagName);
-    
+
         var deactivatedTagName = "DEACTIVATED";
         var deactivatedTag = hiddenTagGroup.tagNamed(deactivatedTagName) || new Tag(deactivatedTagName, hiddenTagGroup);
-    
+
         var toggle = function(child) {
             if (child instanceof Project) {
                 if (child.status === Project.Status.OnHold
@@ -29,13 +19,13 @@
                 }
             }
         };
-        
+
         var process = function(folder) {
             folder.apply(child => {
                 toggle(child);
             });
         };
-        
+
         var folder = folderNamed('Home');
 
         if (folder) {
@@ -49,3 +39,4 @@
 
     return action;
 })();
+_;
