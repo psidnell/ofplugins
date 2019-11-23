@@ -29,14 +29,3 @@ projects between active and on-hold.
 
 A HIDDEN/DEACTIVATED tag is added to or removed from on-hold projects to avoid
 toggling projects that were already on hold.
-
-## Notes
-
-### iOS Limitations
-
-At the momment there is no way to "select" certain item types before executing the plugin in iOS.
-
-The plugins above support selecting an item in MacOS and iPadOS but also have options for hard wired
-selections for items I use regularly from iOS.
-
-This will probably change, after which I will remove the options.
