@@ -1,13 +1,26 @@
 # ofplugins
 
-A work in progress...
+Omnifocus plugins I use on a regular basis. Always a work in progress...
 
 For details of the API see the [reference documentation](https://omni-automation.com/omnifocus/index.html).
 
 ## [Template Plugin](template.omnifocusjs)
 
-Select a project and the plugin will duplicate it and replace any variables
-(e.g. ${Name}, ${PhoneNumber}) with values the user enters in a form.
+Select a project and the plugin will duplicate it and replace variables of your choice like:
+ 
+- ${Name}
+- ${PhoneNumber}
+- ${Priority}
+
+A form will be shown that requests values for these variables.
+
+There are also some special variables where the value will be provided automatically
+such as:
+
+- ${Date}
+- ${Time}
+
+Variable replacement occurs both in the name and note of a project and it's tasks.
 
 ## [Toggle Plugin](toggle.omnifocusjs)
 
@@ -15,4 +28,15 @@ Select a folder and the plugin will descend the structure toggling the
 projects between active and on-hold.
 
 A HIDDEN/DEACTIVATED tag is added to or removed from on-hold projects to avoid
-toggling projects that were already on hold.  
+toggling projects that were already on hold.
+
+## Notes
+
+### iOS Limitations
+
+At the momment there is no way to "select" certain item types before executing the plugin in iOS.
+
+The plugins above support selecting an item in MacOS and iPadOS but also have options for hard wired
+selections for items I use regularly from iOS.
+
+This will probably change, after which I will remove the options.

@@ -45,6 +45,30 @@ var _ = function() {
 		task.note = lib.replaceVariables(task.note, variables);
 	};
 
+	lib.GetDefaultValueForVariable = (variable) => {
+		switch (variable) {
+			case '${Date}' : {
+				var options = {
+					weekday: 'short',
+					year: 'numeric',
+					month: 'short',
+					day: 'numeric'
+				};
+				return new Date().toLocaleDateString('en-UK', options);
+			}
+			case '${Time}' : {
+				var options = {
+					hour: '2-digit',
+					minute: '2-digit',
+					hour12: false
+				};
+				return new Date().toLocaleTimeString('en-UK', options);
+			}
+			default:
+				return null;
+		}
+	}
+
 	// Process the template
 	lib.expandTemplate = (template, form) => {
 		console.log('Processing Template ' + template.name);
@@ -67,14 +91,15 @@ var _ = function() {
 		}
 
 		// Open a form to collect values for variables in the template
-		inputForm = new Form();
+		var inputForm = new Form();
 
 		for (var i = 0; i < templateVariables.length; i++) {
 			var variable = templateVariables[i];
-			inputForm.addField(new Form.Field.String(variable, variable, null), i);
+			var defaultValue = lib.GetDefaultValueForVariable(variable);
+			inputForm.addField(new Form.Field.String(variable, variable, defaultValue), i);
 		}
-		formPrompt = "Provide values for the template";
-		buttonTitle = "OK";
+		var formPrompt = "Provide values for the template";
+		var buttonTitle = "OK";
 		inputForm.show(formPrompt, buttonTitle).then(
 			(form) => lib.expandTemplate(template, form),
 			(error) => console.log(error));
