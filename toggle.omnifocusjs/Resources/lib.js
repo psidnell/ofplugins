@@ -3,7 +3,7 @@ var _ = function() {
 
 	lib.createDeactivatedTag = () => {
 
-		var hiddenTagName = "HIDDEN";
+		var hiddenTagName = "ON-HOLD";
 		var hiddenTagGroup = tagNamed(hiddenTagName) || new Tag(hiddenTagName);
 
 		var deactivatedTagName = "DEACTIVATED";
