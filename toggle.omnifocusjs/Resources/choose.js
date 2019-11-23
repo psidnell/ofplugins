@@ -19,7 +19,7 @@ var _ = (function() {
             // Choose which folder to toggle
             inputForm.addField(new Form.Field.Option(
                 "choice",
-                "Position",
+                "Folder",
                 folders,
                 names,
                 folders[0]

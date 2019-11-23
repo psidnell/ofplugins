@@ -19,7 +19,7 @@ var _ = (function() {
             // Choose which template to expand
             inputForm.addField(new Form.Field.Option(
                 "choice",
-                "Position",
+                "Template",
                 templates,
                 names,
                 templates[0]
