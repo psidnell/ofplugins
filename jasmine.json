@@ -1,7 +1,10 @@
 {
     "spec_dir": ".",
     "spec_files": [
-        "*[sS]pec.js",
-        "**/*[sS]pec.js"
+        "spec/**/*[sS]pec.js"
+    ],
+    "helpers": [
+        "./node_modules/babel-register/lib/node.js",
+        "./spec/helpers/reporter.js"
     ]
 }
