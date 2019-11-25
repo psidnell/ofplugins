@@ -40,3 +40,5 @@ var _ = (function() {
     return action;
 })();
 _;
+// Allow test to import code
+module.exports = _;
