@@ -1,7 +1,9 @@
-class PlugIn {
-    print () {
-        console.log("Hello");
-    };
+PlugIn = function () {
 }
 
-module.exports = PlugIn;
+lastPlugInAction = null;
+
+PlugIn.Action = function (fn) {
+    this.fn = fn;
+    lastPlugInAction = this;
+}

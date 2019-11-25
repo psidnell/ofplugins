@@ -1,9 +1,16 @@
 describe('choose', () => {
-    var PlugIn = require('../../mocks/PlugIn');
-    //require('./choose');
 
-    it('can test code', () => {
-        var demo = new PlugIn();
-        demo.print();
+    var action = null;
+
+    beforeEach(function() {
+        require('../../mocks/PlugIn');
+        require('../../../toggle.omnifocusjs/Resources/choose.js');
+        action = lastPlugInAction;
+    });
+
+    it('can create action', () => {
+        expect(action).toBeTruthy();
+        expect(action.fn).toBeTruthy();
+        expect(action.validate).toBeTruthy();
     });
 });
