@@ -41,4 +41,4 @@ var _ = (function() {
 })();
 _;
 // Allow test to import code
-module.exports = _;
+//module.exports = _;
