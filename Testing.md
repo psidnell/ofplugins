@@ -1,5 +1,6 @@
 # Testing
 
 ```
-npm install -g jasmine 
+npm install -g jasmine
+npm ci
 ```
