@@ -9,7 +9,7 @@
 		{ "image":"icon.png", "identifier": "selection" }
 	],
 	"libraries": [
-		{"identifier": "lib"},
+		{"identifier": "toggleLib"},
 		{"identifier": "factories"}
 	]
 }
