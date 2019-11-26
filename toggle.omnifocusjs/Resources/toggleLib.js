@@ -1,14 +1,20 @@
 var _ = function() {
-    var factoryLib = PlugIn.find("com.PaulSidnell.Toggle").library("factories");
-    var toggleLib = factoryLib.newPlugInLibrary(factoryLib.newVersion("0.1"));
+
+    var toggleLib = new PlugIn.Library(factoryLib.newVersion("0.1"));
+
+    // Cant load this during initialisation
+    var factoryLib = () => {
+        if (!this._factoryLib) {
+            this._factoryLib = PlugIn.find("com.PaulSidnell.Toggle").library("factoryLib");
+        }
+    };
 
 	toggleLib.createDeactivatedTag = () => {
-
 		var hiddenTagName = "ON-HOLD";
-		var hiddenTagGroup = tagNamed(hiddenTagName) || factoryLib.newTag(hiddenTagName);
+		var hiddenTagGroup = tagNamed(hiddenTagName) || factoryLib().newTag(hiddenTagName);
 
 		var deactivatedTagName = "DEACTIVATED";
-		var deactivatedTag = hiddenTagGroup.tagNamed(deactivatedTagName) || factoryLib.newTag(deactivatedTagName, hiddenTagGroup);
+		var deactivatedTag = hiddenTagGroup.tagNamed(deactivatedTagName) || factoryLib().newTag(deactivatedTagName, hiddenTagGroup);
 
 		return deactivatedTag;
 	};

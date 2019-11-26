@@ -15,7 +15,7 @@ var _ = function() {
     };
 
     lib.newFormFieldOption = (fieldName, label, objects, objectLabels, defaultObject) => {
-        return new Form.Field.Option(fieldName, label, objects, objectLabels, defaultObject)
+        return new Form.Field.Option(fieldName, label, objects, objectLabels, defaultObject);
     };
 
     lib.newTag = (tagName) => {
@@ -24,7 +24,7 @@ var _ = function() {
 
     lib.newForm = () => {
         return new Form();
-    }
+    };
 
     return lib;
 }();

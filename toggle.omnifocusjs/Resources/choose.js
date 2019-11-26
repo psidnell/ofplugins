@@ -1,9 +1,8 @@
 var _ = (function() {
     var action = new PlugIn.Action((selection, sender) => {
 
-        var factoryLib = PlugIn.find("com.PaulSidnell.Toggle").library("factories");
-        var toggleLib = PlugIn.find("com.PaulSidnell.Toggle").library("toggleLib" +
-            "");
+        var factoryLib = PlugIn.find("com.PaulSidnell.Toggle").library("factoryLib");
+        var toggleLib = PlugIn.find("com.PaulSidnell.Toggle").library("toggleLib");
 
         var inputForm = new Form();
 
