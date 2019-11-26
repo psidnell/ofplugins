@@ -42,6 +42,10 @@ var _ = function() {
 		folder.apply(child => {
 			toggleLib.toggle(child, deactivatedTag);
 		});
+		
+		// Open the folder
+		var url = URL.fromString('omnifocus:///folder/' + encodeURIComponent(folder.name));
+		url.open();
 	};
 
 	return toggleLib;
