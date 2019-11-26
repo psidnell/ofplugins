@@ -9,7 +9,10 @@ var _ = (function() {
         var templates = [];
         var names = [];
         library.apply(item => {
-            if (item instanceof Project && item.name.indexOf('${') != -1) {
+            if (item instanceof Project && 
+                (item.status === Project.Status.OnHold ||
+                 item.status === Project.Status.Active) &&
+                item.name.indexOf('${') != -1) {
                 templates.push(item);
                 names.push(item.name);
             }
