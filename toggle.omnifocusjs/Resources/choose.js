@@ -10,7 +10,7 @@ var _ = (function() {
         var folders = [];
         var names = [];
         library.apply(item => {
-            if (item instanceof Folder) {
+            if (item instanceof Folder && item.active) {
                 folders.push(item);
                 names.push(item.name);
             }
