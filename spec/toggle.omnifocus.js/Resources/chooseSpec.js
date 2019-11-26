@@ -1,44 +1,42 @@
 describe('choose', () => {
 
-    // Mock enough for creating the plugin and loading libraries
-
-    var toggleLib = {};
-    var factoryLib = {};
-
-    var libs = {};
-
-    var plugIn = {
-        mock: 'PlugIn',
-        library: (name) => libs[name]
-    };
-
-    PlugIn = class {
-    };
-
-    PlugIn.find = (pluginName) => plugIn;
-
+    var toggleLib;
+    var factoryLib;
     var action;
-    PlugIn.Action = function (fn) {
-        this.fn = fn;
-        action = this;
-    };
-
-    Folder = class {
-    };
-
-    library = {};
-
-    require('../../../toggle.omnifocusjs/Resources/choose.js');
 
     beforeEach(() => {
-        // Reset the mock plugin libs each time
-        toggleLib = {};
-        libs['toggleLib'] = toggleLib;
-        factoryLib = {};
-        libs['factoryLib'] = factoryLib;
+        // Mock enough for creating the plugin and loading libraries
 
-        // Reset the library
+        toggleLib = {};
+        factoryLib = {};
+
+        var libs = {
+            toggleLib: toggleLib,
+            factoryLib: factoryLib
+        };
+
+        var plugIn = {
+            mock: 'PlugIn',
+            library: (name) => libs[name]
+        };
+
+        PlugIn = class {
+        };
+
+        PlugIn.find = (pluginName) => plugIn;
+
+        action;
+        PlugIn.Action = function (fn) {
+            this.fn = fn;
+            action = this;
+        };
+
+        Folder = class {
+        };
+
         library = {};
+
+        require('../../../toggle.omnifocusjs/Resources/choose.js');
     });
 
     it('can use mocks', () => {
