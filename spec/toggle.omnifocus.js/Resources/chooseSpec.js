@@ -1,43 +1,53 @@
 describe('choose', () => {
 
-    // Mock classes enough for
-    PlugIn = function () {
+    // Mock enough for creating the plugin and loading libraries
+
+    var toggleLib = {};
+    var factoryLib = {};
+
+    var libs = {};
+
+    var plugIn = {
+        mock: 'PlugIn',
+        library: (name) => libs[name]
     };
 
-    library = {
+    PlugIn = class {
     };
 
-    lastPlugInAction = null;
+    PlugIn.find = (pluginName) => plugIn;
 
+    var action;
     PlugIn.Action = function (fn) {
         this.fn = fn;
-        lastPlugInAction = this;
+        action = this;
     };
 
-    Form = function () {
-        //this.fields = [];
-        this.addField = (field) => {
-            //this.fields.push(field);
-        };
-        this.show = (formPrompt, buttonTitle) => {
-            // return {
-            //     then: () => {}
-            // }
-        };
+    Folder = class {
     };
 
-    Form.Field = function (fn) {
-    };
-
-    Form.Field.Option = function (fn) {
-        this.fn = fn;
-    };
-
-    Folder = function () {
-    };
+    library = {};
 
     require('../../../toggle.omnifocusjs/Resources/choose.js');
-    action = lastPlugInAction;
+
+    beforeEach(() => {
+        // Reset the mock plugin libs each time
+        toggleLib = {};
+        libs['toggleLib'] = toggleLib;
+        factoryLib = {};
+        libs['factoryLib'] = factoryLib;
+
+        // Reset the library
+        library = {};
+    });
+
+    it('can use mocks', () => {
+        var lib1 = PlugIn.find('com.PaulSidnell.Toggle').library('factoryLib');
+        expect(lib1).toBe(factoryLib);
+
+        var lib2 = PlugIn.find('com.PaulSidnell.Toggle').library('toggleLib');
+        expect(lib2).toBe(toggleLib);
+    });
 
     it('can create action', () => {
         expect(action).toBeTruthy();
@@ -50,59 +60,82 @@ describe('choose', () => {
     });
 
     it('can run when database empty', () => {
-        var plugin = {};
-        var toggleLib = {};
+        var form = {};
 
         // Expectations
+        factoryLib.newForm = jasmine.createSpy('newForm').and.returnValue(form);
         library.apply = jasmine.createSpy('apply');
-        PlugIn.find = jasmine.createSpy('find').and.returnValue(plugin);
-        plugin.library = jasmine.createSpy('library').and.returnValue(toggleLib);
 
         // Test
         action.fn(null, null);
 
         // Verify
+        expect(factoryLib.newForm).toHaveBeenCalled();
         expect(library.apply).toHaveBeenCalled();
     });
 
     it('can run when no folders', () => {
-        var plugin = {};
-        var toggleLib = {};
+        var form = {};
         var notFolder = {};
 
         // Expectations
+        factoryLib.newForm = jasmine.createSpy('newForm').and.returnValue(form);
         library.apply = jasmine.createSpy('apply').and.callFake((fn) => {fn(notFolder)});
-        PlugIn.find = jasmine.createSpy('find').and.returnValue(plugin);
-        plugin.library = jasmine.createSpy('library').and.returnValue(toggleLib);
 
         // Test
         action.fn(null, null);
 
         // Verify
+        expect(factoryLib.newForm).toHaveBeenCalled();
         expect(library.apply).toHaveBeenCalled();
     });
 
     it('can find a folder', () => {
-        var plugin = {};
-        var toggleLib = {};
-        var folder = new Folder();
-        var form = {};
+        var folderChosen = new Folder();
+        folderChosen.name = 'folder1';
+
+        var folderNotChosen = new Folder();
+        folderNotChosen.name = 'folder2';
+
+        var form = {
+            values: {
+                choice: folderChosen
+            }
+        };
         var option = {};
+        var promise = {};
 
         // Expectations
-        Form = jasmine.createSpy('Form').and.returnValue(form);
-        Form.Field = {};
-        Form.Field.Option = jasmine.createSpy('Option').and.returnValue(option);
-        inputForm.addField = jasmine.createSpy('addField');
-
-        library.apply = jasmine.createSpy('apply').and.callFake((fn) => {fn(folder)});
-        PlugIn.find = jasmine.createSpy('find').and.returnValue(plugin);
-        plugin.library = jasmine.createSpy('library').and.returnValue(toggleLib);
+        factoryLib.newForm = jasmine.createSpy('newForm').and.returnValue(form);
+        library.apply = jasmine.createSpy('apply').and.callFake((fn) => {
+            fn(folderNotChosen);
+            fn(folderChosen);
+        });
+        factoryLib.newFormFieldOption = jasmine.createSpy('newFormFieldOption').and.returnValue(option);
+        form.addField = jasmine.createSpy('addField');
+        form.show = jasmine.createSpy('show').and.returnValue(promise);
+        promise.then = jasmine.createSpy('then').and.callFake ((okFn, errFn) => okFn(form));
+        toggleLib.toggleFolder = jasmine.createSpy('toggleFolder');
 
         // Test
         action.fn(null, null);
 
         // Verify
+        expect(factoryLib.newForm).toHaveBeenCalled();
         expect(library.apply).toHaveBeenCalled();
+        expect(factoryLib.newFormFieldOption).toHaveBeenCalled();
+        var newFormFieldOptionArgs = factoryLib.newFormFieldOption.calls.mostRecent().args;
+        expect(newFormFieldOptionArgs[0]).toBe('choice');
+        expect(newFormFieldOptionArgs[1]).toBe('Folder');
+        expect(newFormFieldOptionArgs[2].length).toBe(2);
+        expect(newFormFieldOptionArgs[2][0]).toBe(folderNotChosen);
+        expect(newFormFieldOptionArgs[2][1]).toBe(folderChosen);
+        expect(newFormFieldOptionArgs[3].length).toBe(2);
+        expect(newFormFieldOptionArgs[3][0]).toBe(folderNotChosen.name);
+        expect(newFormFieldOptionArgs[3][1]).toBe(folderChosen.name);
+        expect(newFormFieldOptionArgs[4]).toBe(folderNotChosen);
+        expect(form.show).toHaveBeenCalledWith("Choose a folder", "OK");
+        expect(promise.then).toHaveBeenCalled();
+        expect(toggleLib.toggleFolder).toHaveBeenCalledWith(folderChosen);
     });
 });
