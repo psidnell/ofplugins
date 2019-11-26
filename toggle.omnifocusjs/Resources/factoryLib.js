@@ -6,7 +6,7 @@
 var _ = function() {
     var lib = new PlugIn.Library(new Version("0.1"));
 
-    lib.newPluginLibrary = (version) => {
+    lib.newPlugInLibrary = (version) => {
         return new PlugIn.Library(version);
     };
 
