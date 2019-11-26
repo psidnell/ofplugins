@@ -1,13 +1,13 @@
 var _ = function() {
 
-    // Cant load this during initialisation
+    var toggleLib = new PlugIn.Library(new Version("0.1"));
+
+    // Can't load this directly during initialisation of a library - it seems.
     var factoryLib = () => {
         if (!this._factoryLib) {
             this._factoryLib = PlugIn.find("com.PaulSidnell.Toggle").library("factoryLib");
         }
     };
-
-    var toggleLib = factoryLib().newPlugInLibrary(factoryLib().newVersion("0.1"));
 
 	toggleLib.createDeactivatedTag = () => {
 		var hiddenTagName = "ON-HOLD";
