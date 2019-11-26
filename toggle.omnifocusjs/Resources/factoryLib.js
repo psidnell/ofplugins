@@ -4,11 +4,7 @@
  * @private
  */
 var _ = function() {
-    var lib = new PlugIn.Library(new Version("0.1"));
-
-    lib.newPlugInLibrary = (version) => {
-        return new PlugIn.Library(version);
-    };
+    var lib = new PlugIn.Library(new Version('0.1'));
 
     lib.newVersion = (version) => {
         return new Version(version);

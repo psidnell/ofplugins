@@ -132,7 +132,7 @@ describe('choose', () => {
         expect(newFormFieldOptionArgs[3][0]).toBe(folderNotChosen.name);
         expect(newFormFieldOptionArgs[3][1]).toBe(folderChosen.name);
         expect(newFormFieldOptionArgs[4]).toBe(folderNotChosen);
-        expect(form.show).toHaveBeenCalledWith("Choose a folder", "OK");
+        expect(form.show).toHaveBeenCalledWith('Choose a folder', 'OK');
         expect(promise.then).toHaveBeenCalled();
         expect(toggleLib.toggleFolder).toHaveBeenCalledWith(folderChosen);
     });

@@ -75,5 +75,4 @@ describe('selected', () => {
         // Verify
         expect(toggleLib.toggleFolder).toHaveBeenCalledWith(selection.folders[0]);
     });
-
 });
