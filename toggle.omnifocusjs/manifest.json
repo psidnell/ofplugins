@@ -9,6 +9,7 @@
 		{ "image":"icon.png", "identifier": "selection" }
 	],
 	"libraries": [
-		{"identifier": "lib"}
+		{"identifier": "lib"},
+		{"identifier": "factories"}
 	]
 }

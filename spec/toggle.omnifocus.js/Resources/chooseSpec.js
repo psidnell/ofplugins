@@ -1,6 +1,6 @@
 describe('choose', () => {
 
-    // Mock classes
+    // Mock classes enough for
     PlugIn = function () {
     };
 
@@ -15,14 +15,14 @@ describe('choose', () => {
     };
 
     Form = function () {
-        this.fields = [];
+        //this.fields = [];
         this.addField = (field) => {
-            this.fields.push(field);
+            //this.fields.push(field);
         };
         this.show = (formPrompt, buttonTitle) => {
-            return {
-                then: () => {}
-            }
+            // return {
+            //     then: () => {}
+            // }
         };
     };
 
@@ -30,6 +30,7 @@ describe('choose', () => {
     };
 
     Form.Field.Option = function (fn) {
+        this.fn = fn;
     };
 
     Folder = function () {
@@ -85,8 +86,15 @@ describe('choose', () => {
         var plugin = {};
         var toggleLib = {};
         var folder = new Folder();
+        var form = {};
+        var option = {};
 
         // Expectations
+        Form = jasmine.createSpy('Form').and.returnValue(form);
+        Form.Field = {};
+        Form.Field.Option = jasmine.createSpy('Option').and.returnValue(option);
+        inputForm.addField = jasmine.createSpy('addField');
+
         library.apply = jasmine.createSpy('apply').and.callFake((fn) => {fn(folder)});
         PlugIn.find = jasmine.createSpy('find').and.returnValue(plugin);
         plugin.library = jasmine.createSpy('library').and.returnValue(toggleLib);
