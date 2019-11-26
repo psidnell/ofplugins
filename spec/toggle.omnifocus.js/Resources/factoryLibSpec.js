@@ -1,6 +1,6 @@
 describe('factoryLib', () => {
 
-    var lib;
+    var factoryLib;
 
     beforeEach(() => {
         // Mock enough for creating the plugin and loading libraries
@@ -14,7 +14,7 @@ describe('factoryLib', () => {
 
         PlugIn.Library = function (version) {
             this.version = version;
-            lib = this;
+            factoryLib = this;
         };
 
         Form = class {
@@ -39,13 +39,13 @@ describe('factoryLib', () => {
     });
 
     it('can create library', () => {
-        expect(lib).toBeTruthy();
-        expect(lib.version).toBeTruthy();
-        expect(lib.version.version).toBe('0.1')
+        expect(factoryLib).toBeTruthy();
+        expect(factoryLib.version).toBeTruthy();
+        expect(factoryLib.version.version).toBe('0.1')
     });
 
     it('can create create new Version', () => {
-        var version = lib.newVersion('1.2.3');
+        var version = factoryLib.newVersion('1.2.3');
         expect(version instanceof Version).toBeTruthy();
         expect(version.version).toBe('1.2.3');
     });
@@ -57,7 +57,7 @@ describe('factoryLib', () => {
         var objectLabels = [];
         var defaultObject = {};
 
-        var option = lib.newFormFieldOption(fieldName, label, objects, objectLabels, defaultObject);
+        var option = factoryLib.newFormFieldOption(fieldName, label, objects, objectLabels, defaultObject);
 
         expect(option instanceof Form.Field.Option).toBeTruthy();
         expect(option.fieldName).toBe(fieldName);
@@ -70,7 +70,7 @@ describe('factoryLib', () => {
     it('can create create new Tag', () => {
         var name = 'tn';
 
-        var tag = lib.newTag(name);
+        var tag = factoryLib.newTag(name);
 
         expect(tag instanceof Tag).toBeTruthy();
         expect(tag.name).toBe(name);
@@ -78,7 +78,7 @@ describe('factoryLib', () => {
 
     it('can create create new Form', () => {
 
-        var form = lib.newForm();
+        var form = factoryLib.newForm();
 
         expect(form instanceof Form).toBeTruthy();
     });

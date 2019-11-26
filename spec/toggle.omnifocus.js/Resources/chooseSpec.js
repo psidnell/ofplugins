@@ -16,7 +16,6 @@ describe('choose', () => {
         };
 
         var plugIn = {
-            mock: 'PlugIn',
             library: (name) => libs[name]
         };
 

@@ -4,24 +4,24 @@
  * @private
  */
 var _ = function() {
-    var lib = new PlugIn.Library(new Version('0.1'));
+    var factoryLib = new PlugIn.Library(new Version('0.1'));
 
-    lib.newVersion = (version) => {
+    factoryLib.newVersion = (version) => {
         return new Version(version);
     };
 
-    lib.newFormFieldOption = (fieldName, label, objects, objectLabels, defaultObject) => {
+    factoryLib.newFormFieldOption = (fieldName, label, objects, objectLabels, defaultObject) => {
         return new Form.Field.Option(fieldName, label, objects, objectLabels, defaultObject);
     };
 
-    lib.newTag = (tagName) => {
-        return new Tag(tagName);
+    factoryLib.newTag = (tagName, parent) => {
+        return new Tag(tagName, parent);
     };
 
-    lib.newForm = () => {
+    factoryLib.newForm = () => {
         return new Form();
     };
 
-    return lib;
+    return factoryLib;
 }();
 _;
