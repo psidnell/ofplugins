@@ -82,6 +82,10 @@ var _ = function() {
 		project.task.apply((task) => {
 			lib.replaceVariableInTask(task, form.values);
 		})
+		
+		// Open the new project
+		var url = URL.fromString('omnifocus:///task/' + encodeURIComponent(project.task.name));
+		url.open();
 	};
 
 	lib.expand = (template) => {
