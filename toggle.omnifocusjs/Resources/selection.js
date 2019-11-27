@@ -9,7 +9,8 @@ var _ = (function() {
     });
 
     action.validate = (selection, sender) => {
-        return (selection.folders.length === 1)
+        return selection.folders.length === 1 &&
+            selection.folders[0].active;
     };
 
     return action;

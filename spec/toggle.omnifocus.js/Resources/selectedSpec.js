@@ -53,9 +53,18 @@ describe('selected', () => {
         expect(action.validate(selection, null)).toBeFalsy();
     });
 
-    it('does validate when a folder is selected', () => {
+    it('doesn\'t validate when a folder is selected but not active', () => {
         var selection = {
             folders: [new Folder()]
+        };
+        expect(action.validate(selection, null)).toBeFalsy();
+    });
+
+    it('does validate when a folder is selected and is active', () => {
+        var folder = new Folder();
+        folder.active = true;
+        var selection = {
+            folders: [folder]
         };
         expect(action.validate(selection, null)).toBeTruthy();
     });

@@ -45,7 +45,10 @@ var _ = function() {
 		
 		// Open the folder
 		var url = URL.fromString('omnifocus:///folder/' + encodeURIComponent(folder.name));
-		url.open();
+		// Missing on MacOS?
+		if (url.open) {
+			url.open();
+		}
 	};
 
 	return toggleLib;
