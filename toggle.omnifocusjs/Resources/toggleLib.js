@@ -44,7 +44,7 @@ var _ = function() {
 		});
 		
 		// Open the folder
-		var url = URL.fromString('omnifocus:///folder/' + encodeURIComponent(folder.id.primaryKey));
+		var url = URL.fromString('omnifocus:///folder/' + encodeURIComponent(folder.name));
 		url.call(reply => {});
 	};
 
