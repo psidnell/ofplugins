@@ -84,11 +84,8 @@ var _ = function() {
 		});
 		
 		// Open the new project
-		var url = URL.fromString('omnifocus:///task/' + encodeURIComponent(project.task.name));
-		// Missing on MacOS?
-		if (url.open) {
-			url.open();
-		}
+		var url = URL.fromString('omnifocus:///folder/' + encodeURIComponent(project.id.primaryKey));
+		url.call(reply => {});
 	};
 
 	lib.expand = (template) => {

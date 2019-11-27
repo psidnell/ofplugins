@@ -44,11 +44,8 @@ var _ = function() {
 		});
 		
 		// Open the folder
-		var url = URL.fromString('omnifocus:///folder/' + encodeURIComponent(folder.name));
-		// Missing on MacOS?
-		if (url.open) {
-			url.open();
-		}
+		var url = URL.fromString('omnifocus:///folder/' + encodeURIComponent(folder.id.primaryKey));
+		url.call(reply => {});
 	};
 
 	return toggleLib;
