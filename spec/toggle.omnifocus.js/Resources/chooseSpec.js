@@ -90,9 +90,11 @@ describe('choose', () => {
     it('can find a folder', () => {
         var folderChosen = new Folder();
         folderChosen.name = 'folder1';
+        folderChosen.active = true;
 
         var folderNotChosen = new Folder();
         folderNotChosen.name = 'folder2';
+        folderNotChosen.active = true;
 
         var form = {
             values: {

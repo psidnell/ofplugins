@@ -41,7 +41,10 @@ describe('toggleLib', () => {
         Project.Status = {
             Active: 'Active',
             OnHold: 'OnHold'
-        }
+        };
+
+        URL = class {
+        };
 
         require('../../../toggle.omnifocusjs/Resources/toggleLib.js');
 
@@ -209,11 +212,13 @@ describe('toggleLib', () => {
         var onHoldTag = new Tag('ON-HOLD');
         var deactivatedTag = new Tag('DEACTIVATED');
         var folder = {};
+        folder.name = 'fname with a spece';
         var child = new Project();
         child.status = Project.Status.Active;
         child.task = {
             tags: []
         };
+        var url = new URL();
 
         // Expectations
         tagNamed = jasmine.createSpy('tagNamed').and.returnValue(onHoldTag);
@@ -221,6 +226,8 @@ describe('toggleLib', () => {
         factoryLib.newTag = jasmine.createSpy('newTag').and.returnValue(deactivatedTag);
         folder.apply = jasmine.createSpy('apply').and.callFake(fn => fn(child));
         child.task.addTag = jasmine.createSpy('addTag');
+        URL.fromString = jasmine.createSpy('fromString').and.returnValue(url);
+        url.open = jasmine.createSpy('open');
 
         // Test
         toggleLib.toggleFolder(folder);
@@ -229,5 +236,7 @@ describe('toggleLib', () => {
         expect(folder.apply).toHaveBeenCalled();
         expect(child.status).toBe(Project.Status.OnHold);
         expect(child.task.addTag).toHaveBeenCalledWith(deactivatedTag);
+        expect(URL.fromString).toHaveBeenCalledWith('omnifocus:///folder/' + encodeURIComponent(folder.name));
+        expect(url.open).toHaveBeenCalled();
     });
 });
