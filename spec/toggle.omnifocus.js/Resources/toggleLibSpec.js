@@ -227,7 +227,7 @@ describe('toggleLib', () => {
         folder.apply = jasmine.createSpy('apply').and.callFake(fn => fn(child));
         child.task.addTag = jasmine.createSpy('addTag');
         URL.fromString = jasmine.createSpy('fromString').and.returnValue(url);
-        url.open = jasmine.createSpy('open');
+        url.call = jasmine.createSpy('open');
 
         // Test
         toggleLib.toggleFolder(folder);
@@ -237,6 +237,6 @@ describe('toggleLib', () => {
         expect(child.status).toBe(Project.Status.OnHold);
         expect(child.task.addTag).toHaveBeenCalledWith(deactivatedTag);
         expect(URL.fromString).toHaveBeenCalledWith('omnifocus:///folder/' + encodeURIComponent(folder.name));
-        expect(url.open).toHaveBeenCalled();
+        expect(url.call).toHaveBeenCalled();
     });
 });
