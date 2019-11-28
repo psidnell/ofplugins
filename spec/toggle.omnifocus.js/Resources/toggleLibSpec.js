@@ -72,30 +72,25 @@ describe('toggleLib', () => {
         expect(toggleLib._factoryLib).toBe(factoryLib);
     });
 
-    it('can load create Deactivated tag when ON-HOLD and DEACTIVATED already exists', () => {
-        var hiddenTagGroup = new Tag('ON-HOLD');
+    it('can load create Deactivated tag when DEACTIVATED already exists', () => {
         var deactivatedTag = new Tag('DEACTIVATED');
 
         // Expectations
-        tagNamed = jasmine.createSpy('tagNamed').and.returnValue(hiddenTagGroup);
-        hiddenTagGroup.tagNamed = jasmine.createSpy('tagNamed').and.returnValue(deactivatedTag);
+        tagNamed = jasmine.createSpy('tagNamed').and.returnValue(deactivatedTag);
 
         // Test
         var result = toggleLib.createDeactivatedTag();
 
         // Verify
         expect(result).toBe(deactivatedTag);
-        expect(tagNamed).toHaveBeenCalledWith('ON-HOLD');
-        expect(hiddenTagGroup.tagNamed).toHaveBeenCalledWith('DEACTIVATED');
+        expect(tagNamed).toHaveBeenCalledWith('DEACTIVATED');
     });
 
-    it('can load create Deactivated tag when ON-HOLD already exists', () => {
-        var onHoldTag = new Tag('ON-HOLD');
+    it('can load create Deactivated tag when it does\'nt already exist', () => {
         var deactivatedTag = new Tag('DEACTIVATED');
 
         // Expectations
-        tagNamed = jasmine.createSpy('tagNamed').and.returnValue(onHoldTag);
-        onHoldTag.tagNamed = jasmine.createSpy('tagNamed').and.returnValue(null);
+        tagNamed = jasmine.createSpy('tagNamed').and.returnValue(null);
         factoryLib.newTag = jasmine.createSpy('newTag').and.returnValue(deactivatedTag);
 
         // Test
@@ -103,35 +98,8 @@ describe('toggleLib', () => {
 
         // Verify
         expect(result).toBe(deactivatedTag);
-        expect(tagNamed).toHaveBeenCalledWith('ON-HOLD');
-        expect(onHoldTag.tagNamed).toHaveBeenCalledWith('DEACTIVATED');
-        expect(factoryLib.newTag).toHaveBeenCalledWith('DEACTIVATED', onHoldTag);
-    });
-
-    it('can load create Deactivated tag when no tags exists', () => {
-        var onHoldTag = new Tag('ON-HOLD');
-        var deactivatedTag = new Tag('DEACTIVATED');
-
-        // Expectations
-        tagNamed = jasmine.createSpy('tagNamed').and.returnValue(null);
-        onHoldTag.tagNamed = jasmine.createSpy('tagNamed').and.returnValue(null);
-        factoryLib.newTag = jasmine.createSpy('newTag').and.callFake((name) => {
-            if (name === 'ON-HOLD') {
-                return onHoldTag;
-            } else if (name === 'DEACTIVATED') {
-                return deactivatedTag;
-            }
-        });
-
-        // Test
-        var result = toggleLib.createDeactivatedTag();
-
-        // Verify
-        expect(result).toBe(deactivatedTag);
-        expect(tagNamed).toHaveBeenCalledWith('ON-HOLD');
-        expect(onHoldTag.tagNamed).toHaveBeenCalledWith('DEACTIVATED');
-        expect(factoryLib.newTag).toHaveBeenCalledWith('ON-HOLD');
-        expect(factoryLib.newTag).toHaveBeenCalledWith('DEACTIVATED', onHoldTag);
+        expect(tagNamed).toHaveBeenCalledWith('DEACTIVATED');
+        expect(factoryLib.newTag).toHaveBeenCalledWith('DEACTIVATED');
     });
 
     it('doesn\'t change a node of the wrong type', () => {
@@ -209,7 +177,6 @@ describe('toggleLib', () => {
     });
 
     it('can toggle a folder', () => {
-        var onHoldTag = new Tag('ON-HOLD');
         var deactivatedTag = new Tag('DEACTIVATED');
         var folder = {};
         folder.name = 'fname with a spece';
@@ -221,9 +188,7 @@ describe('toggleLib', () => {
         var url = new URL();
 
         // Expectations
-        tagNamed = jasmine.createSpy('tagNamed').and.returnValue(onHoldTag);
-        onHoldTag.tagNamed = jasmine.createSpy('tagNamed').and.returnValue(null);
-        factoryLib.newTag = jasmine.createSpy('newTag').and.returnValue(deactivatedTag);
+        tagNamed = jasmine.createSpy('tagNamed').and.returnValue(deactivatedTag);
         folder.apply = jasmine.createSpy('apply').and.callFake(fn => fn(child));
         child.task.addTag = jasmine.createSpy('addTag');
         URL.fromString = jasmine.createSpy('fromString').and.returnValue(url);

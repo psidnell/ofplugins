@@ -15,11 +15,8 @@ var _ = function() {
     toggleLib.factoryLib = factoryLib;
 
 	toggleLib.createDeactivatedTag = () => {
-		var hiddenTagName = 'ON-HOLD';
-		var hiddenTagGroup = tagNamed(hiddenTagName) || factoryLib().newTag(hiddenTagName);
-
 		var deactivatedTagName = 'DEACTIVATED';
-		var deactivatedTag = hiddenTagGroup.tagNamed(deactivatedTagName) || factoryLib().newTag(deactivatedTagName, hiddenTagGroup);
+		var deactivatedTag = tagNamed(deactivatedTagName) || factoryLib().newTag(deactivatedTagName);
 
 		return deactivatedTag;
 	};
