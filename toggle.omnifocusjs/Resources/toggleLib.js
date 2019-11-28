@@ -4,11 +4,12 @@ var _ = function() {
 
     // Can't load this directly during initialisation of a library - it seems.
 	// Cache the reference on the library.
+	var _factoryLib;
     var factoryLib = () => {
-        if (!toggleLib._factoryLib) {
-			toggleLib._factoryLib = PlugIn.find('com.PaulSidnell.Toggle').library('factoryLib');
+        if (!_factoryLib) {
+			_factoryLib = PlugIn.find('com.PaulSidnell.Toggle').library('factoryLib');
         }
-        return toggleLib._factoryLib;
+        return _factoryLib;
     };
 
     // To make the function visible to tests
