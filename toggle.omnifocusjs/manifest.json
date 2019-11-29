@@ -7,7 +7,8 @@
 	"actions": [
 		{ "image":"icon.png", "identifier": "chooseActivate" },
 		{ "image":"icon.png", "identifier": "chooseOnHold" },
-		{ "image":"icon.png", "identifier": "selection" }
+		{ "image":"icon.png", "identifier": "selectionActivate" },
+		{ "image":"icon.png", "identifier": "selectionOnHold" }
 	],
 	"libraries": [
 		{"identifier": "toggleLib"},

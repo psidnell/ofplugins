@@ -1,4 +1,4 @@
-describe('selected', () => {
+describe('selectionOnHold', () => {
 
     var toggleLib;
     var action;
@@ -32,7 +32,7 @@ describe('selected', () => {
 
         library = {};
 
-        require('../../../toggle.omnifocusjs/Resources/selection.js');
+        require('../../../toggle.omnifocusjs/Resources/selectionOnHold.js');
     });
 
     it('can use mocks', () => {
@@ -81,6 +81,6 @@ describe('selected', () => {
         action.fn(selection, null);
 
         // Verify
-        expect(toggleLib.toggleFolder).toHaveBeenCalledWith(selection.folders[0]);
+        expect(toggleLib.toggleFolder).toHaveBeenCalledWith(selection.folders[0], false);
     });
 });

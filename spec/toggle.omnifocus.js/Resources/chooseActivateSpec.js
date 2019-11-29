@@ -1,4 +1,4 @@
-describe('choose', () => {
+describe('chooseActivate', () => {
 
     var toggleLib;
     var factoryLib;
@@ -35,7 +35,7 @@ describe('choose', () => {
 
         library = {};
 
-        require('../../../toggle.omnifocusjs/Resources/choose.js');
+        require('../../../toggle.omnifocusjs/Resources/chooseActivate.js');
     });
 
     it('can use mocks', () => {
@@ -135,6 +135,6 @@ describe('choose', () => {
         expect(newFormFieldOptionArgs[4]).toBe(folderNotChosen);
         expect(form.show).toHaveBeenCalledWith('Choose a folder', 'OK');
         expect(promise.then).toHaveBeenCalled();
-        expect(toggleLib.toggleFolder).toHaveBeenCalledWith(folderChosen);
+        expect(toggleLib.toggleFolder).toHaveBeenCalledWith(folderChosen, true);
     });
 });

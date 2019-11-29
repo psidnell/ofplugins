@@ -15,6 +15,11 @@ var _ = function() {
     // To make the function visible to tests
     toggleLib.factoryLib = factoryLib;
 
+	// For testing
+	toggleLib.setFactoryLib = (factoryLib) => {
+		_factoryLib = factoryLib;
+	};
+
 	toggleLib.createDeactivatedTag = () => {
 		var deactivatedTagName = 'DEACTIVATED';
 		var deactivatedTag = tagNamed(deactivatedTagName) || factoryLib().newTag(deactivatedTagName);

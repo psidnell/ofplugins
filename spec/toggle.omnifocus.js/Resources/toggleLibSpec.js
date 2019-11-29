@@ -49,7 +49,7 @@ describe('toggleLib', () => {
         require('../../../toggle.omnifocusjs/Resources/toggleLib.js');
 
         // Clean the lib in the required code to prevent previous values affecting tests
-        toggleLib._factoryLib = null;
+        toggleLib.setFactoryLib(factoryLib);
     });
 
     it('can use mocks', () => {
@@ -64,12 +64,9 @@ describe('toggleLib', () => {
     });
 
     it('can load factoryLib', () => {
-        expect(toggleLib._factoryLib).toBeFalsy();
-
         var result = toggleLib.factoryLib();
 
         expect(result).toBe(factoryLib);
-        expect(toggleLib._factoryLib).toBe(factoryLib);
     });
 
     it('can load create Deactivated tag when DEACTIVATED already exists', () => {
@@ -86,7 +83,7 @@ describe('toggleLib', () => {
         expect(tagNamed).toHaveBeenCalledWith('DEACTIVATED');
     });
 
-    it('can load create Deactivated tag when it does\'nt already exist', () => {
+    it('can load create Deactivated tag when it doesn\'t already exist', () => {
         var deactivatedTag = new Tag('DEACTIVATED');
 
         // Expectations
@@ -107,7 +104,7 @@ describe('toggleLib', () => {
         child.status = null;
 
         // Test
-        toggleLib.toggle(child, null);
+        toggleLib.toggle(child, null, false);
 
         // Verify
         expect(child.status).toBe(null);
@@ -118,7 +115,7 @@ describe('toggleLib', () => {
         child.status = null;
 
         // Test
-        toggleLib.toggle(child, null);
+        toggleLib.toggle(child, null, false);
 
         // Verify
         expect(child.status).toBe(null);
@@ -132,7 +129,7 @@ describe('toggleLib', () => {
         };
 
         // Test
-        toggleLib.toggle(child, null);
+        toggleLib.toggle(child, null, true);
 
         // Verify
         expect(child.status).toBe(Project.Status.OnHold);
@@ -150,7 +147,7 @@ describe('toggleLib', () => {
         child.task.removeTag = jasmine.createSpy('removeTag');
 
         // Test
-        toggleLib.toggle(child, deactivatedTag);
+        toggleLib.toggle(child, deactivatedTag, true);
 
         // Verify
         expect(child.task.removeTag).toHaveBeenCalledWith(deactivatedTag);
@@ -169,7 +166,7 @@ describe('toggleLib', () => {
         child.task.addTag = jasmine.createSpy('addTag');
 
         // Test
-        toggleLib.toggle(child, deactivatedTag);
+        toggleLib.toggle(child, deactivatedTag, false);
 
         // Verify
         expect(child.status).toBe(Project.Status.OnHold);
@@ -195,7 +192,7 @@ describe('toggleLib', () => {
         url.call = jasmine.createSpy('open');
 
         // Test
-        toggleLib.toggleFolder(folder);
+        toggleLib.toggleFolder(folder, false);
 
         // Verify
         expect(folder.apply).toHaveBeenCalled();

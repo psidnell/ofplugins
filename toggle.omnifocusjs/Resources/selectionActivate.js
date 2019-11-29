@@ -5,7 +5,7 @@ var _ = (function() {
 
         var folder = selection.folders[0];
 
-        toggleLib.toggleFolder(folder);
+        toggleLib.toggleFolder(folder, true);
     });
 
     action.validate = (selection, sender) => {
