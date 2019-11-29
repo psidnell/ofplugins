@@ -29,7 +29,7 @@ var _ = (function() {
             var formPrompt = 'Choose a folder';
             var buttonTitle = 'OK';
             inputForm.show(formPrompt, buttonTitle).then(
-                (form) => toggleLib.toggleFolder(form.values['choice']),
+                (form) => toggleLib.toggleFolder(form.values['choice'], true),
                 (error) => console.log(error));
         }
     });

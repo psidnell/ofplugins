@@ -22,23 +22,23 @@ var _ = function() {
 		return deactivatedTag;
 	};
 
-	toggleLib.toggle = function(child, deactivatedTag) {
+	toggleLib.toggle = function(child, deactivatedTag, activate) {
 		if (child instanceof Project) {
-			if (child.status === Project.Status.OnHold
+			if (activate && child.status === Project.Status.OnHold
 				&& child.task.tags.includes(deactivatedTag)) {
 				child.task.removeTag(deactivatedTag);
 				child.status = Project.Status.Active;
-			} else if ( child.status === Project.Status.Active) {
+			} else if (!activate && child.status === Project.Status.Active) {
 				child.task.addTag(deactivatedTag);
 				child.status = Project.Status.OnHold;
 			}
 		}
 	};
 
-	toggleLib.toggleFolder = function(folder) {
+	toggleLib.toggleFolder = function(folder, activate) {
 		var deactivatedTag = toggleLib.createDeactivatedTag();
 		folder.apply(child => {
-			toggleLib.toggle(child, deactivatedTag);
+			toggleLib.toggle(child, deactivatedTag, activate);
 		});
 		
 		// Open the folder
