@@ -32,7 +32,7 @@ var _ = function() {
 		var result = text;
 		for (var variable in variables) {
 			var value = variables[variable];
-			result = result.replace(variable, value);
+			result = result.replace(new RegExp('\\' + variable, 'g'), value);
 		}
 
 		return result;
