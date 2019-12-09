@@ -1,0 +1,24 @@
+/*{
+	"type": "action",
+	"targets": ["omnifocus"],
+	"author": "Paul Sidnell",
+	"identifier": "com.PaulSidnell.sort",
+	"version": "1.0",
+	"description": "Sorts a projects items by due date",
+	"label": "Sort Project by Due",
+	"shortLabel": "Sort Project by Due"
+}*/
+var _ = function(){
+	var action = new PlugIn.Action(function(selection, sender){
+		// action code
+		// selection options: tasks, projects, folders, tags
+		project = selection.projects[0];
+	});
+
+	action.validate = function(selection, sender){
+		return (selection.projects.length === 1)
+	};
+	
+	return action;
+}();
+_;
