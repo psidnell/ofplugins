@@ -2,23 +2,23 @@
 	"type": "action",
 	"targets": ["omnifocus"],
 	"author": "Paul Sidnell",
-	"identifier": "com.PaulSidnell.sort",
+	"identifier": "com.PaulSidnell.sortbystart",
 	"version": "1.0",
-	"description": "Sorts a projects items by due date",
-	"label": "Sort Project tasks by Due",
-	"shortLabel": "Sort Project by Due"
+	"description": "Sorts a projects items by defer date",
+	"label": "Sort Project tasks by Defer",
+	"shortLabel": "Sort Project by Defer"
 }*/
 var _ = function(){
 	var compare = (a, b) => {
-		if (a.dueDate && b.dueDate) {
-			if (a.dueDate.getTime() > b.dueDate.getTime()) {
+		if (a.deferDate && b.deferDate) {
+			if (a.deferDate.getTime() > b.deferDate.getTime()) {
 				return 1;
-			} else if (a.dueDate.getTime() < b.dueDate.getTime()) {
+			} else if (a.deferDate.getTime() < b.deferDate.getTime()) {
 				return -1;
 			}
-		} else if (!a.dueDate && b.dueDate) {
+		} else if (!a.deferDate && b.deferDate) {
 			return 1;
-		} else if (a.dueDate && !b.dueDate) {
+		} else if (a.deferDate && !b.deferDate) {
 			return -1;
 		}
 		return a.name.localeCompare(b.name);
