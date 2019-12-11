@@ -1,0 +1,13 @@
+{
+	"defaultLocale": "en",
+	"identifier": "com.PaulSidnell.Sort",
+	"author": "Paul Sidnell",
+	"description": "Sort Project Tasks",
+	"version": "1.0",
+	"actions": [
+		{ "image":"icon.png", "identifier": "sortByDefer" },
+		{ "image":"icon.png", "identifier": "sortByDue" }
+	],
+	"libraries": [
+	]
+}

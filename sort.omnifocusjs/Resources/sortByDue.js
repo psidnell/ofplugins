@@ -1,14 +1,4 @@
-/*{
-	"type": "action",
-	"targets": ["omnifocus"],
-	"author": "Paul Sidnell",
-	"identifier": "com.PaulSidnell.sortbydue",
-	"version": "1.0",
-	"description": "Sorts a projects items by due date",
-	"label": "Sort Project tasks by Due",
-	"shortLabel": "Sort Project by Due"
-}*/
-var _ = function(){
+var _ = (function() {
 	var compare = (a, b) => {
 		if (a.dueDate && b.dueDate) {
 			if (a.dueDate.getTime() > b.dueDate.getTime()) {
@@ -22,8 +12,8 @@ var _ = function(){
 			return -1;
 		}
 		return a.name.localeCompare(b.name);
-	}
-	
+	};
+
 	var action = new PlugIn.Action(function(selection, sender){
 		project = selection.projects[0];
 		var tasks = [];
@@ -37,7 +27,7 @@ var _ = function(){
 	action.validate = function(selection, sender){
 		return (selection.projects.length === 1)
 	};
-	
+
 	return action;
-}();
+})();
 _;
