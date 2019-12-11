@@ -60,3 +60,7 @@ Note: a HIDDEN/DEACTIVATED tag is added to active projects when they are put on 
 identify which projects to re-activate by only re-activating ones that it de-activated in the first place. This means that projects that were on-hold when their enclosing folder was de-activated remain on-hold when the folder is reactivated. 
 
 Actions are provided to activate or put on hold the selected folder or to present a choice from the list of all folders.
+
+## [Sort Plugin](sort.omnifocusjs)
+
+This plugin sorts the tasks in a project by either defer or due. This functionality is available in the MacOS version but not in iOS. 
