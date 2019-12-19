@@ -11,7 +11,8 @@ var _ = (function() {
     action.validate = (selection, sender) => {
         return selection.projects.length === 1 &&
             (selection.projects[0].status === Project.Status.OnHold ||
-                selection.projects[0].status === Project.Status.Active);
+                selection.projects[0].status === Project.Status.Active) &&
+            selection.projects[0].name.indexOf('${') != -1;
     };
 
     return action;
