@@ -56,7 +56,7 @@ Monday morning.
 
 The plugin will descend into the selected folder structure changing active projects to on-hold and vice versa.
 
-Note: a HIDDEN/DEACTIVATED tag is added to active projects when they are put on hold and removed when they are reactivated. This is so the plug can
+Note: a DEACTIVATED tag is added to active projects when they are put on hold and removed when they are reactivated. This is so the plug can
 identify which projects to re-activate by only re-activating ones that it de-activated in the first place. This means that projects that were on-hold when their enclosing folder was de-activated remain on-hold when the folder is reactivated. 
 
 Actions are provided to activate or put on hold the selected folder or to present a choice from the list of all folders.
