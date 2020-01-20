@@ -2,27 +2,9 @@ var _ = function() {
 
     var toggleLib = new PlugIn.Library(new Version('0.1'));
 
-    // Can't load this directly during initialisation of a library - it seems.
-	// Cache the reference on the library.
-	var _factoryLib;
-    var factoryLib = () => {
-        if (!_factoryLib) {
-			_factoryLib = PlugIn.find('com.PaulSidnell.Toggle').library('factoryLib');
-        }
-        return _factoryLib;
-    };
-
-    // To make the function visible to tests
-    toggleLib.factoryLib = factoryLib;
-
-	// For testing
-	toggleLib.setFactoryLib = (factoryLib) => {
-		_factoryLib = factoryLib;
-	};
-
 	toggleLib.createDeactivatedTag = () => {
 		var deactivatedTagName = 'DEACTIVATED';
-		var deactivatedTag = tagNamed(deactivatedTagName) || factoryLib().newTag(deactivatedTagName);
+		var deactivatedTag = tagNamed(deactivatedTagName) || new Tag(deactivatedTagName);
 
 		return deactivatedTag;
 	};

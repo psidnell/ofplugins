@@ -1,10 +1,9 @@
 var _ = (function() {
     var action = new PlugIn.Action((selection, sender) => {
 
-        var factoryLib = PlugIn.find('com.PaulSidnell.Toggle').library('factoryLib');
         var toggleLib = PlugIn.find('com.PaulSidnell.Toggle').library('toggleLib');
 
-        var inputForm = factoryLib.newForm();
+        var inputForm = new Form();
 
         // Find folders
         var folders = [];
@@ -18,7 +17,7 @@ var _ = (function() {
 
         if (folders.length > 0) {
             // Choose which folder to toggle
-            inputForm.addField(factoryLib.newFormFieldOption(
+            inputForm.addField(new Form.Field.Option(
                 'choice',
                 'Folder',
                 folders,
