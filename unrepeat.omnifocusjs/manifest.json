@@ -1,0 +1,12 @@
+{
+	"defaultLocale": "en",
+	"identifier": "ccom.PaulSidnell.UnRepeat",
+	"author": "Paul Sidnell",
+	"description": "Duplicate task and remove repeat",
+	"version": "1.0",
+	"actions": [
+		{ "image":"icon.png", "identifier": "selectionUnRepeat" }
+	],
+	"libraries": [
+	]
+}
