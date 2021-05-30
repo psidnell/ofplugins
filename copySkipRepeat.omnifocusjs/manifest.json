@@ -1,0 +1,12 @@
+{
+	"defaultLocale": "en",
+	"identifier": "com.PaulSidnell.CopySkipRepeat",
+	"author": "Paul Sidnell",
+	"description": "Duplicate task and Skip",
+	"version": "1.0",
+	"actions": [
+		{ "image":"icon.png", "identifier": "copySkipRepeat" }
+	],
+	"libraries": [
+	]
+}

@@ -65,13 +65,13 @@ Actions are provided to activate or put on hold the selected folder or to presen
 
 This plugin sorts the tasks in a project by either defer or due. This functionality is available in the MacOS version but not in iOS. 
 
-## [Un-Repeat](unrepeat.omnifocusjs)
+## [Copy Skip Repeat](copySkipRepeat.omnifocusjs)
 
 Often I have a repeating task that I want to modify for the current repetition, but not affect the next repetition.
 
 This plugin takes the selected task (if it's in a project and has a repeat), copies it and removes the repeat on the copy (leaving the original unaffected).
 
-This allows the original to be completed and the copy can be modified without affecting the original task.
+The original task is completed and the copy can be modified without affecting the original task.
 
 ## [Sentinel Task](sentinel.omnifocusjs)
 
