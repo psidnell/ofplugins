@@ -1,0 +1,12 @@
+{
+	"defaultLocale": "en",
+	"identifier": "com.PaulSidnell.Sentinel",
+	"author": "Paul Sidnell",
+	"description": "Create Sentinal Task from Selection",
+	"version": "1.0",
+	"actions": [
+		{ "image":"icon.png", "identifier": "selectionSentinel" }
+	],
+	"libraries": [
+	]
+}

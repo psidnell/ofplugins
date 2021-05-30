@@ -1,6 +1,6 @@
 {
 	"defaultLocale": "en",
-	"identifier": "ccom.PaulSidnell.UnRepeat",
+	"identifier": "com.PaulSidnell.UnRepeat",
 	"author": "Paul Sidnell",
 	"description": "Duplicate task and remove repeat",
 	"version": "1.0",

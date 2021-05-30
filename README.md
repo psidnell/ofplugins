@@ -72,3 +72,9 @@ Often I have a repeating task that I want to modify for the current repetition, 
 This plugin takes the selected task (if it's in a project and has a repeat), copies it and removes the repeat on the copy (leaving the original unaffected).
 
 This allows the original to be completed and the copy can be modified without affecting the original task.
+
+## [Sentinel Task](sentinel.omnifocusjs)
+
+Often I have several tasks, like a shopping list or a bunch of chores, that I want to do today. I don't want to give all of them the Forecast tag, as that would be too much clutter. Instead I want to have a single [sentinel](https://www.dictionary.com/browse/sentinel) task with the Forecast tag that represents them.
+
+With this plugin, if you select an individual representative task that has a tag like "Shopping", it will create a single task where the name is "Shopping", and a note with the url of the shopping tag. The current Forcast tag will also be added.
