@@ -5,10 +5,10 @@
 	"description": "Toggle a folder hierarchy active/on-hold",
 	"version": "1.0",
 	"actions": [
-		{ "image":"icon.png", "identifier": "chooseActivate" },
-		{ "image":"icon.png", "identifier": "chooseOnHold" },
-		{ "image":"icon.png", "identifier": "selectionActivate" },
-		{ "image":"icon.png", "identifier": "selectionOnHold" }
+		{ "image":"play.png", "identifier": "chooseActivate" },
+		{ "image":"pause.png", "identifier": "chooseOnHold" },
+		{ "image":"play.png", "identifier": "selectionActivate" },
+		{ "image":"pause.png", "identifier": "selectionOnHold" }
 	],
 	"libraries": [
 		{"identifier": "toggleLib"}

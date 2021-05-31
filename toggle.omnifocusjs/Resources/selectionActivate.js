@@ -3,14 +3,16 @@ var _ = (function() {
 
         var toggleLib = PlugIn.find('com.PaulSidnell.Toggle').library('toggleLib');
 
-        var folder = selection.folders[0];
+        selection.folders.forEach(folder => {
+            if (folder.active) {
+                toggleLib.toggleFolder(folder, true);
+            }
+        });
 
-        toggleLib.toggleFolder(folder, true);
     });
 
     action.validate = (selection, sender) => {
-        return selection.folders.length === 1 &&
-            selection.folders[0].active;
+        return selection.folders.length > 0;
     };
 
     return action;
