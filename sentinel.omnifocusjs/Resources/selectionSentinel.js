@@ -19,11 +19,15 @@ var _ = (function() {
             }
         });
 
+        // Add sentinel tag
+        var sentinalTag = flattenedTags.byName("➡️") || new Tag("➡️");
+        tags.push(sentinalTag);
+
         var tagNameList = [];
         tags.forEach((tag)=>{
             tagNameList.push(tag.name);
         });
-        var title = '➡️ ' + tagNameList.join(', ');
+        var title = tagNameList.join(', ');
 
         var noteLines = [];
         tags.forEach((tag)=>{
