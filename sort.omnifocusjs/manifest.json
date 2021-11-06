@@ -5,8 +5,7 @@
 	"description": "Sort Project Tasks",
 	"version": "1.0",
 	"actions": [
-		{ "image":"sortByDefer.png", "identifier": "sortByDefer" },
-		{ "image":"sortByDue.png", "identifier": "sortByDue" }
+		{ "image":"sort.png", "identifier": "sort" }
 	],
 	"libraries": [
 	]
