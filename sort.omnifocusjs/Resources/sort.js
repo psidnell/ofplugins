@@ -44,22 +44,19 @@ var _ = (function() {
 		return due;
 	}
 
-	var available = (item, now) => {
+	var available = (item) => {
 		return (
 			item.taskStatus === Task.Status.Available ||
 			item.taskStatus === Task.Status.DueSoon);
 	}
 
 	var compare = (left, right) => {
-		var now = new Date().getTime();
-		var availableLeft = available(left, now);
-		var smartTimeLeft = smartTime(left, now);
-		var availableRight = available(right, now);
-		var smartTimeRight = smartTime(right, now);
+		var availableLeft = available(left);
+		var smartTimeLeft = smartTime(left);
+		var availableRight = available(right);
+		var smartTimeRight = smartTime(right);
 
-		var cmp = 0
-
-		// 1: Availability (in terms of date)
+		// 1: Availability
 		if (availableLeft && !availableRight) {
 			return -1;
 		}
@@ -67,7 +64,15 @@ var _ = (function() {
 			return 1;
 		}
 
-		// 2: Time
+		// 2: Flagged
+		if (left.flagged && !right.flagged) {
+			return -1;
+		}
+		if (!left.flagged && right.flagged) {
+			return 1;
+		}
+
+		// 3: Defer/Due
 		if (smartTimeLeft && !smartTimeRight) {
 			return -1;
 		}
@@ -75,13 +80,13 @@ var _ = (function() {
 			return 1;
 		}
 		if (smartTimeLeft && smartTimeRight) {
-			cmp = cmpTime(smartTimeLeft, smartTimeRight);
+			let cmp = cmpTime(smartTimeLeft, smartTimeRight);
 			if (cmp !== 0) {
 				return cmp;
 			}
 		}
 
-		// 3: Finally sort on name
+		// 4: Finally sort on name
 		return left.name.localeCompare(right.name);
 	};
 

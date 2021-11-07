@@ -63,7 +63,7 @@ Actions are provided to activate or put on hold the selected folder or to presen
 
 ## [Sort Plugin](sort.omnifocusjs)
 
-This plugin performs a "smart" sort of the tasks in a project accounting for status, defer and due. This functionality is available in the MacOS version but not in iOS. 
+This plugin performs a "smart" sort of the tasks in a project accounting for flagged, status, defer and due dates.
 
 ## [Copy Skip Repeat](copySkipRepeat.omnifocusjs)
 
