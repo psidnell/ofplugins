@@ -1,93 +1,71 @@
 var _ = (function() {
 
-	var cmpTime = (t1, t2) => {
-		if (!t1 || !t2) {
-			// No decision unless both have times
-			return 0;
-		} else if (t1 > t2) {
-			return 1;
-		} else if (t1 < t2) {
-			return -1;
-		} else {
-			return 0;
-		}
-	}
+    var smartTime = (item, now) => {
+        var time;
+        if (item.dueDate) {
+            time = item.dueDate.getTime()
+        } else if (item.deferDate) {
+            time = item.deferDate.getTime();
+        } else {
+            time = now.getTime();
+        }
+        // console.log ('smartTime ' + item.name + ' ' + new Date(time) + ' = ' + time);
+        return time;
+    }
 
-	var dueTime = (item) => {
-		return item.dueDate ? item.dueDate.getTime() : null;
-	}
+    var rank = (item) => {
+        /* Statuses to consider
+            Available (Task.Status r/o) • The task is available to work on.
+            Blocked (Task.Status r/o) • The task is not available to work on currently, due to a future defer date, a preceeding task in a sequential project, or having an on-hold tag associated.
+            Completed (Task.Status r/o) • The task is already completed.
+            Dropped (Task.Status r/o) • The task will not be worked on.
+            DueSoon (Task.Status r/o) • The task is incomplete and due soon.
+            Next (Task.Status r/o) • The task is the first available task in a project.
+            Overdue (Task.Status r/o) • The task is incomplete overdue.
+        */
+        var rank = 0;
+        var status = item.taskStatus;
+        switch (status) {
+            case Task.Status.Overdue:
+            case Task.Status.DueSoon:
+            case Task.Status.Available:
+            case Task.Status.Next:
+                rank += item.flagged ? Math.pow(10, 4) : 0;
+                break;
+        }
 
-	var deferTimeIfFuture = (item, now) => {
-		// A defer date of the past is same as no defer date or a defer date of now
-		var deferTime = item.deferDate ? item.deferDate.getTime() : null;
-		if (deferTime && deferTime <= now) {
-			deferTime = null;
-		}
-		return deferTime;
-	}
-
-	var smartTime = (item, now) => {
-		let due = dueTime(item);
-		let defer = deferTimeIfFuture(item, now);
-		if (!due && !defer) {
-			return null;
-		}
-		if (due && !defer) {
-			return due;
-		}
-		if (!due && defer) {
-			return defer;
-		}
-		if (due > defer) {
-			return Math.min(due, defer);
-		}
-		return due;
-	}
-
-	var available = (item) => {
-		return (
-			item.taskStatus === Task.Status.Available ||
-			item.taskStatus === Task.Status.DueSoon);
-	}
+        rank += status === Task.Status.Overdue ? Math.pow(10, 3): 0;
+        rank += status === Task.Status.DueSoon ? Math.pow(10, 2) : 0;
+        rank += status === Task.Status.Available ? Math.pow(10, 1) : 0;
+        rank += status === Task.Status.Next ? Math.pow(10, 0) : 0;
+        // console.log('rank ' + item.name + ' ' + item.taskStatus + ' f=' + item.flagged + ' = ' + rank);
+        return rank;
+    }
 
 	var compare = (left, right) => {
-		var availableLeft = available(left);
-		var smartTimeLeft = smartTime(left);
-		var availableRight = available(right);
-		var smartTimeRight = smartTime(right);
+	    const now = new Date();
+	    // Compare on rank
+        const leftRank = rank(left);
+        const rightRank = rank (right);
+        if (leftRank != rightRank) {
+            return rightRank - leftRank;
+        }
 
-		// 1: Availability
-		if (availableLeft && !availableRight) {
-			return -1;
-		}
-		if (!availableLeft && availableRight) {
-			return 1;
-		}
+        // Compare on smart times
+        const leftSmartTime = smartTime(left, now);
+        const rightSmartTime = smartTime(right, now);
+        if (leftSmartTime !== rightSmartTime) {
+            return leftSmartTime - rightSmartTime;
+        }
 
-		// 2: Flagged
-		if (left.flagged && !right.flagged) {
-			return -1;
-		}
-		if (!left.flagged && right.flagged) {
-			return 1;
-		}
+		// Compare on name
+		var cmp = left.name.localeCompare(right.name);
+		if (cmp != 0) {
+		    return cmp;
+		};
 
-		// 3: Defer/Due
-		if (smartTimeLeft && !smartTimeRight) {
-			return -1;
-		}
-		if (!smartTimeLeft && smartTimeRight) {
-			return 1;
-		}
-		if (smartTimeLeft && smartTimeRight) {
-			let cmp = cmpTime(smartTimeLeft, smartTimeRight);
-			if (cmp !== 0) {
-				return cmp;
-			}
-		}
-
-		// 4: Finally sort on name
-		return left.name.localeCompare(right.name);
+		// Compare on id
+        return left.id.primaryKey.localeCompare(right.id.primaryKey);
 	};
 
 	var action = new PlugIn.Action(function(selection, sender){
