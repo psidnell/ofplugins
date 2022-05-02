@@ -27,7 +27,7 @@ var _ = (function() {
         tags.forEach((tag)=>{
             tagNameList.push(tag.name);
         });
-        var title = tagNameList.join(', ');
+        var title = '## ' + tagNameList.join(', ');
 
         var noteLines = [];
         tags.forEach((tag)=>{
