@@ -20,8 +20,8 @@ var _ = (function() {
         });
 
         // Add sentinel tag
-        var sentinalTag = flattenedTags.byName("➡️") || new Tag("➡️");
-        tags.push(sentinalTag);
+        //var sentinalTag = flattenedTags.byName("➡️") || new Tag("➡️");
+        //tags.push(sentinalTag);
 
         var tagNameList = [];
         tags.forEach((tag)=>{
