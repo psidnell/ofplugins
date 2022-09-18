@@ -1,0 +1,35 @@
+/*{
+	"type": "action",
+	"targets": ["omnifocus"],
+	"author": "",
+	"identifier": "",
+	"version": "1.0",
+	"description": "A plug-in for sending TaskPaper to Drafts.",
+	"label": "Plug-In Menu Item Title",
+	"shortLabel": "Item Title",
+	"paletteLabel": "Toolbar Item",
+	"image": "gearshape.fill"
+}*/
+(() => {
+	const action = new PlugIn.Action(async function(selection, sender){
+
+		fileTypeID = "com.omnigroup.omnifocus2.export-filetype.plain-text"
+		baseName = "Tasky-Export"
+		wrapper = await document.makeFileWrapper(baseName, fileTypeID);
+		taskPaper = wrapper.contents.toString()
+		urlStr = "drafts://x-callback-url/" +
+			"create" +
+			"?action=Project%20from%20Template" +
+			"&text=" + encodeURIComponent(taskPaper);
+		scriptURL = URL.fromString(urlStr);
+        console.log(scriptURL);
+        scriptURL.open()
+	});
+
+	action.validate = function(selection, sender){
+		// validation code
+		return true
+	};
+
+	return action;
+})();
