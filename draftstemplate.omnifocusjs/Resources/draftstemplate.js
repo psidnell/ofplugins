@@ -11,6 +11,7 @@ var _ = (function() {
         	    "?action=Project%20from%20Template" +
         	    "&text=" + encodeURIComponent(taskPaper);
             var scriptURL = URL.fromString(url);
+            console.log(url);
             scriptURL.call(function(){console.log('OK')})
         })
         wrapperPromise.catch(err => {
