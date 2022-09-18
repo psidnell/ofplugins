@@ -1,22 +1,17 @@
 var _ = (function() {
 
-	var action = new PlugIn.Action(function(selection, sender){
-		var fileTypeID = "com.omnigroup.omnifocus2.export-filetype.plain-text";
-        var baseName = "Tasky-Export";
-        var wrapperPromise = document.makeFileWrapper(baseName, fileTypeID);
-        wrapperPromise.then(wrapper => {
-        	var taskPaper = wrapper.contents.toString();
-        	var url = "drafts://x-callback-url/" +
-        	    "create" +
-        	    "?action=Project%20from%20Template" +
-        	    "&text=" + encodeURIComponent(taskPaper);
-            var scriptURL = URL.fromString(url);
-            console.log(url);
-            scriptURL.call(function(){console.log('OK')})
-        })
-        wrapperPromise.catch(err => {
-        	console.error(err.message);
-        })
+	const action = new PlugIn.Action(async function(selection, sender){
+		const fileTypeID = "com.omnigroup.omnifocus2.export-filetype.plain-text";
+		const baseName = "Tasky-Export";
+		const wrapper = await document.makeFileWrapper(baseName, fileTypeID);
+		const taskPaper = wrapper.contents.toString()
+		const urlStr = "drafts://x-callback-url/" +
+			"create" +
+			"?action=Project%20from%20Template" +
+			"&text=" + encodeURIComponent(taskPaper);
+		const scriptURL = URL.fromString(urlStr);
+        console.log(scriptURL);
+        scriptURL.open();
 	});
 
 	action.validate = function(selection, sender){
