@@ -1,0 +1,12 @@
+{
+	"defaultLocale": "en",
+	"identifier": "com.PaulSidnell.DraftsTemplate",
+	"author": "Paul Sidnell",
+	"description": "Expand Template With Drafts",
+	"version": "1.0",
+	"actions": [
+		{ "image":"draftstemplate.png", "identifier": "draftstemplate" }
+	],
+	"libraries": [
+	]
+}
