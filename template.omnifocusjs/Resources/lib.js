@@ -64,7 +64,7 @@ var _ = function() {
 
 	// Process the template
 	lib.expandTaskPaper = (template, taskPaper, variableValues) => {
-		console.log('Processing Template ' + template.name);
+		// console.log('Processing Template ' + template.name);
 		var expandedTaskPaper = lib.replaceVariables(taskPaper, variableValues);
 		// console.log(expandedTaskPaper);
 
@@ -88,7 +88,6 @@ var _ = function() {
         } else {
             // Open a form to collect values for variables in the template
             var inputForm = new Form();
-            console.log(1);
             for (var i = 0; i < templateVariables.length; i++) {
                 var variable = templateVariables[i];
                 var defaultValue = lib.getDefaultValueForVariable(variable);
@@ -96,7 +95,6 @@ var _ = function() {
             }
             var formPrompt = "Provide values for the template";
             var buttonTitle = "OK";
-            console.log(2);
             inputForm.show(formPrompt, buttonTitle).then(
                 (form) => lib.expandTaskPaper(template, taskPaper, form.values),
                 (error) => console.log(error));
