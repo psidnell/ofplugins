@@ -3,12 +3,14 @@ var _ = function() {
 
 	// Find variables in text (thanks to Thomas Kern)
 	lib.findVariables = (text, variablesFound) => {
-		substrings = text.match(/\$\{[^\}]*\}/gm);
+		substrings = text.match(/\[\[[^\]]*\]\]/gm);
 		if (substrings != null) {
 			for (var i = 0; i < substrings.length; i++) {
-				var variable = substrings[i];
+				var variable = substrings[i]
+				    .replaceAll('[[', '')
+				    .replaceAll(']]', '');
 				if (!variablesFound.includes(variable)) {
-					console.log("Found variable " + variable);
+					// console.log("Found variable " + variable);
 					variablesFound.push(variable);
 				}
 			}
@@ -32,7 +34,7 @@ var _ = function() {
 		var result = text;
 		for (var variable in variables) {
 			var value = variables[variable];
-			result = result.replace(new RegExp('\\' + variable, 'g'), value);
+			result = result.replace(new RegExp('\\[\\[' + variable + '\\]\\]', 'g'), value);
 		}
 
 		return result;
@@ -40,29 +42,28 @@ var _ = function() {
 
 	// Replace any variables in the task title or note
 	lib.replaceVariableInTask = (task, variables) => {
-		console.log('Processing Task ' + task.name);
+		// console.log('Processing Task ' + task.name);
 		task.name = lib.replaceVariables(task.name, variables);
 		task.note = lib.replaceVariables(task.note, variables);
 	};
 
 	lib.GetDefaultValueForVariable = (variable) => {
+	    var now = new Date();
 		switch (variable) {
-			case '${Date}' : {
-				var options = {
-					weekday: 'short',
-					year: 'numeric',
-					month: 'short',
-					day: 'numeric'
-				};
-				return new Date().toLocaleDateString('en-UK', options);
+			case 'date' : {
+
+                let ye = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(now);
+                let mo = new Intl.DateTimeFormat('en', { month: '2-digit' }).format(now);
+                let da = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(now);
+                return `${ye}-${mo}-${da}`;
 			}
-			case '${Time}' : {
-				var options = {
-					hour: '2-digit',
-					minute: '2-digit',
-					hour12: false
-				};
-				return new Date().toLocaleTimeString('en-UK', options);
+			case 'time' : {
+			    let ye = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(now);
+                let mo = new Intl.DateTimeFormat('en', { month: '2-digit' }).format(now);
+                let da = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(now);
+                let h = new Intl.DateTimeFormat('en', { hour: '2-digit', hour12: false }).format(now);
+                let m = new Intl.DateTimeFormat('en', { minute: '2-digit' }).format(now);
+                return `${ye}-${mo}-${da} ${h}:${m}`;
 			}
 			default:
 				return null;
@@ -71,7 +72,7 @@ var _ = function() {
 
 	// Process the template
 	lib.expandTemplate = (template, form) => {
-		console.log('Processing Template ' + template.name);
+		// console.log('Processing Template ' + template.name);
 		// Duplicate the template project
 		var project = duplicateSections([template], template.before)[0];
 
@@ -91,7 +92,7 @@ var _ = function() {
 	lib.expand = (template) => {
 		var templateVariables = lib.findVariablesInTemplate(template);
 		if (templateVariables.length == 0) {
-			throw new Error("Project is not a template, add a ${Variable} to the title or note");
+			throw new Error("Project is not a template, add a [[variable]] to the title or note");
 		}
 
 		// Open a form to collect values for variables in the template

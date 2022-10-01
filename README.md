@@ -17,16 +17,16 @@ Select a template project and run the plugin action and it will:
 
 Variables are fragments of text like:
  
-- ${Name}
-- ${PhoneNumber}
-- ${PizzaToppings}
-- ${NumberOfWidgets}
+- [[Name]]
+- [[PhoneNumber]]
+- [[PizzaToppings]]
+- [[NumberOfWidgets]]
 
 There are also some special predefined variables where the value in the form
 will be be provided with a default value (but which you can edit) such as:
 
-- ${Date} today's date.
-- ${Time} the current time.
+- [[date]] today's date.
+- [[time]] the current date and time.
 
 Variable replacement occurs both in the name and note of a project and all it's tasks.
 
@@ -41,10 +41,10 @@ While selection of a project is possible on MacOS and iPadOS, it's currently not
 An example template project in OmniFocus might be:
 
 ```
-Project: Order Pizza at ${Date} ${Time}
-    Task: Call ${PizzaStoreNumber}
-    Task: Place Order for ${Type}, ${Size}, ${Extras}
-    Task: Pay ${VoucherCode}
+Project: Order Pizza at [[time]]
+    Task: Call [[PizzaStoreNumber]]
+    Task: Place Order for [[Type]], [[Size]], [[Extras]]
+    Task: Pay [[VoucherCode]]
     Task: Wait for Delivery
     Task: Eat Pizza
 ```
