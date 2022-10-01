@@ -2,7 +2,8 @@ var _ = function() {
 	var lib = new PlugIn.Library(new Version("0.1"));
 
 	// Find variables in text (thanks to Thomas Kern)
-	lib.findVariables = (text, variablesFound) => {
+	lib.findVariables = (text) => {
+	    var variablesFound = [];
 		substrings = text.match(/\[\[[^\]]*\]\]/gm);
 		if (substrings != null) {
 			for (var i = 0; i < substrings.length; i++) {
@@ -15,18 +16,7 @@ var _ = function() {
 				}
 			}
 		}
-	};
-
-	// Find all the variables used in the template
-	lib.findVariablesInTemplate = (template) => {
-		// Find the variables used in the template
-		var templateVariables = [];
-		template.task.apply((task) => {
-			lib.findVariables(task.name, templateVariables);
-			lib.findVariables(task.note, templateVariables)
-		});
-
-		return templateVariables;
+		return variablesFound;
 	};
 
 	// Replace variables in the string with those from the form
@@ -40,14 +30,7 @@ var _ = function() {
 		return result;
 	};
 
-	// Replace any variables in the task title or note
-	lib.replaceVariableInTask = (task, variables) => {
-		// console.log('Processing Task ' + task.name);
-		task.name = lib.replaceVariables(task.name, variables);
-		task.note = lib.replaceVariables(task.note, variables);
-	};
-
-	lib.GetDefaultValueForVariable = (variable) => {
+	lib.getDefaultValueForVariable = (variable) => {
 	    var now = new Date();
 		switch (variable) {
 			case 'date' : {
@@ -70,44 +53,54 @@ var _ = function() {
 		}
 	}
 
+    lib.buildFolderPath = (folder) => {
+        var names = [];
+        while (folder != null) {
+            names.unshift(folder.name);
+            folder = folder.parent;
+        }
+        return names.length == 0 ? 'projects' : '/folder/' + names.join(':');
+    }
+
 	// Process the template
-	lib.expandTemplate = (template, form) => {
-		// console.log('Processing Template ' + template.name);
-		// Duplicate the template project
-		var project = duplicateSections([template], template.before)[0];
+	lib.expandTaskPaper = (template, taskPaper, variableValues) => {
+		console.log('Processing Template ' + template.name);
+		var expandedTaskPaper = lib.replaceVariables(taskPaper, variableValues);
+		// console.log(expandedTaskPaper);
 
-		// Make it active
-		project.status = Project.Status.Active;
+        var path = lib.buildFolderPath(template.parentFolder);
 
-		// Replace any variables in the project
-		project.task.apply((task) => {
-			lib.replaceVariableInTask(task, form.values);
-		});
-		
-		// Open the new project
-		var url = URL.fromString('omnifocus:///task/' + encodeURIComponent(project.name));
+        encodeURIComponent(template.assignedContainer);
+        var urlStr = "omnifocus:///paste" +
+            "?target=" + encodeURIComponent(path) +
+            "&content=" + encodeURIComponent(expandedTaskPaper)
+        // console.log(urlStr);
+		// Create and open the new project
+		var url = URL.fromString(urlStr);
 		url.call(reply => {});
 	};
 
-	lib.expand = (template) => {
-		var templateVariables = lib.findVariablesInTemplate(template);
-		if (templateVariables.length == 0) {
-			throw new Error("Project is not a template, add a [[variable]] to the title or note");
-		}
+	lib.expand = (template, taskPaper) => {
+        var templateVariables = lib.findVariables(taskPaper);
 
-		// Open a form to collect values for variables in the template
-		var inputForm = new Form();
-
-		for (var i = 0; i < templateVariables.length; i++) {
-			var variable = templateVariables[i];
-			var defaultValue = lib.GetDefaultValueForVariable(variable);
-			inputForm.addField(new Form.Field.String(variable, variable, defaultValue), i);
-		}
-		var formPrompt = "Provide values for the template";
-		var buttonTitle = "OK";
-		inputForm.show(formPrompt, buttonTitle).then(
-			(form) => lib.expandTemplate(template, form),
-			(error) => console.log(error));
+        if (templateVariables.length == 0) {
+            lib.expandTaskPaper(template, taskPaper, templateVariables)
+        } else {
+            // Open a form to collect values for variables in the template
+            var inputForm = new Form();
+            console.log(1);
+            for (var i = 0; i < templateVariables.length; i++) {
+                var variable = templateVariables[i];
+                var defaultValue = lib.getDefaultValueForVariable(variable);
+                inputForm.addField(new Form.Field.String(variable, variable, defaultValue), i);
+            }
+            var formPrompt = "Provide values for the template";
+            var buttonTitle = "OK";
+            console.log(2);
+            inputForm.show(formPrompt, buttonTitle).then(
+                (form) => lib.expandTaskPaper(template, taskPaper, form.values),
+                (error) => console.log(error));
+        }
 	};
 
 	return lib;

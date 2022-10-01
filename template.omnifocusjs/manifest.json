@@ -5,7 +5,6 @@
 	"description": "Expand a Template Project",
 	"version": "1.0",
 	"actions": [
-		{ "image":"icon.png", "identifier": "choose" },
 		{ "image":"icon.png", "identifier": "selection" }
 	],
 	"libraries": [

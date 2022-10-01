@@ -6,11 +6,13 @@ For details of the OmniAutomation API and how to install and use a plugin see th
 
 ## [Template Plugin](template.omnifocusjs)
 
-A template project is simply a project with placeholder variables that can be used as a template to create new active projects. In the new project the variables will have been replaced with real values. The template project can be on hold to avoid cluttering up your active tasks.
+A template project is simply an active or paused project with placeholder variables that can be used
+as a template to create new active projects. In the new project any template variables will have been
+replaced with real values. The template project can be on hold to avoid cluttering up your active tasks.
 
 Select a template project and run the plugin action and it will:
 
-- Open a form to ask for values for your variables.
+- Open a form to ask for values for your variables (if any).
 - Duplicate the template to create a new project above the template.
 - Replace the variables in the copy with values you provided.
 - Make the duplicate project active.
@@ -30,13 +32,9 @@ will be be provided with a default value (but which you can edit) such as:
 
 Variable replacement occurs both in the name and note of a project and all it's tasks.
 
-The plugin provides two actions.
+The plugin provides one action.
 
 **Select Template**: This action expands the selected template project. The selected project must contain at least one variable or an error will be generated. This is a precaution against accidental selection of a non template project.
-
-While selection of a project is possible on MacOS and iPadOS, it's currently not possible in OmniFocus on iOS. See **Choose Template**.
-
-**Choose Template**: This action scans OmniFocus for projects with variables in their title, and allows one to be selected for expansion.
 
 An example template project in OmniFocus might be:
 
@@ -48,6 +46,22 @@ Project: Order Pizza at [[time]]
     Task: Wait for Delivery
     Task: Eat Pizza
 ```
+
+Note that text expansion is performed after internally converting the template
+to [OmniFocus TaskPaper format](https://support.omnigroup.com/omnifocus-taskpaper-reference)
+
+This means that it's possible to add text to task/project titles that will be interpreted by
+OmniFocus during processing. For example @due or @defer directives:
+
+```
+Project: Order Pizza Tomorrow Evening @defer(+1d) @due(+1d 7pm)
+    Task: Call [[PizzaStoreNumber]]
+    Task: Place Order for [[Type]], [[Size]], [[Extras]]
+    Task: Pay [[VoucherCode]]
+    Task: Wait for Delivery
+    Task: Eat Pizza
+```
+
 
 ## [Toggle Plugin](toggle.omnifocusjs)
 
