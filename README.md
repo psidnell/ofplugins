@@ -51,8 +51,9 @@ Note that text expansion is performed after internally converting the template
 to [OmniFocus TaskPaper format](https://support.omnigroup.com/omnifocus-taskpaper-reference)
 
 This means that it's possible to add text to task/project titles that will be interpreted by
-OmniFocus during processing. For example @due or @defer directives:
+OmniFocus during processing. For example @due or @defer:
 
+example 1 - using relative dates
 ```
 Project: Order Pizza Tomorrow Evening @defer(+1d) @due(+1d 7pm)
     Task: Call [[PizzaStoreNumber]]
@@ -62,6 +63,15 @@ Project: Order Pizza Tomorrow Evening @defer(+1d) @due(+1d 7pm)
     Task: Eat Pizza
 ```
 
+example 2 - choosing an absolute date:
+```
+Project: Order Pizza On @defer([[date]]) @due([[date]] 7pm)
+    Task: Call [[PizzaStoreNumber]]
+    Task: Place Order for [[Type]], [[Size]], [[Extras]]
+    Task: Pay [[VoucherCode]]
+    Task: Wait for Delivery
+    Task: Eat Pizza
+```
 
 ## [Toggle Plugin](toggle.omnifocusjs)
 
