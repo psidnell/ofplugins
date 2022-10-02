@@ -6,72 +6,56 @@ For details of the OmniAutomation API and how to install and use a plugin see th
 
 ## [Template Plugin](template.omnifocusjs)
 
-A template project is simply an active or paused project with placeholder variables that can be used
+A template project is simply an active or paused project with placeholder variables. It can be used
 as a template to create new active projects. In the new project any template variables will have been
 replaced with real values. The template project can be on hold to avoid cluttering up your active tasks.
 
 Select a template project and run the plugin action and it will:
 
 - Open a form to ask for values for your variables (if any).
-- Duplicate the template to create a new project above the template.
+- Duplicate the template to create a new project below the template.
 - Replace the variables in the copy with values you provided.
-- Make the duplicate project active.
-
-Variables are fragments of text like:
- 
-- [[Name]]
-- [[PhoneNumber]]
-- [[PizzaToppings]]
-- [[NumberOfWidgets]]
-
-There are also some special predefined variables where the value in the form
-will be be provided with a default value (but which you can edit) such as:
-
-- [[date]] today's date.
-- [[time]] the current date and time.
-
-Variable replacement occurs both in the name and note of a project and all it's tasks.
+- Make the new project active.
 
 The plugin provides one action.
 
-**Select Template**: This action expands the selected template project. The selected project must contain at least one variable or an error will be generated. This is a precaution against accidental selection of a non template project.
+**Select Template**: This action expands the selected template project. 
 
-An example template project in OmniFocus might be:
+Variables are fragments of text like:
+ 
+- \[\[Name\]\]
+- \[\[Phone Number\]\]
+- \[\[Pizza Toppings\]\]
+- \[\[Number Of Widgets\]\]
 
-```
-Project: Order Pizza at [[time]]
-    Task: Call [[PizzaStoreNumber]]
-    Task: Place Order for [[Type]], [[Size]], [[Extras]]
-    Task: Pay [[VoucherCode]]
-    Task: Wait for Delivery
-    Task: Eat Pizza
-```
+But they can also have types which the input form can use:
+
+- \[\[The Date:date\]\] a date picker defaulting to today.
+- \[\[Start Time:time\]\] a date/time picker defaulting to now.
+- \[\[Year:date:yyyy\]\] a date picker that produces just the year. See [formatting rules](https://unicode-org.github.io/icu/userguide/format_parse/datetime/#formatting-dates). The date/time types are actually the same but with different default formats.
+- \[\[Something:text\]\] a longer form of \[\[Something\]\].
+- \[\[Choose:option:One,Two,Three\]\] results in the chosen option.
+- \[\[Checkbox:checkbox\]\] results in Yes or No.
+- \[\[Checkbox1:checkbox:On,Off\]\] results in On or Off.
+
+Variable replacement occurs both in the name and note of a project and all it's tasks.
 
 Note that text expansion is performed after internally converting the template
 to [OmniFocus TaskPaper format](https://support.omnigroup.com/omnifocus-taskpaper-reference)
 
 This means that it's possible to add text to task/project titles that will be interpreted by
-OmniFocus during processing. For example @due or @defer:
+OmniFocus during TaskPaper processing. For example the @due or @defer directives can be placed in the project/task titles with have relative/absolute dates, and these values will become the due/defer date.
 
-example 1 - using relative dates
-```
-Project: Order Pizza Tomorrow Evening @defer(+1d) @due(+1d 7pm)
-    Task: Call [[PizzaStoreNumber]]
-    Task: Place Order for [[Type]], [[Size]], [[Extras]]
-    Task: Pay [[VoucherCode]]
-    Task: Wait for Delivery
-    Task: Eat Pizza
-```
+An example template project in OmniFocus might be:
 
-example 2 - choosing an absolute date:
-```
-Project: Order Pizza On @defer([[date]]) @due([[date]] 7pm)
-    Task: Call [[PizzaStoreNumber]]
-    Task: Place Order for [[Type]], [[Size]], [[Extras]]
-    Task: Pay [[VoucherCode]]
-    Task: Wait for Delivery
-    Task: Eat Pizza
-```
+![[2022-10-02-065309.png]]
+When this project is selected and the action executed, a form will be presented:
+
+![[2022-10-02-065739.png]]
+
+After the form is populated and OK is pressed, a new project is created below the template project, with the template values populated:
+
+![[2022-10-02-065802.png]]
 
 ## [Toggle Plugin](toggle.omnifocusjs)
 
