@@ -11,7 +11,7 @@ var _ = function() {
 				    .replaceAll('[[', '')
 				    .replaceAll(']]', '');
 				if (!variablesFound.includes(variableSpec)) {
-					console.log("Found variable " + variableSpec);
+					// console.log("Found variable " + variableSpec);
 					variablesFound.push(variableSpec);
 				}
 			}
@@ -134,7 +134,7 @@ var _ = function() {
                 var variable = templateVariables[i];
                 lib.addFormField(inputForm, variable, i);
             }
-            var formPrompt = "Provide values for the template";
+            var formPrompt = template.name;
             var buttonTitle = "OK";
             inputForm.show(formPrompt, buttonTitle).then(
                 (form) => lib.expandTaskPaper(template, taskPaper, templateVariables, form.values),

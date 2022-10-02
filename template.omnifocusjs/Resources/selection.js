@@ -1,8 +1,15 @@
 var _ = (function() {
 
     const action = new PlugIn.Action(async function(selection, sender){
+        var template = selection.projects[0];
 
-         // Should contain com.omnigroup.omnifocus2.export-filetype.plain-text
+        // Open the template project exclusively in project view to avoid
+        // issues collecting the TaskPaper
+        var win = document.windows[0]
+        win.perspective = Perspective.BuiltIn.Projects
+        win.focus = [template];
+
+        // Should contain com.omnigroup.omnifocus2.export-filetype.plain-text
         // But doesn't in OF4 on iOS
         var types = document.writableTypes.map(type => {
             return "\"" + type + "\""
@@ -23,9 +30,11 @@ var _ = (function() {
             taskPaper = Pasteboard.general.string;
         }
 
+        // Unfocus again
+        win.focus = [];
+
         var lib = PlugIn.find("com.PaulSidnell.Template").library("lib");
 
-        var template = selection.projects[0];
         lib.expand(template, taskPaper);
     });
 
