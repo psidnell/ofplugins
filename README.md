@@ -48,14 +48,14 @@ OmniFocus during TaskPaper processing. For example the @due or @defer directives
 
 An example template project in OmniFocus might be:
 
-![[2022-10-02-065309.png]]
+![](2022-10-02-065309.png)
 When this project is selected and the action executed, a form will be presented:
 
-![[2022-10-02-065739.png]]
+![](2022-10-02-065739.png)
 
 After the form is populated and OK is pressed, a new project is created below the template project, with the template values populated:
 
-![[2022-10-02-065802.png]]
+![](2022-10-02-065802.png)
 
 ## [Toggle Plugin](toggle.omnifocusjs)
 
