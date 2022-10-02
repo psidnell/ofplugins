@@ -10,7 +10,7 @@ A template project is simply an active or paused project with placeholder variab
 as a template to create new active projects. In the new project any template variables will have been
 replaced with real values. The template project can be on hold to avoid cluttering up your active tasks.
 
-Select a template project and run the plugin action and it will:
+Select a template project in the OmniFocus side bar and run the plugin action and it will:
 
 - Open a form to ask for values for your variables (if any).
 - Duplicate the template to create a new project below the template.
@@ -56,6 +56,16 @@ When this project is selected and the action executed, a form will be presented:
 After the form is populated and OK is pressed, a new project is created below the template project, with the template values populated:
 
 ![](2022-10-02-065802.png)
+
+Limitations:
+
+If a variable with the same name but multiple differing types or defaults is used in a template
+then it will be presented multiple times in the input form and each version will get it's own value
+during expansion.
+
+Always select the project to be expanded by selecting it in the project side bar. If more than one project 
+is visible in the main view then the plugin will attempt to expand all visible projects. This is a
+seems to be limitation of the OmniFocus TaskPaper API.
 
 ## [Toggle Plugin](toggle.omnifocusjs)
 

@@ -11,7 +11,7 @@ var _ = function() {
 				    .replaceAll('[[', '')
 				    .replaceAll(']]', '');
 				if (!variablesFound.includes(variableSpec)) {
-					// console.log("Found variable " + variableSpec);
+					console.log("Found variable " + variableSpec);
 					variablesFound.push(variableSpec);
 				}
 			}
@@ -28,7 +28,7 @@ var _ = function() {
             var variableName = parts[0];
             var variableType = parts.length > 0 ? parts[1] : 'text';
             var options = parts.length > 1 ? parts[2] : null;
-            var value = variableValues[variableName];
+            var value = variableValues[variableSpec];
             switch (variableType) {
                 case 'date' : {
                     var formatStr = options == null ?  'yyyy-MM-dd' : options;
@@ -51,6 +51,7 @@ var _ = function() {
                 default:
                     break;
             }
+            console.log("replacing " + variableSpec + " with " + value);
 			result = result.replaceAll("[[" + variableSpec + "]]", value);
 		}
 		return result;
@@ -94,28 +95,28 @@ var _ = function() {
    			case 'date' : {
    			    var formatStr = options == null ?  'yyyy-MM-dd' : options;
                 var format = Formatter.Date.withFormat(formatStr);
-                inputForm.addField(new Form.Field.Date(variableName, variableName, new Date(), format), position);
+                inputForm.addField(new Form.Field.Date(variableSpec, variableName, new Date(), format), position);
                 break;
    			}
    			case 'time' : {
    			    var formatStr = options == null ?  'yyyy-MM-dd HH:mm' : options;
                 var format = Formatter.Date.withFormat(formatStr);
-                inputForm.addField(new Form.Field.Date(variableName, variableName, new Date(), format), position);
+                inputForm.addField(new Form.Field.Date(variableSpec, variableName, new Date(), format), position);
                 break;
    			}
    			case 'option' : {
                 var choices = options != null ? options.split(',') : [""];
-                inputForm.addField(new Form.Field.Option(variableName, variableName, choices, choices, choices[0]), position);
+                inputForm.addField(new Form.Field.Option(variableSpec, variableName, choices, choices, choices[0]), position);
                 break;
             }
    			case 'checkbox' : {
-                inputForm.addField(new Form.Field.Checkbox(variableName, variableName, null), position);
+                inputForm.addField(new Form.Field.Checkbox(variableSpec, variableName, null), position);
                 break;
             }
    			case 'text':
    			default:
    			    var value = options;
-                inputForm.addField(new Form.Field.String(variableName, variableName, value), position);
+                inputForm.addField(new Form.Field.String(variableSpec, variableName, value), position);
                 break;
    		}
    	}
