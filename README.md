@@ -23,20 +23,20 @@ The plugin provides one action.
 
 Variables are fragments of text like:
  
-- \[\[Name\]\]
-- \[\[Phone Number\]\]
-- \[\[Pizza Toppings\]\]
-- \[\[Number Of Widgets\]\]
+- `[[Name]]`
+- `[[Phone Number]]`
+- `[[Pizza Toppings]]`
+- `[[Number Of Widgets]]`
 
 But they can also have types which the input form can use:
 
-- \[\[The Date:date\]\] a date picker defaulting to today.
-- \[\[Start Time:time\]\] a date/time picker defaulting to now.
-- \[\[Year:date:yyyy\]\] a date picker that produces just the year. See [formatting rules](https://unicode-org.github.io/icu/userguide/format_parse/datetime/#formatting-dates). The date/time types are actually the same but with different default formats.
-- \[\[Something:text\]\] a longer form of \[\[Something\]\].
-- \[\[Choose:option:One,Two,Three\]\] results in the chosen option.
-- \[\[Checkbox:checkbox\]\] results in Yes or No.
-- \[\[Checkbox1:checkbox:On,Off\]\] results in On or Off.
+- `[[The Date:date]]` a date picker defaulting to today.
+- `[[Start Time:time]]` a date/time picker defaulting to now.
+- `[[Year:date:yyyy]]` a date picker that produces just the year. See [formatting rules](https://unicode-org.github.io/icu/userguide/format_parse/datetime/#formatting-dates). The date/time types are actually the same but with different default formats.
+- `[[Something:text]]` a longer form of `[[Something]]`.
+- `[[Choose:option:One,Two,Three]]` results in the chosen option.
+- `[[Checkbox:checkbox]]` results in Yes or No.
+- `[[Checkbox1:checkbox:On,Off]]` results in On or Off.
 
 Variable replacement occurs both in the name and note of a project and all it's tasks.
 
