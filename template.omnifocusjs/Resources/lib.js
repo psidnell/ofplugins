@@ -7,12 +7,12 @@ var _ = function() {
 		substrings = text.match(/\[\[[^\]]*\]\]/gm);
 		if (substrings != null) {
 			for (var i = 0; i < substrings.length; i++) {
-				var variable = substrings[i]
+				var variableSpec = substrings[i]
 				    .replaceAll('[[', '')
 				    .replaceAll(']]', '');
-				if (!variablesFound.includes(variable)) {
-					// console.log("Found variable " + variable);
-					variablesFound.push(variable);
+				if (!variablesFound.includes(variableSpec)) {
+					// console.log("Found variable " + variableSpec);
+					variablesFound.push(variableSpec);
 				}
 			}
 		}
@@ -20,38 +20,41 @@ var _ = function() {
 	};
 
 	// Replace variables in the string with those from the form
-	lib.replaceVariables = (text, variables) => {
+	lib.replaceVariables = (text, templateVariables, variableValues) => {
 		var result = text;
-		for (var variable in variables) {
-			var value = variables[variable];
-			result = result.replace(new RegExp('\\[\\[' + variable + '\\]\\]', 'g'), value);
+		for (var i = 0; i < templateVariables.length; i++) {
+		    var variableSpec = templateVariables[i];
+		    var parts = variableSpec.split(':');
+            var variableName = parts[0];
+            var variableType = parts.length > 0 ? parts[1] : 'text';
+            var options = parts.length > 1 ? parts[2] : null;
+            var value = variableValues[variableName];
+            switch (variableType) {
+                case 'date' : {
+                    var formatStr = options == null ?  'yyyy-MM-dd' : options;
+                    var format = Formatter.Date.withFormat(formatStr);
+                    value = format.stringFromDate(value);
+                    break;
+                }
+                case 'time' : {
+                    var formatStr = options == null ?  'yyyy-MM-dd HH:mm' : options;
+                    var format = Formatter.Date.withFormat(formatStr);
+                    value = format.stringFromDate(value);
+                    break;
+                }
+                case 'checkbox' : {
+                    var choices = (options != null && options.indexOf(',') != -1) ?
+                        options.split(',') : ["Yes", "No"];
+                    value = value ? choices[0] : choices[1];
+                    break;
+                }
+                default:
+                    break;
+            }
+			result = result.replaceAll("[[" + variableSpec + "]]", value);
 		}
-
 		return result;
 	};
-
-	lib.getDefaultValueForVariable = (variable) => {
-	    var now = new Date();
-		switch (variable) {
-			case 'date' : {
-
-                let ye = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(now);
-                let mo = new Intl.DateTimeFormat('en', { month: '2-digit' }).format(now);
-                let da = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(now);
-                return `${ye}-${mo}-${da}`;
-			}
-			case 'time' : {
-			    let ye = new Intl.DateTimeFormat('en', { year: 'numeric' }).format(now);
-                let mo = new Intl.DateTimeFormat('en', { month: '2-digit' }).format(now);
-                let da = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(now);
-                let h = new Intl.DateTimeFormat('en', { hour: '2-digit', hour12: false }).format(now);
-                let m = new Intl.DateTimeFormat('en', { minute: '2-digit' }).format(now);
-                return `${ye}-${mo}-${da} ${h}:${m}`;
-			}
-			default:
-				return null;
-		}
-	}
 
     lib.buildFolderPath = (folder) => {
         var names = [];
@@ -63,9 +66,9 @@ var _ = function() {
     }
 
 	// Process the template
-	lib.expandTaskPaper = (template, taskPaper, variableValues) => {
+	lib.expandTaskPaper = (template, taskPaper, templateVariables, variableValues) => {
 		// console.log('Processing Template ' + template.name);
-		var expandedTaskPaper = lib.replaceVariables(taskPaper, variableValues);
+		var expandedTaskPaper = lib.replaceVariables(taskPaper, templateVariables, variableValues);
 		// console.log(expandedTaskPaper);
 
         var path = lib.buildFolderPath(template.parentFolder);
@@ -80,23 +83,60 @@ var _ = function() {
 		url.call(reply => {});
 	};
 
+   	lib.addFormField = (inputForm, variableSpec, position) => {
+   	    var parts = variableSpec.split(':');
+   	    var variableName = parts[0];
+   	    var variableType = parts.length > 0 ? parts[1] : 'text';
+   	    var options = parts.length > 1 ? parts[2] : null;
+   	    var now = new Date();
+   	    // https://unicode-org.github.io/icu/userguide/format_parse/datetime/#formatting-dates
+   		switch (variableType) {
+   			case 'date' : {
+   			    var formatStr = options == null ?  'yyyy-MM-dd' : options;
+                var format = Formatter.Date.withFormat(formatStr);
+                inputForm.addField(new Form.Field.Date(variableName, variableName, new Date(), format), position);
+                break;
+   			}
+   			case 'time' : {
+   			    var formatStr = options == null ?  'yyyy-MM-dd HH:mm' : options;
+                var format = Formatter.Date.withFormat(formatStr);
+                inputForm.addField(new Form.Field.Date(variableName, variableName, new Date(), format), position);
+                break;
+   			}
+   			case 'option' : {
+                var choices = options != null ? options.split(',') : [""];
+                inputForm.addField(new Form.Field.Option(variableName, variableName, choices, choices, choices[0]), position);
+                break;
+            }
+   			case 'checkbox' : {
+                inputForm.addField(new Form.Field.Checkbox(variableName, variableName, null), position);
+                break;
+            }
+   			case 'text':
+   			default:
+   			    var value = options;
+                inputForm.addField(new Form.Field.String(variableName, variableName, value), position);
+                break;
+   		}
+   	}
+
+
 	lib.expand = (template, taskPaper) => {
         var templateVariables = lib.findVariables(taskPaper);
 
         if (templateVariables.length == 0) {
-            lib.expandTaskPaper(template, taskPaper, templateVariables)
+            lib.expandTaskPaper(template, taskPaper, templateVariables, new Object())
         } else {
             // Open a form to collect values for variables in the template
             var inputForm = new Form();
             for (var i = 0; i < templateVariables.length; i++) {
                 var variable = templateVariables[i];
-                var defaultValue = lib.getDefaultValueForVariable(variable);
-                inputForm.addField(new Form.Field.String(variable, variable, defaultValue), i);
+                lib.addFormField(inputForm, variable, i);
             }
             var formPrompt = "Provide values for the template";
             var buttonTitle = "OK";
             inputForm.show(formPrompt, buttonTitle).then(
-                (form) => lib.expandTaskPaper(template, taskPaper, form.values),
+                (form) => lib.expandTaskPaper(template, taskPaper, templateVariables, form.values),
                 (error) => console.log(error));
         }
 	};
