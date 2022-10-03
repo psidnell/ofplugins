@@ -30,9 +30,19 @@ var _ = (function() {
         win.perspective = Perspective.BuiltIn.Projects
         win.focus = matches;
 
+        // Restore original perspective
+
         // Crashes on the phone:
-        if (startingPerspective && !Device.current.iOS) {
-            document.windows[0].perspective = startingPerspective;
+        // document.windows[0].perspective = startingPerspective;
+
+        if (startingPerspective ) {
+            var urlStr;
+            if (Perspective.BuiltIn.all.includes(startingPerspective)) {
+                urlStr = "omnifocus:///" + encodeURIComponent(startingPerspective.name.toLowerCase());
+            } else {
+                urlStr = "omnifocus:///perspective/" + encodeURIComponent(startingPerspective.identifier);
+            }
+            URL.fromString(urlStr).open();
         }
 	});
 
