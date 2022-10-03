@@ -1,8 +1,8 @@
 {
 	"defaultLocale": "en",
-	"identifier": "com.PaulSidnell.FocusHome",
+	"identifier": "com.PaulSidnell.FocusWork",
 	"author": "Paul Sidnell",
-	"description": "Focus on Home Projects",
+	"description": "Focus on Work Projects",
 	"version": "1.0",
 	"actions": [
 		{ "image":"focus.png", "identifier": "focus" }

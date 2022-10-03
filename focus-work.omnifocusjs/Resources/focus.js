@@ -5,7 +5,7 @@ var _ = (function() {
 		flattenedFolders.forEach(folder => {
 		    if ((!folder.parent) &&
 		        folder.status == Folder.Status.Active &&
-		        (folder.name.toLowerCase().indexOf("home") != -1 || folder.name.toLowerCase().indexOf("misc") != -1)) {
+		        (folder.name.toLowerCase().indexOf("work") != -1 || folder.name.toLowerCase().indexOf("misc") != -1)) {
 		        matches.push(folder);
 		        // console.log("Matched Folder " + folder.name);
             }
@@ -15,7 +15,7 @@ var _ = (function() {
             if ((!project.parentFolder) &&
                 project.status != Project.Status.Dropped &&
                 project.status != Project.Status.Done &&
-                (project.name.toLowerCase().indexOf("home") != -1 || project.name.toLowerCase().indexOf("misc") != -1)) {
+                (project.name.toLowerCase().indexOf("work") != -1 || project.name.toLowerCase().indexOf("misc") != -1)) {
                 matches.push(project);
                 // console.log("Matched Project " + project.name);
             }
