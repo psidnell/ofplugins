@@ -1,6 +1,6 @@
 var _ = (function() {
 
-	var action = new PlugIn.Action(function(selection, sender){
+	var action = new PlugIn.Action(async function(selection, sender){
 
         const SEARCH_FOR = "work";
 
@@ -34,17 +34,7 @@ var _ = (function() {
 
         // Crashes on the phone:
         // document.windows[0].perspective = startingPerspective;
-
-        // Even this crashes on the iPad
-        if (startingPerspective && !Device.current.iPad) {
-            var urlStr;
-            if (Perspective.BuiltIn.all.includes(startingPerspective)) {
-                urlStr = "omnifocus:///" + encodeURIComponent(startingPerspective.name.toLowerCase());
-            } else {
-                urlStr = "omnifocus:///perspective/" + encodeURIComponent(startingPerspective.identifier);
-            }
-            URL.fromString(urlStr).open();
-        }
+        Timer.once(0, () => document.windows[0].perspective = startingPerspective);
 	});
 
 	action.validate = function(selection, sender){
