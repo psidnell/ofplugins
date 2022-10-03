@@ -30,7 +30,10 @@ var _ = (function() {
         win.perspective = Perspective.BuiltIn.Projects
         win.focus = matches;
 
-        document.windows[0].perspective = startingPerspective;
+        // Crashes on the phone:
+        if (startingPerspective && !Device.current.iOS) {
+            document.windows[0].perspective = startingPerspective;
+        }
 	});
 
 	action.validate = function(selection, sender){
