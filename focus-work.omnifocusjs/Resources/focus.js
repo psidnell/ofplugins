@@ -35,7 +35,8 @@ var _ = (function() {
         // Crashes on the phone:
         // document.windows[0].perspective = startingPerspective;
 
-        if (startingPerspective ) {
+        // Even this crashes on the iPad
+        if (startingPerspective && !Device.current.iPad) {
             var urlStr;
             if (Perspective.BuiltIn.all.includes(startingPerspective)) {
                 urlStr = "omnifocus:///" + encodeURIComponent(startingPerspective.name.toLowerCase());
