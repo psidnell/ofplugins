@@ -1,0 +1,12 @@
+{
+	"defaultLocale": "en",
+	"identifier": "com.PaulSidnell.Focus",
+	"author": "Paul Sidnell",
+	"description": "Focus on Home Projects",
+	"version": "1.0",
+	"actions": [
+		{ "image":"focus.png", "identifier": "focus" }
+	],
+	"libraries": [
+	]
+}
