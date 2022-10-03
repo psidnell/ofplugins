@@ -34,8 +34,7 @@ var _ = (function() {
 
         // Crashes on the phone:
         // document.windows[0].perspective = startingPerspective;
-        Timer.once(0, () => document.windows[0].perspective = startingPerspective);
-        }
+        Timer.once(2, () => document.windows[0].perspective = startingPerspective);
 	});
 
 	action.validate = function(selection, sender){
