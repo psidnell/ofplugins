@@ -34,7 +34,8 @@ var _ = (function() {
 
         // Crashes on the phone:
         // document.windows[0].perspective = startingPerspective;
-        Timer.once(2, () => document.windows[0].perspective = startingPerspective);
+        var delay = Device.current.mac ? 0 : 2;
+        Timer.once(delay, () => document.windows[0].perspective = startingPerspective);
 	});
 
 	action.validate = function(selection, sender){
