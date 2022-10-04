@@ -1,19 +1,30 @@
 var _ = (function() {
 
+    var applyTag = (taskOrProject, repeatTag) => {
+        if (taskOrProject.repetitionRule) {
+            if (!taskOrProject.tags.includes(repeatTag)) {
+                console.log("Adding to: " + taskOrProject.name);
+                taskOrProject.addTag(repeatTag);
+            }
+        } else {
+            if (taskOrProject.tags.includes(repeatTag)) {
+                console.log("Removing from: " + taskOrProject.name);
+                taskOrProject.removeTag(repeatTag);
+            }
+        }
+    }
+
     var applyToTask = (task, repeatTag) => {
         if (task.taskStatus != Task.Status.Completed && task.taskStatus != Task.Status.Dropped) {
             //console.log("Task: " + task.name);
-            if (task.repetitionRule) {
-                task.addTag(repeatTag);
-            } else {
-                task.removeTag(repeatTag);
-            }
+            applyTag(task, repeatTag);
         }
     }
 
     var applyToProject = (project, repeatTag) => {
         if (project.taskStatus != Task.Status.Completed && project.taskStatus != Task.Status.Dropped) {
             //console.log("Project: " + project.name);
+            applyTag(project, repeatTag);
             project.flattenedTasks.forEach(task => {
                 applyToTask(task, repeatTag);
             });
@@ -33,17 +44,17 @@ var _ = (function() {
 	    var tagName = "♻";
 	    var repeatTag = flattenedTags.byName(tagName) || new Tag(tagName, tags.end);
 
-        if (selection.folders) {
-            selection.folders.forEach(folder => applyToFolder(folder, repeatTag));
-        }
+        selection.folders.forEach(folder => applyToFolder(folder, repeatTag));
+        selection.projects.forEach(project => applyToProject(project, repeatTag));
+        selection.tasks.forEach(task => applyToTask(task, repeatTag));
 
         console.log("Applied " + tagName);
 	});
 
 	action.validate = function(selection, sender){
-	    // TODO allow the selection of anything
-	    // TODO push
-	    return selection.folders && selection.folders.length > 0;
+	    return (selection.folders.length > 0) ||
+	           (selection.projects.length > 0) ||
+	           (selection.tasks.length > 0);
 	};
 
 	return action;
