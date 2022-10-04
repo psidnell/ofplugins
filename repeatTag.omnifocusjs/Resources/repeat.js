@@ -1,5 +1,7 @@
 var _ = (function() {
 
+    const tagName = "♻️";
+
     var applyTag = (taskOrProject, repeatTag) => {
         if (taskOrProject.repetitionRule) {
             if (!taskOrProject.tags.includes(repeatTag)) {
@@ -41,7 +43,6 @@ var _ = (function() {
     }
 
 	var action = new PlugIn.Action(function(selection, sender){
-	    var tagName = "♻";
 	    var repeatTag = flattenedTags.byName(tagName) || new Tag(tagName, tags.end);
 
         selection.folders.forEach(folder => applyToFolder(folder, repeatTag));
