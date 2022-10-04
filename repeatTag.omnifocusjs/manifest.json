@@ -1,0 +1,12 @@
+{
+	"defaultLocale": "en",
+	"identifier": "com.PaulSidnell.RepeatTag",
+	"author": "Paul Sidnell",
+	"description": "Apply Repeat Tag",
+	"version": "1.0",
+	"actions": [
+		{ "image":"repeat.png", "identifier": "repeat" }
+	],
+	"libraries": [
+	]
+}
