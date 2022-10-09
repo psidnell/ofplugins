@@ -1,0 +1,12 @@
+{
+	"defaultLocale": "en",
+	"identifier": "com.PaulSidnell.Duration",
+	"author": "Paul Sidnell",
+	"description": "Calculate Duration",
+	"version": "1.0",
+	"actions": [
+		{ "image":"duration.png", "identifier": "duration" }
+	],
+	"libraries": [
+	]
+}
