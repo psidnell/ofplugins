@@ -37,7 +37,7 @@ var _ = (function() {
 
         var task = new Task(title, inbox.beginning);
         task.addTag(Tag.forecastTag);
-        task.flagged = true;
+        // task.flagged = true;
         tags.forEach(tag => {
             task.addTag(tag);
         });
