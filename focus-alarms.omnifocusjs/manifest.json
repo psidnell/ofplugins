@@ -1,0 +1,12 @@
+{
+	"defaultLocale": "en",
+	"identifier": "com.PaulSidnell.FocusAlarms",
+	"author": "Paul Sidnell",
+	"description": "Focus on Alarms",
+	"version": "1.0",
+	"actions": [
+		{ "image":"focus.png", "identifier": "focus" }
+	],
+	"libraries": [
+	]
+}
