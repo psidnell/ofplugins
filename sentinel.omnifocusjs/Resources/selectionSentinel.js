@@ -20,18 +20,23 @@ var _ = (function() {
         });
 
         // Add sentinel tag
-        //var sentinalTag = flattenedTags.byName("➡️") || new Tag("➡️");
-        //tags.push(sentinalTag);
+        // var sentinelTagName = "/➡️";
+        // var sentinalTag = flattenedTags.byName(sentinelTagName) || new Tag(sentinelTagName);
+        // tags.push(sentinalTag);
 
         var tagNameList = [];
         tags.forEach((tag)=>{
-            tagNameList.push(tag.name);
+            //if (tag != sentinalTag) {
+                tagNameList.push(tag.name);
+            //}
         });
-        var title = '## ' + tagNameList.join(', ');
+        var title = '➡️ ' + tagNameList.join(', ');
 
         var noteLines = [];
         tags.forEach((tag)=>{
-            noteLines.push('omnifocus:///tag/' +  encodeURIComponent(tag.name));
+            //if (tag != sentinalTag) {
+                noteLines.push('omnifocus:///tag/' +  encodeURIComponent(tag.name));
+            //}
         });
         var note = noteLines.join('\n');
 
