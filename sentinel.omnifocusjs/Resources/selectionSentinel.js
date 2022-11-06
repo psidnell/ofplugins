@@ -20,23 +20,23 @@ var _ = (function() {
         });
 
         // Add sentinel tag
-        // var sentinelTagName = "/➡️";
-        // var sentinalTag = flattenedTags.byName(sentinelTagName) || new Tag(sentinelTagName);
-        // tags.push(sentinalTag);
+         var sentinelTagName = "/➡️";
+         var sentinalTag = flattenedTags.byName(sentinelTagName) || new Tag(sentinelTagName);
+         tags.push(sentinalTag);
 
         var tagNameList = [];
         tags.forEach((tag)=>{
-            //if (tag != sentinalTag) {
+            if (tag != sentinalTag) {
                 tagNameList.push(tag.name);
-            //}
+            }
         });
         var title = '➡️ ' + tagNameList.join(', ');
 
         var noteLines = [];
         tags.forEach((tag)=>{
-            //if (tag != sentinalTag) {
+            if (tag != sentinalTag) {
                 noteLines.push('omnifocus:///tag/' +  encodeURIComponent(tag.name));
-            //}
+            }
         });
         var note = noteLines.join('\n');
 
