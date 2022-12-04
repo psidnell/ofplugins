@@ -1,6 +1,6 @@
 var _ = (function() {
 
-    const tagName = "♻️";
+    const tagName = "/♻️";
 
     var applyTag = (taskOrProject, repeatTag) => {
         if (taskOrProject.repetitionRule) {
@@ -49,13 +49,17 @@ var _ = (function() {
         selection.projects.forEach(project => applyToProject(project, repeatTag));
         selection.tasks.forEach(task => applyToTask(task, repeatTag));
 
+        if (selection.folders.length === 0 &&
+            selection.projects.length === 0 &&
+            selection.tasks.length === 0) {
+             flattenedTasks.forEach(task => applyToTask(task, repeatTag));
+            }
+
         console.log("Applied " + tagName);
 	});
 
 	action.validate = function(selection, sender){
-	    return (selection.folders.length > 0) ||
-	           (selection.projects.length > 0) ||
-	           (selection.tasks.length > 0);
+	    return true;
 	};
 
 	return action;
