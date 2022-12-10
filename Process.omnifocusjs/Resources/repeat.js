@@ -3,6 +3,20 @@ var _ = function() {
 
     const tagName = "/♻️";
 
+    var started = -1;
+
+    lib.t = () => {
+        const now = new Date().getTime();
+
+        if (started === -1) {
+            started = now;
+        }
+
+        const result  = now - started;
+        started = now;
+        return result;
+    }
+
     lib.applyTag = (taskOrProject, repeatTag) => {
         if (taskOrProject.repetitionRule) {
             if (!taskOrProject.tags.includes(repeatTag)) {
@@ -44,10 +58,11 @@ var _ = function() {
     }
 
     lib.process = (selection) => {
-        console.log("Start Processing Repeats");
+        started = -1;
+        console.log(lib.t(), "Start Processing Repeats");
         var repeatTag = flattenedTags.byName(tagName) || new Tag(tagName, tags.end);
         flattenedTasks.forEach(task => lib.applyToTask(task, repeatTag));
-        console.log("Finished Processing Repeats");
+        console.log(lib.t(), "Finished Processing Repeats");
     }
 
 	return lib;
