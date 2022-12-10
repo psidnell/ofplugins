@@ -4,6 +4,9 @@ var _ = (function() {
 
 	    var repeat = PlugIn.find("com.PaulSidnell.Process").library("repeat");
 	    repeat.process(selection);
+
+	    var defer = PlugIn.find("com.PaulSidnell.Process").library("defer");
+        defer.process(selection);
 	});
 
 	action.validate = function(selection, sender){

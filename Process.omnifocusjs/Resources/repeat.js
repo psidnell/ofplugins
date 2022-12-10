@@ -6,7 +6,7 @@ var _ = function() {
     lib.applyTag = (taskOrProject, repeatTag) => {
         if (taskOrProject.repetitionRule) {
             if (!taskOrProject.tags.includes(repeatTag)) {
-                console.log("Adding to: " + taskOrProject.name);
+                console.log("Adding " + tagName + " to: " + taskOrProject.name);
                 taskOrProject.addTag(repeatTag);
             }
         } else {
@@ -44,9 +44,10 @@ var _ = function() {
     }
 
     lib.process = (selection) => {
+        console.log("Start Processing Repeats");
         var repeatTag = flattenedTags.byName(tagName) || new Tag(tagName, tags.end);
         flattenedTasks.forEach(task => lib.applyToTask(task, repeatTag));
-        console.log("Applied " + tagName);
+        console.log("Finished Processing Repeats");
     }
 
 	return lib;
