@@ -1,0 +1,12 @@
+{
+	"defaultLocale": "en",
+	"identifier": "com.PaulSidnell.Process",
+	"author": "Paul Sidnell",
+	"description": "Process Database",
+	"version": "1.0",
+	"actions": [
+		{ "image":"process.png", "identifier": "process" }
+	],
+	"libraries": [
+	]
+}
