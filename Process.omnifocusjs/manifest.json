@@ -8,5 +8,6 @@
 		{ "image":"process.png", "identifier": "process" }
 	],
 	"libraries": [
+		{"identifier": "repeat"}
 	]
 }
