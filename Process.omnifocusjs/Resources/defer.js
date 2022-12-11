@@ -68,21 +68,28 @@ var _ = function() {
         var dow = defer.getDay();
         var daysUntil = Math.ceil((defer.getTime() - today.getTime()) / DAY);
 
-        if (daysUntil < 7 && dow !== 0 && dow !== 6 && !task.tags.includes(thisWeekTag)) {
-            task.addTag(thisWeekTag);
-            lib.removeTags(task, [weekendTag, nextWeekTag]);
-            return;
+        if (daysUntil < 7 && dow !== 0 && dow !== 6) {
+            if (!task.tags.includes(thisWeekTag)) {
+                task.addTag(thisWeekTag);
+            }
+        } else {
+            lib.removeTags(task, [thisWeekTag]);
         }
 
-        if (daysUntil >= 7 && daysUntil <= 14 && dow !== 0 && dow !== 6 && !task.tags.includes(nextWeekTag)) {
-            task.addTag(nextWeekTag);
-            lib.removeTags(task, [weekendTag, thisWeekTag]);
-            return;
+        if (daysUntil >= 7 && daysUntil <= 14 && dow !== 0 && dow !== 6) {
+            if (!task.tags.includes(nextWeekTag)) {
+                task.addTag(nextWeekTag);
+            }
+        } else {
+            lib.removeTags(task, [nextWeekTag]);
         }
 
-        if (daysUntil < 7 && (dow === 0 || dow === 6 && !task.tags.includes())) {
-            task.addTag(weekendTag);
-            lib.removeTags(task,[thisWeekTag, nextWeekTag]);
+        if (daysUntil < 6 && (dow === 0 || dow === 6)) {
+            if (!task.tags.includes(weekendTag)) {
+                task.addTag(weekendTag);
+            }
+        } else {
+            lib.removeTags(task,[weekendTag]);
         }
     }
 
