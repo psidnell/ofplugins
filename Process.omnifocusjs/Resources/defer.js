@@ -55,7 +55,7 @@ var _ = function() {
         }
     }
 
-    lib.assignWeek = (task, weekendTag, nextWeekEnd, thisWeekTag, nextWeekTag) => {
+    lib.assignWeek = (task, tomorrowTag, weekendTag, nextWeekEndTag, thisWeekTag, nextWeekTag) => {
         let now = new Date();
         const defer = task.effectiveDeferDate;
         defer.setHours(0, 0, 0, 0);
@@ -69,6 +69,14 @@ var _ = function() {
         const offsetFromStartOfWeek = daysUntil - (dowSundayFix - 1);
         const weekOffset = Math.floor(offsetFromStartOfWeek / 7);
         // console.log(defer, weekOffset);
+
+        if (daysUntil === 1) {
+            if (!task.tags.includes(tomorrowTag)) {
+                task.addTag(tomorrowTag);
+            }
+        } else {
+            lib.removeTags(task, [tomorrowTag]);
+        }
 
         if (weekOffset === 0 && dow !== SAT && dow !== SUN) {
             if (!task.tags.includes(thisWeekTag)) {
@@ -95,11 +103,11 @@ var _ = function() {
         }
 
         if (weekOffset === 0  && (dow === SAT || dow === SUN)) {
-            if (!task.tags.includes(nextWeekEnd)) {
-                task.addTag(nextWeekEnd);
+            if (!task.tags.includes(nextWeekEndTag)) {
+                task.addTag(nextWeekEndTag);
             }
         } else {
-            lib.removeTags(task,[nextWeekEnd]);
+            lib.removeTags(task,[nextWeekEndTag]);
         }
     }
 
@@ -184,11 +192,12 @@ var _ = function() {
 
         console.log(lib.t(), "Assigned Months");
 
+        var tomorrowTag = lib.findCreateSubTag(rootTag, "TOMORROW");
         var weekendTag = lib.findCreateSubTag(rootTag, "THIS WEEKEND");
         var nextWeekTag = lib.findCreateSubTag(rootTag, "NEXT WEEK");
         var thisWeekTag = lib.findCreateSubTag(rootTag, "THIS WEEK");
-        var nextWeekEnd = lib.findCreateSubTag(rootTag, "NEXT WEEKEND");
-        deferredTasks.forEach(task => lib.assignWeek(task, weekendTag, nextWeekEnd, thisWeekTag, nextWeekTag));
+        var nextWeekEndTag = lib.findCreateSubTag(rootTag, "NEXT WEEKEND");
+        deferredTasks.forEach(task => lib.assignWeek(task, tomorrowTag, weekendTag, nextWeekEndTag, thisWeekTag, nextWeekTag));
 
         console.log(lib.t(), "Assigned Weeks");
 
