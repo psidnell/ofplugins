@@ -4,6 +4,8 @@ var _ = function() {
     const ROOT_NAME = '/⏸️ DEFERRED';
     const YEARS_NAME = 'YEARS';
     const MONTH_NAMES = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+    const SUN = 0;
+    const SAT = 6;
     const DAY = 24*60*60*1000;
 
     var started = -1;
@@ -53,22 +55,22 @@ var _ = function() {
         }
     }
 
-    lib.assignWeek = (task, rootTag) => {
-        var weekendTag = lib.findCreateSubTag(rootTag, "WEEKEND");
-        var nextWeekTag = lib.findCreateSubTag(rootTag, "NEXT WEEK");
-        var thisWeekTag = lib.findCreateSubTag(rootTag, "THIS WEEK");
-
+    lib.assignWeek = (task, weekendTag, nextWeekEnd, thisWeekTag, nextWeekTag) => {
         let now = new Date();
-        var defer = task.effectiveDeferDate;
-        defer.setUTCHours(0, 0, 0, 0);
+        const defer = task.effectiveDeferDate;
+        defer.setHours(0, 0, 0, 0);
 
-        var today = now;
-        today.setUTCHours(0, 0, 0, 0);
+        const today = now;
+        today.setHours(0, 0, 0, 0);
 
-        var dow = defer.getDay();
-        var daysUntil = Math.ceil((defer.getTime() - today.getTime()) / DAY);
+        const dow = defer.getDay();
+        const daysUntil = Math.floor((defer.getTime() - today.getTime()) / DAY);
+        const dowSundayFix = dow == 0 ? 7 : dow;
+        const offsetFromStartOfWeek = daysUntil - (dowSundayFix - 1);
+        const weekOffset = Math.floor(offsetFromStartOfWeek / 7);
+        // console.log(defer, weekOffset);
 
-        if (daysUntil < 7 && dow !== 0 && dow !== 6) {
+        if (weekOffset === 0 && dow !== SAT && dow !== SUN) {
             if (!task.tags.includes(thisWeekTag)) {
                 task.addTag(thisWeekTag);
             }
@@ -76,7 +78,7 @@ var _ = function() {
             lib.removeTags(task, [thisWeekTag]);
         }
 
-        if (daysUntil >= 7 && daysUntil <= 14 && dow !== 0 && dow !== 6) {
+        if (weekOffset === 1 && dow !== SAT && dow !== SUN) {
             if (!task.tags.includes(nextWeekTag)) {
                 task.addTag(nextWeekTag);
             }
@@ -84,12 +86,20 @@ var _ = function() {
             lib.removeTags(task, [nextWeekTag]);
         }
 
-        if (daysUntil < 6 && (dow === 0 || dow === 6)) {
+        if (weekOffset === -1 && (dow === SAT || dow === SUN)) {
             if (!task.tags.includes(weekendTag)) {
                 task.addTag(weekendTag);
             }
         } else {
             lib.removeTags(task,[weekendTag]);
+        }
+
+        if (weekOffset === 0  && (dow === SAT || dow === SUN)) {
+            if (!task.tags.includes(nextWeekEnd)) {
+                task.addTag(nextWeekEnd);
+            }
+        } else {
+            lib.removeTags(task,[nextWeekEnd]);
         }
     }
 
@@ -174,7 +184,11 @@ var _ = function() {
 
         console.log(lib.t(), "Assigned Months");
 
-        deferredTasks.forEach(task => lib.assignWeek(task, rootTag));
+        var weekendTag = lib.findCreateSubTag(rootTag, "THIS WEEKEND");
+        var nextWeekTag = lib.findCreateSubTag(rootTag, "NEXT WEEK");
+        var thisWeekTag = lib.findCreateSubTag(rootTag, "THIS WEEK");
+        var nextWeekEnd = lib.findCreateSubTag(rootTag, "NEXT WEEKEND");
+        deferredTasks.forEach(task => lib.assignWeek(task, weekendTag, nextWeekEnd, thisWeekTag, nextWeekTag));
 
         console.log(lib.t(), "Assigned Weeks");
 
