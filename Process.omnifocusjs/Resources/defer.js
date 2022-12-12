@@ -219,4 +219,12 @@ var _ = function() {
 
 	return lib;
 }();
+
+try {
+    if (TESTING) {
+        module.exports = _;
+    }
+} catch (e) {
+}
+
 _;
