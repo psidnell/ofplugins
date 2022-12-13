@@ -68,56 +68,49 @@ var _ = function() {
             ) / DAY);
     }
 
-    lib.assignWeek = (task, tomorrowTag, weekendTag, nextWeekEndTag, thisWeekTag, nextWeekTag) => {
-        const defer = lib.setDateToStartOfDay(task.effectiveDeferDate);
-        const today = lib.setDateToStartOfDay(new Date());
-
-        const dow = defer.getDay();
-        const daysUntil = Math.floor((defer.getTime() - today.getTime()) / DAY);
+    lib.startOfWeekOf = (date) => {
+        var result = lib.setDateToStartOfDay(date);
+        const dow = result.getDay();
         const dowSundayFix = dow == 0 ? 7 : dow;
-        const offsetFromStartOfWeek = daysUntil - (dowSundayFix - 1);
-        const weekOffset = Math.floor(offsetFromStartOfWeek / 7);
-        // console.log(defer, weekOffset);
+        result.setDate(result.getDate() - (dowSundayFix - 1));
+        return result;
+    }
 
-        if (daysUntil === 1) {
-            if (!task.tags.includes(tomorrowTag)) {
-                task.addTag(tomorrowTag);
+    lib.applyTagIf = (apply, task, tag) => {
+        if (apply) {
+            if (!task.tags.includes(tag)) {
+                task.addTag(tag);
             }
         } else {
-            lib.removeTags(task, [tomorrowTag]);
+            lib.removeTags(task, [tag]);
         }
+    }
 
-        if (weekOffset === 0 && dow !== SAT && dow !== SUN) {
-            if (!task.tags.includes(thisWeekTag)) {
-                task.addTag(thisWeekTag);
-            }
-        } else {
-            lib.removeTags(task, [thisWeekTag]);
-        }
+    lib.weekDifference = (now, future) => {
+        const weekDiff = lib.daysBetween(
+            lib.startOfWeekOf(now),
+            lib.startOfWeekOf(future));
+        return Math.floor(weekDiff / 7);
+    }
 
-        if (weekOffset === 1 && dow !== SAT && dow !== SUN) {
-            if (!task.tags.includes(nextWeekTag)) {
-                task.addTag(nextWeekTag);
-            }
-        } else {
-            lib.removeTags(task, [nextWeekTag]);
-        }
+    lib.isWeekend = (date) => {
+        return date.getDay() === SAT || date.getDay() === SUN;
+    }
 
-        if (weekOffset === -1 && (dow === SAT || dow === SUN)) {
-            if (!task.tags.includes(weekendTag)) {
-                task.addTag(weekendTag);
-            }
-        } else {
-            lib.removeTags(task,[weekendTag]);
-        }
+    lib.assignWeekTags = (task, now, tomorrowTag, weekendTag, nextWeekEndTag, thisWeekTag, nextWeekTag) => {
+        const daysUntil = lib.daysBetween(now, task.effectiveDeferDate);
+        const defer = task.effectiveDeferDate;
 
-        if (weekOffset === 0  && (dow === SAT || dow === SUN)) {
-            if (!task.tags.includes(nextWeekEndTag)) {
-                task.addTag(nextWeekEndTag);
-            }
-        } else {
-            lib.removeTags(task,[nextWeekEndTag]);
-        }
+        const weekOffset = lib.weekDifference(now, defer);
+        var isWeekend = lib.isWeekend(now);
+        var isThisWeek = isWeekend ? weekOffset === 1 : weekOffset === 0;
+        var isNextWeek = isWeekend ? weekOffset === 2 : weekOffset === 1;
+
+        lib.applyTagIf(daysUntil === 1, task, tomorrowTag);
+        lib.applyTagIf(isThisWeek && !lib.isWeekend(defer), task, thisWeekTag);
+        lib.applyTagIf(isNextWeek && !lib.isWeekend(defer), task, nextWeekTag);
+        lib.applyTagIf(weekOffset === 0 && lib.isWeekend(defer), task, weekendTag);
+        lib.applyTagIf(weekOffset === 1 && lib.isWeekend(defer), task, nextWeekEndTag);
     }
 
     lib.ordinalOfMonth = (monthAndYear) => {
@@ -206,7 +199,7 @@ var _ = function() {
         var nextWeekTag = lib.findCreateSubTag(rootTag, "NEXT WEEK");
         var thisWeekTag = lib.findCreateSubTag(rootTag, "THIS WEEK");
         var nextWeekEndTag = lib.findCreateSubTag(rootTag, "NEXT WEEKEND");
-        deferredTasks.forEach(task => lib.assignWeek(task, tomorrowTag, weekendTag, nextWeekEndTag, thisWeekTag, nextWeekTag));
+        deferredTasks.forEach(task => lib.assignWeekTags(now, task, tomorrowTag, weekendTag, nextWeekEndTag, thisWeekTag, nextWeekTag));
 
         console.log(lib.t(), "Assigned Weeks");
 

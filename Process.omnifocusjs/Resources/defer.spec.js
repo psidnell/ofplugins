@@ -194,4 +194,329 @@ describe('Defer', () => {
         expect(diff).toBe(expected);
     });
 
+    it.each([
+        // Dec 12 2022 is a Mon
+        ['12 Dec 2022 00:00:00 GMT', '12 Dec 2022 00:00:00 GMT'],
+        ['13 Dec 2022 00:00:00 GMT', '12 Dec 2022 00:00:00 GMT'],
+        ['14 Dec 2022 00:00:00 GMT', '12 Dec 2022 00:00:00 GMT'],
+        ['15 Dec 2022 00:00:00 GMT', '12 Dec 2022 00:00:00 GMT'],
+        ['16 Dec 2022 00:00:00 GMT', '12 Dec 2022 00:00:00 GMT'],
+        ['17 Dec 2022 00:00:00 GMT', '12 Dec 2022 00:00:00 GMT'],
+        ['18 Dec 2022 00:00:00 GMT', '12 Dec 2022 00:00:00 GMT'],
+        // Dec 19 2022 is a Mon
+        ['19 Dec 2022 00:00:00 GMT', '19 Dec 2022 00:00:00 GMT'],
+    ])('can find the start of the week', (ds, sowDs) => {
+        //Given
+        var date = new Date(Date.parse(ds));
+        var expectedStartOfWeek = new Date(Date.parse(sowDs));
+
+        //When
+        var startOfWeek = lib.startOfWeekOf(date);
+
+        //Then
+        expect(startOfWeek).toEqual(expectedStartOfWeek);
+    });
+
+    it('can apply a tag if required and missing', () => {
+        //Given
+        const task = {
+            tags: [],
+            addTag: jest.fn((tag) => null)
+        };
+        const tag = {};
+
+        //When
+        lib.applyTagIf(true, task, tag);
+
+        //Then
+        expect(task.addTag.mock.calls[0][0]).toBe(tag);
+    });
+
+    it('can do nothing if a tag if required and present', () => {
+        //Given
+        const tag = {};
+
+        const task = {
+            tags: [tag],
+            addTag: jest.fn((tag) => null)
+        };
+
+
+        //When
+        lib.applyTagIf(true, task, tag);
+
+        //Then
+        expect(task.addTag.mock.calls.length).toBe(0);
+    });
+
+    it('can remove a tag if not required', () => {
+        //Given
+        const tag = {};
+
+        const task = {
+            tags: [tag],
+            addTag: jest.fn((tag) => null)
+        };
+
+        lib.removeTags = jest.fn((task, tags) => null)
+
+        //When
+        lib.applyTagIf(false, task, tag);
+
+        //Then
+        expect(task.addTag.mock.calls.length).toBe(0);
+
+        expect(lib.removeTags.mock.calls[0][0]).toBe(task);
+        expect(lib.removeTags.mock.calls[0][1]).toEqual([tag]);
+    });
+
+    it.each([
+        // Dec 10 2022 is a Sat
+        ['10 Dec 2022 00:00:00 GMT', '10 Dec 2022 00:00:00 GMT', 0],
+        ['10 Dec 2022 00:00:00 GMT', '11 Dec 2022 00:00:00 GMT', 0],
+        ['10 Dec 2022 00:00:00 GMT', '12 Dec 2022 23:59:59 GMT', 1],
+        ['10 Dec 2022 00:00:00 GMT', '12 Dec 2022 00:00:00 GMT', 1],
+        // Dec 12 2022 is a Mon
+        ['12 Dec 2022 00:00:00 GMT', '12 Dec 2022 00:00:00 GMT', 0],
+        ['12 Dec 2022 00:00:00 GMT', '13 Dec 2022 00:00:00 GMT', 0],
+        ['12 Dec 2022 00:00:00 GMT', '14 Dec 2022 00:00:00 GMT', 0],
+        ['12 Dec 2022 00:00:00 GMT', '15 Dec 2022 00:00:00 GMT', 0],
+        ['12 Dec 2022 00:00:00 GMT', '16 Dec 2022 00:00:00 GMT', 0],
+        ['12 Dec 2022 00:00:00 GMT', '17 Dec 2022 00:00:00 GMT', 0],
+        ['12 Dec 2022 00:00:00 GMT', '18 Dec 2022 00:00:00 GMT', 0],
+        ['12 Dec 2022 00:00:00 GMT', '18 Dec 2022 23:59:59 GMT', 0],
+        ['12 Dec 2022 00:00:00 GMT', '19 Dec 2022 00:00:00 GMT', 1],
+    ])('can calculate week difference', (today, future, difference) => {
+        //Given
+        var currentDate = new Date(Date.parse(today));
+        var futureDate = new Date(Date.parse(future));
+
+        //When
+        var result = lib.weekDifference(currentDate, futureDate);
+
+        //Then
+        expect(result).toBe(difference);
+    });
+
+    it.each([
+        ['12 Dec 2022 00:00:00 GMT', '12 Dec 2022 00:00:00 GMT', false],
+        ['12 Dec 2022 00:00:00 GMT', '12 Dec 2022 23:59:59 GMT', false],
+        ['12 Dec 2022 00:00:00 GMT', '13 Dec 2022 00:00:00 GMT', true],
+        ['12 Dec 2022 00:00:00 GMT', '13 Dec 2022 23:59:59 GMT', true],
+        ['12 Dec 2022 00:00:00 GMT', '14 Dec 2022 00:00:00 GMT', false],
+    ])('can apply tomorrow tag', (today, defer, isTomorrow) => {
+        //Given
+        var currentDate = new Date(Date.parse(today));
+        var deferDate = new Date(Date.parse(defer));
+
+        var tomorrowTag = {is:"tomorrowTag"};
+        var weekendTag = {is:"weekendTag"};
+        var nextWeekEndTag = {is:"nextWeekEndTag"}
+        var thisWeekTag = {is:"thisWeekTag"};
+        var nextWeekTag = {is:"nextWeekTag"};
+
+        const task = {
+            effectiveDeferDate: deferDate
+        };
+
+        lib.applyTagIf = jest.fn((apply, task, tag) => null)
+
+        //When
+        lib.assignWeekTags(task, currentDate, tomorrowTag, weekendTag, nextWeekEndTag, thisWeekTag, nextWeekTag);
+
+        //Then
+        expect(lib.applyTagIf.mock.calls[0][0]).toBe(isTomorrow);
+        expect(lib.applyTagIf.mock.calls[0][1]).toBe(task);
+        expect(lib.applyTagIf.mock.calls[0][2]).toBe(tomorrowTag);
+        expect(lib.applyTagIf.mock.calls.length).toBe(5);
+    });
+
+    it.each([
+        // Dec 12 2022 is a Mon
+        // The current week
+        ['12 Dec 2022 00:00:00 GMT', false],
+        ['13 Dec 2022 00:00:00 GMT', false],
+        ['14 Dec 2022 00:00:00 GMT', false],
+        ['15 Dec 2022 00:00:00 GMT', false],
+        ['16 Dec 2022 00:00:00 GMT', false],
+        ['17 Dec 2022 00:00:00 GMT', true],
+        ['18 Dec 2022 00:00:00 GMT', true],
+    ])('can detect a weekend', (today, isWeekend) => {
+        //Given
+        var currentDate = new Date(Date.parse(today));
+
+        //When
+        var result = lib.isWeekend(currentDate);
+
+        //Then
+        expect(result).toBe(isWeekend);
+    });
+
+    it.each([
+        // Dec 12 2022 is a Mon
+        ['11 Dec 2022 00:00:00 GMT', '12 Dec 2022 00:00:00 GMT', true],
+        // The current week
+        ['12 Dec 2022 00:00:00 GMT', '12 Dec 2022 00:00:00 GMT', true],
+        ['12 Dec 2022 00:00:00 GMT', '13 Dec 2022 00:00:00 GMT', true],
+        ['12 Dec 2022 00:00:00 GMT', '14 Dec 2022 00:00:00 GMT', true],
+        ['12 Dec 2022 00:00:00 GMT', '15 Dec 2022 00:00:00 GMT', true],
+        ['12 Dec 2022 00:00:00 GMT', '16 Dec 2022 00:00:00 GMT', true],
+        ['12 Dec 2022 00:00:00 GMT', '17 Dec 2022 00:00:00 GMT', false],
+    ])('can apply this week tag', (today, defer, isThisWeek) => {
+        //Given
+        var currentDate = new Date(Date.parse(today));
+        var deferDate = new Date(Date.parse(defer));
+
+        var tomorrowTag = {is:"tomorrowTag"};
+        var weekendTag = {is:"weekendTag"};
+        var nextWeekEndTag = {is:"nextWeekEndTag"}
+        var thisWeekTag = {is:"thisWeekTag"};
+        var nextWeekTag = {is:"nextWeekTag"};
+
+        const task = {
+            effectiveDeferDate: deferDate
+        };
+
+        lib.applyTagIf = jest.fn((apply, task, tag) => null)
+
+        //When
+        lib.assignWeekTags(task, currentDate, tomorrowTag, weekendTag, nextWeekEndTag, thisWeekTag, nextWeekTag);
+
+        //Then
+        expect(lib.applyTagIf.mock.calls[1][0]).toBe(isThisWeek);
+        expect(lib.applyTagIf.mock.calls[1][1]).toBe(task);
+        expect(lib.applyTagIf.mock.calls[1][2]).toBe(thisWeekTag);
+        expect(lib.applyTagIf.mock.calls.length).toBe(5);
+    });
+
+    it.each([
+        // Dec 12 2022 is a Mon
+        // The current week
+        ['12 Dec 2022 00:00:00 GMT', '12 Dec 2022 00:00:00 GMT', false],
+        ['12 Dec 2022 00:00:00 GMT', '13 Dec 2022 00:00:00 GMT', false],
+        ['12 Dec 2022 00:00:00 GMT', '14 Dec 2022 00:00:00 GMT', false],
+        ['12 Dec 2022 00:00:00 GMT', '15 Dec 2022 00:00:00 GMT', false],
+        ['12 Dec 2022 00:00:00 GMT', '16 Dec 2022 00:00:00 GMT', false],
+        ['12 Dec 2022 00:00:00 GMT', '17 Dec 2022 00:00:00 GMT', false],
+        ['12 Dec 2022 00:00:00 GMT', '18 Dec 2022 00:00:00 GMT', false],
+        ['12 Dec 2022 00:00:00 GMT', '19 Dec 2022 00:00:00 GMT', true],
+        ['12 Dec 2022 00:00:00 GMT', '20 Dec 2022 00:00:00 GMT', true],
+        ['12 Dec 2022 00:00:00 GMT', '21 Dec 2022 00:00:00 GMT', true],
+        ['12 Dec 2022 00:00:00 GMT', '22 Dec 2022 00:00:00 GMT', true],
+        ['12 Dec 2022 00:00:00 GMT', '23 Dec 2022 00:00:00 GMT', true],
+        ['12 Dec 2022 00:00:00 GMT', '24 Dec 2022 00:00:00 GMT', false],
+        ['12 Dec 2022 00:00:00 GMT', '25 Dec 2022 00:00:00 GMT', false],
+    ])('can apply next week tag', (today, defer, isThisWeek) => {
+        //Given
+        var currentDate = new Date(Date.parse(today));
+        var deferDate = new Date(Date.parse(defer));
+
+        var tomorrowTag = {is:"tomorrowTag"};
+        var weekendTag = {is:"weekendTag"};
+        var nextWeekEndTag = {is:"nextWeekEndTag"}
+        var thisWeekTag = {is:"thisWeekTag"};
+        var nextWeekTag = {is:"nextWeekTag"};
+
+        const task = {
+            effectiveDeferDate: deferDate
+        };
+
+        lib.applyTagIf = jest.fn((apply, task, tag) => null)
+
+        //When
+        lib.assignWeekTags(task, currentDate, tomorrowTag, weekendTag, nextWeekEndTag, thisWeekTag, nextWeekTag);
+
+        //Then
+        expect(lib.applyTagIf.mock.calls[2][0]).toBe(isThisWeek);
+        expect(lib.applyTagIf.mock.calls[2][1]).toBe(task);
+        expect(lib.applyTagIf.mock.calls[2][2]).toBe(nextWeekTag);
+        expect(lib.applyTagIf.mock.calls.length).toBe(5);
+    });
+
+    it.each([
+        // Dec 12 2022 is a Mon
+        ['10 Dec 2022 00:00:00 GMT', '10 Dec 2022 00:00:00 GMT', true],
+        ['10 Dec 2022 00:00:00 GMT', '11 Dec 2022 00:00:00 GMT', true],
+        // The current week
+        ['12 Dec 2022 00:00:00 GMT', '12 Dec 2022 00:00:00 GMT', false],
+        ['12 Dec 2022 00:00:00 GMT', '13 Dec 2022 00:00:00 GMT', false],
+        ['12 Dec 2022 00:00:00 GMT', '14 Dec 2022 00:00:00 GMT', false],
+        ['12 Dec 2022 00:00:00 GMT', '15 Dec 2022 00:00:00 GMT', false],
+        ['12 Dec 2022 00:00:00 GMT', '16 Dec 2022 00:00:00 GMT', false],
+        ['12 Dec 2022 00:00:00 GMT', '17 Dec 2022 00:00:00 GMT', true],
+        ['12 Dec 2022 00:00:00 GMT', '18 Dec 2022 00:00:00 GMT', true],
+        ['12 Dec 2022 00:00:00 GMT', '19 Dec 2022 00:00:00 GMT', false],
+    ])('can apply this weekend tag', (today, defer, isThisWeek) => {
+        //Given
+        var currentDate = new Date(Date.parse(today));
+        var deferDate = new Date(Date.parse(defer));
+
+        var tomorrowTag = {is:"tomorrowTag"};
+        var weekendTag = {is:"weekendTag"};
+        var nextWeekEndTag = {is:"nextWeekEndTag"}
+        var thisWeekTag = {is:"thisWeekTag"};
+        var nextWeekTag = {is:"nextWeekTag"};
+
+        const task = {
+            effectiveDeferDate: deferDate
+        };
+
+        lib.applyTagIf = jest.fn((apply, task, tag) => null)
+
+        //When
+        lib.assignWeekTags(task, currentDate, tomorrowTag, weekendTag, nextWeekEndTag, thisWeekTag, nextWeekTag);
+
+        //Then
+        expect(lib.applyTagIf.mock.calls[3][0]).toBe(isThisWeek);
+        expect(lib.applyTagIf.mock.calls[3][1]).toBe(task);
+        expect(lib.applyTagIf.mock.calls[3][2]).toBe(weekendTag);
+        expect(lib.applyTagIf.mock.calls.length).toBe(5);
+    });
+
+    it.each([
+        // Dec 12 2022 is a Mon
+        ['10 Dec 2022 00:00:00 GMT', '10 Dec 2022 00:00:00 GMT', false],
+        ['10 Dec 2022 00:00:00 GMT', '11 Dec 2022 00:00:00 GMT', false],
+        // The current week
+        ['12 Dec 2022 00:00:00 GMT', '12 Dec 2022 00:00:00 GMT', false],
+        ['12 Dec 2022 00:00:00 GMT', '13 Dec 2022 00:00:00 GMT', false],
+        ['12 Dec 2022 00:00:00 GMT', '14 Dec 2022 00:00:00 GMT', false],
+        ['12 Dec 2022 00:00:00 GMT', '15 Dec 2022 00:00:00 GMT', false],
+        ['12 Dec 2022 00:00:00 GMT', '16 Dec 2022 00:00:00 GMT', false],
+        ['12 Dec 2022 00:00:00 GMT', '17 Dec 2022 00:00:00 GMT', false],
+        ['12 Dec 2022 00:00:00 GMT', '18 Dec 2022 00:00:00 GMT', false],
+        ['12 Dec 2022 00:00:00 GMT', '19 Dec 2022 00:00:00 GMT', false],
+        ['12 Dec 2022 00:00:00 GMT', '20 Dec 2022 00:00:00 GMT', false],
+        ['12 Dec 2022 00:00:00 GMT', '21 Dec 2022 00:00:00 GMT', false],
+        ['12 Dec 2022 00:00:00 GMT', '22 Dec 2022 00:00:00 GMT', false],
+        ['12 Dec 2022 00:00:00 GMT', '23 Dec 2022 00:00:00 GMT', false],
+        ['12 Dec 2022 00:00:00 GMT', '24 Dec 2022 00:00:00 GMT', true],
+        ['12 Dec 2022 00:00:00 GMT', '25 Dec 2022 00:00:00 GMT', true],
+        ['12 Dec 2022 00:00:00 GMT', '26 Dec 2022 00:00:00 GMT', false],
+    ])('can apply next weekend tag', (today, defer, isThisWeek) => {
+        //Given
+        var currentDate = new Date(Date.parse(today));
+        var deferDate = new Date(Date.parse(defer));
+
+        var tomorrowTag = {is:"tomorrowTag"};
+        var weekendTag = {is:"weekendTag"};
+        var nextWeekEndTag = {is:"nextWeekEndTag"}
+        var thisWeekTag = {is:"thisWeekTag"};
+        var nextWeekTag = {is:"nextWeekTag"};
+
+        const task = {
+            effectiveDeferDate: deferDate
+        };
+
+        lib.applyTagIf = jest.fn((apply, task, tag) => null)
+
+        //When
+        lib.assignWeekTags(task, currentDate, tomorrowTag, weekendTag, nextWeekEndTag, thisWeekTag, nextWeekTag);
+
+        //Then
+        expect(lib.applyTagIf.mock.calls[4][0]).toBe(isThisWeek);
+        expect(lib.applyTagIf.mock.calls[4][1]).toBe(task);
+        expect(lib.applyTagIf.mock.calls[4][2]).toBe(nextWeekEndTag);
+        expect(lib.applyTagIf.mock.calls.length).toBe(5);
+    });
 });

@@ -8,7 +8,7 @@ describe('Defer', () => {
 
     it('can calculate elapsed time', async () => {
         expect(lib.t()).toBe(0);
-        await new Promise((r) => setTimeout(r, 1));
+        await new Promise((r) => setTimeout(r, 2));
         expect(lib.t()).toBeGreaterThan(0);
     });
 
