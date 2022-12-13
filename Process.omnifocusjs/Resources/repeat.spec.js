@@ -1,4 +1,4 @@
-const lib = require('./defer');
+const lib = require('./repeat');
 
 describe('Defer', () => {
 
