@@ -16,6 +16,41 @@ describe('Defer', () => {
         expect(lib.t()).toBeGreaterThan(0);
     });
 
+    it('can find a sub tag', async () => {
+        //Given
+        const tagName = "tag name";
+        const existingChildTag = {};
+        const parent = {
+            tagNamed: jest.fn((name) => existingChildTag)
+        }
+
+        //When
+        var result = lib.findCreateSubTag(parent, tagName);
+
+        //Then
+        expect(result).toBe(existingChildTag)
+        expect(parent.tagNamed.mock.calls[0][0]).toBe(tagName);
+        expect(parent.tagNamed.mock.calls.length).toBe(1);
+    });
+
+    it('can create a sub tag', async () => {
+        //Given
+        const tagName = "tag name";
+        const parent = {
+            tagNamed: jest.fn((name) => null),
+            ending: "ending"
+        };
+
+        //When
+        var createdTag = lib.findCreateSubTag(parent, tagName);
+
+        //Then
+        expect(createdTag.name).toBe(tagName);
+        expect(createdTag.position).toBe(parent.ending);
+        expect(parent.tagNamed.mock.calls[0][0]).toBe(tagName);
+        expect(parent.tagNamed.mock.calls.length).toBe(1);
+    });
+
     it('can create a month tag', async () => {
         //Given
         var year = 2022;
