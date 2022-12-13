@@ -157,4 +157,41 @@ describe('Defer', () => {
         expect(task.addTag.mock.calls.length).toBe(0);
     });
 
+    it('can set a date to be the start of the day', () => {
+        //Given
+        let now = new Date();
+
+        //When
+        var result = lib.setDateToStartOfDay(new Date(now.getTime()));
+
+        //Then
+        expect(result.getFullYear()).toBe(now.getFullYear());
+        expect(result.getMonth()).toBe(now.getMonth());
+        expect(result.getDate()).toBe(now.getDate());
+        expect(result.getDay()).toBe(now.getDay());
+        expect(result.getHours()).toBe(0);
+        expect(result.getMinutes()).toBe(0);
+        expect(result.getSeconds()).toBe(0);
+        expect(result.getMilliseconds()).toBe(0);
+    });
+
+    it.each([
+        ['13 Dec 2022 00:00:00 GMT', '13 Dec 2022 00:00:00 GMT', 0],
+        ['13 Dec 2022 00:00:00 GMT', '13 Dec 2022 23:59:59 GMT', 0],
+        ['13 Dec 2022 00:01:00 GMT', '13 Dec 2022 02:00:00 GMT', 0],
+        ['13 Dec 2022 00:00:00 GMT', '14 Dec 2022 00:00:00 GMT', 1],
+        ['13 Dec 2022 23:59:00 GMT', '14 Dec 2022 00:00:00 GMT', 1],
+        ['13 Dec 2022 00:00:00 GMT', '17 Dec 2022 00:00:00 GMT', 4],
+    ])('can calculate the difference in days between dates', (ds1, ds2, expected) => {
+        //Given
+        var d1 = new Date(Date.parse(ds1));
+        var d2 = new Date(Date.parse(ds2));
+
+        //When
+        var diff = lib.daysBetween(d1, d2);
+
+        //Then
+        expect(diff).toBe(expected);
+    });
+
 });

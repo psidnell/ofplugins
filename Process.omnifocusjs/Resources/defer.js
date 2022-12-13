@@ -55,13 +55,22 @@ var _ = function() {
         }
     }
 
-    lib.assignWeek = (task, tomorrowTag, weekendTag, nextWeekEndTag, thisWeekTag, nextWeekTag) => {
-        let now = new Date();
-        const defer = task.effectiveDeferDate;
-        defer.setHours(0, 0, 0, 0);
+    lib.setDateToStartOfDay = (date) => {
+        var result = new Date(date.getTime());
+        result.setHours(0, 0, 0, 0);
+        return result;
+    }
 
-        const today = now;
-        today.setHours(0, 0, 0, 0);
+    lib.daysBetween = (todayDate, targetDate) => {
+        return Math.floor(
+            (lib.setDateToStartOfDay(targetDate).getTime() -
+                lib.setDateToStartOfDay(todayDate).getTime()
+            ) / DAY);
+    }
+
+    lib.assignWeek = (task, tomorrowTag, weekendTag, nextWeekEndTag, thisWeekTag, nextWeekTag) => {
+        const defer = lib.setDateToStartOfDay(task.effectiveDeferDate);
+        const today = lib.setDateToStartOfDay(new Date());
 
         const dow = defer.getDay();
         const daysUntil = Math.floor((defer.getTime() - today.getTime()) / DAY);
