@@ -173,20 +173,21 @@ var _ = function() {
         var rootTag = flattenedTags.byName(ROOT_NAME) || new Tag(ROOT_NAME, tags.ending);
         var yearsTag = rootTag.flattenedTags.byName(YEARS_NAME) || new Tag(YEARS_NAME, rootTag.ending);
 
-        let now = new Date().getTime();
+        let today = new Date();
+        let nowMillis = today.getTime();
 
         const deferredTasks = flattenedTasks.filter(
             task => task.taskStatus !== Task.Status.Completed
                 && task.taskStatus !== Task.Status.Dropped
                 && task.effectiveDeferDate
-                && task.effectiveDeferDate.getTime()  > now);
+                && task.effectiveDeferDate.getTime()  > nowMillis);
 
         console.log(lib.t(), "Deferred tasks");
 
         const availableTasks = flattenedTasks.filter(
             task => task.taskStatus !== Task.Status.Completed
                 && task.taskStatus !== Task.Status.Dropped
-                && (!task.effectiveDeferDate || task.effectiveDeferDate.getTime()  <= now));
+                && (!task.effectiveDeferDate || task.effectiveDeferDate.getTime()  <= nowMillis));
 
         console.log(lib.t(), "Available tasks");
 
@@ -199,7 +200,7 @@ var _ = function() {
         var nextWeekTag = lib.findCreateSubTag(rootTag, "NEXT WEEK");
         var thisWeekTag = lib.findCreateSubTag(rootTag, "THIS WEEK");
         var nextWeekEndTag = lib.findCreateSubTag(rootTag, "NEXT WEEKEND");
-        deferredTasks.forEach(task => lib.assignWeekTags(now, task, tomorrowTag, weekendTag, nextWeekEndTag, thisWeekTag, nextWeekTag));
+        deferredTasks.forEach(task => lib.assignWeekTags(task, today, tomorrowTag, weekendTag, nextWeekEndTag, thisWeekTag, nextWeekTag));
 
         console.log(lib.t(), "Assigned Weeks");
 
