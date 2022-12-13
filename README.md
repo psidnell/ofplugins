@@ -92,3 +92,23 @@ The original task is completed and the copy can be modified without affecting th
 Often I have several tasks, like a shopping list or a bunch of chores, that I want to do today. I don't want to give all of them the Forecast tag, as that would be too much clutter. Instead I want to have a single [sentinel](https://www.dictionary.com/browse/sentinel) task with the Forecast tag that represents them.
 
 With this plugin, if you select an individual representative task like "Shopping" or the tag itself, it will create a single task where the name is "Shopping", and a note with the url of the shopping tag. The current Forcast tag will also be added.
+
+## Testing
+
+If using nvm - switch to the version specified in the .nvmrc
+
+```zsh
+nvm use
+```
+
+Then to install node modules:
+
+```zsh
+npm ci
+```
+
+And to run the tests:
+
+```zsh
+npm test
+```
