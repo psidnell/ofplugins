@@ -102,8 +102,11 @@ describe('Defer', () => {
         var yearsTag = {
             flattenedChildren: []
         };
-        var monthTag = {};
+        var monthTag = {
+            name: "Mock Tag"
+        };
         var task = {
+            name: "Mock Task",
             effectiveDeferDate: new Date(),
             tags: [],
             addTag: jest.fn((tag) => null),
@@ -127,7 +130,7 @@ describe('Defer', () => {
         expect(task.addTag.mock.calls[0][1]).toBe(task.endingOfTags);
     });
 
-    it('can assign a month tag if already assigned', () => {
+    it('can not assign a month tag if already assigned', () => {
         //Given
         let now = new Date();
         var year = now.getFullYear();
@@ -354,7 +357,7 @@ describe('Defer', () => {
 
     it.each([
         // Dec 12 2022 is a Mon
-        ['11 Dec 2022 00:00:00 GMT', '12 Dec 2022 00:00:00 GMT', true],
+        ['11 Dec 2022 00:00:00 GMT', '12 Dec 2022 00:00:00 GMT', false],
         // The current week
         ['12 Dec 2022 00:00:00 GMT', '12 Dec 2022 00:00:00 GMT', true],
         ['12 Dec 2022 00:00:00 GMT', '13 Dec 2022 00:00:00 GMT', true],

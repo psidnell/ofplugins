@@ -103,12 +103,10 @@ var _ = function() {
 
         const weekOffset = lib.weekDifference(now, defer);
         var isWeekend = lib.isWeekend(now);
-        var isThisWeek = isWeekend ? weekOffset === 1 : weekOffset === 0;
-        var isNextWeek = isWeekend ? weekOffset === 2 : weekOffset === 1;
 
         lib.applyTagIf(daysUntil === 1, task, tomorrowTag);
-        lib.applyTagIf(isThisWeek && !lib.isWeekend(defer), task, thisWeekTag);
-        lib.applyTagIf(isNextWeek && !lib.isWeekend(defer), task, nextWeekTag);
+        lib.applyTagIf(weekOffset === 0 && !lib.isWeekend(defer), task, thisWeekTag);
+        lib.applyTagIf(weekOffset === 1 && !lib.isWeekend(defer), task, nextWeekTag);
         lib.applyTagIf(weekOffset === 0 && lib.isWeekend(defer), task, weekendTag);
         lib.applyTagIf(weekOffset === 1 && lib.isWeekend(defer), task, nextWeekEndTag);
     }
