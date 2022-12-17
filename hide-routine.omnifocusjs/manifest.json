@@ -1,0 +1,12 @@
+{
+	"defaultLocale": "en",
+	"identifier": "com.PaulSidnell.HideRoutine",
+	"author": "Paul Sidnell",
+	"description": "Hide Routine",
+	"version": "1.0",
+	"actions": [
+		{ "image":"hide.png", "identifier": "hide" }
+	],
+	"libraries": [
+	]
+}
