@@ -16,7 +16,7 @@ var _ = (function() {
 
 	    var matches = [];
 		flattenedFolders.forEach(folder => {
-		    if ((!folder.parent) &&
+		    if ((folder.parent && !folder.parent.parent) &&
 		        folder.status == Folder.Status.Active &&
 		        !matchesStrings(folder.name)) {
 		        matches.push(folder);
@@ -25,7 +25,7 @@ var _ = (function() {
 		});
 
 		flattenedProjects.forEach(project => {
-            if ((!project.parentFolder) &&
+            if ((!project.parentFolder || project.parentFolder.name==="Miscellaneous") &&
                 project.status != Project.Status.Dropped &&
                 project.status != Project.Status.Done &&
 				!matchesStrings(project.name)) {
