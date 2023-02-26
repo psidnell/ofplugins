@@ -20,7 +20,7 @@ var _ = (function() {
         });
 
         // Add sentinel tag
-         var sentinelTagName = "/➡️";
+         var sentinelTagName = "/↔️";
          var sentinalTag = flattenedTags.byName(sentinelTagName) || new Tag(sentinelTagName);
          tags.push(sentinalTag);
 
@@ -30,7 +30,7 @@ var _ = (function() {
                 tagNameList.push(tag.name);
             }
         });
-        var title = '➡️ ' + tagNameList.join(', ');
+        var title = '↔️ ' + tagNameList.join(', ');
 
         var noteLines = [];
         tags.forEach((tag)=>{
