@@ -22,7 +22,7 @@ var _ = (function() {
         // Add sentinel tag
          var sentinelTagName = "/↔️";
          var sentinalTag = flattenedTags.byName(sentinelTagName) || new Tag(sentinelTagName);
-         tags.push(sentinalTag);
+         // tags.push(sentinalTag);
 
         var tagNameList = [];
         tags.forEach((tag)=>{
