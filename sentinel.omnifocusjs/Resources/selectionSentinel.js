@@ -37,7 +37,7 @@ var _ = (function() {
         var noteLines = [];
         tags.forEach((tag)=>{
             if (tag != sentinalTag) {
-                noteLines.push(tag.name + ': omnifocus:///tag/' +  encodeURIComponent(tag.name));
+                noteLines.push(tag.name + ': omnifocus:///tag/' +  tag.id.primaryKey);
                 noteLines.push('');
             }
         });
