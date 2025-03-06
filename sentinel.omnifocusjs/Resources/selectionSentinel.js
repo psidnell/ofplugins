@@ -2,9 +2,11 @@ var _ = (function() {
     var action = new PlugIn.Action((selection, sender) => {
 
         var tags = [];
+        var tasks = [];
 
         // Tags from any selected tasks
         selection.tasks.forEach(task => {
+            tasks.push(task);
             task.tags.forEach(tag => {
                 if (!tags.includes(tag)) {
                     tags.push(tag);
@@ -35,8 +37,16 @@ var _ = (function() {
         var noteLines = [];
         tags.forEach((tag)=>{
             if (tag != sentinalTag) {
-                noteLines.push('omnifocus:///tag/' +  encodeURIComponent(tag.name));
+                noteLines.push(tag.name + ': omnifocus:///tag/' +  encodeURIComponent(tag.name));
+                noteLines.push('');
             }
+        });
+        tasks.forEach((task)=>{
+           if (task.containingProject) {
+             noteLines.push(task.containingProject.name + ': omnifocus:///project/' +
+                task.containingProject.id.primaryKey);
+                noteLines.push('');
+           }
         });
         var note = noteLines.join('\n');
 
