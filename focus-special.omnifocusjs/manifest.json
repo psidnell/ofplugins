@@ -1,0 +1,12 @@
+{
+	"defaultLocale": "en",
+	"identifier": "com.PaulSidnell.FocusSpecial",
+	"author": "Paul Sidnell",
+	"description": "Focus on Special Projects",
+	"version": "1.0",
+	"actions": [
+		{ "image":"focus.png", "identifier": "focus" }
+	],
+	"libraries": [
+	]
+}
