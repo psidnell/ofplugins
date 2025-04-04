@@ -41,21 +41,27 @@ var _ = (function() {
                 noteLines.push('');
             }
         });
+        var parentProject;
         tasks.forEach((task)=>{
            if (task.containingProject) {
              noteLines.push(task.containingProject.name + ': omnifocus:///project/' +
                 task.containingProject.id.primaryKey);
                 noteLines.push('');
+                parentProject = task.containingProject;
            }
         });
         var note = noteLines.join('\n');
 
         var task = new Task(title, inbox.beginning);
+        if (parentProject) {
+            moveTasks([task], parentProject);
+        }
         task.addTag(Tag.forecastTag);
         task.flagged = true;
         tags.forEach(tag => {
             task.addTag(tag);
         });
+        task.addTag(sentinalTag);
         task.note = note;
     });
 
