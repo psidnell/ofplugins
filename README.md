@@ -87,7 +87,7 @@ This plugin takes the selected task (if it's in a project and has a repeat), cop
 
 The original task is completed and the copy can be modified without affecting the original task.
 
-## [Sentinel Task](sentinel.omnifocusjs)
+## [Sentinel Task](unused/sentinel.omnifocusjs)
 
 Often I have several tasks, like a shopping list or a bunch of chores, that I want to do today. I don't want to give all of them the Forecast tag, as that would be too much clutter. Instead I want to have a single [sentinel](https://www.dictionary.com/browse/sentinel) task with the Forecast tag that represents them.
 
