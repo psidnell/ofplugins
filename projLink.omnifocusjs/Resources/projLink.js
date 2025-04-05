@@ -21,6 +21,8 @@ var _ = (function() {
         newTask.addTag(Tag.forecastTag);
         newTask.flagged = true;
         newTask.note = note;
+        var formatter = Formatter.Date.withStyle(Formatter.Date.Style.Short);
+        newTask.deferDate = formatter.dateFromString('00:00');
     });
 
     action.validate = (selection, sender) => {
