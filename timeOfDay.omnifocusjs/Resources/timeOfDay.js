@@ -29,7 +29,6 @@ var _ = (function() {
                     var hour = task.effectiveDueDate.getHours();
                     var minute = task.effectiveDueDate.getMinutes();
 
-                    console.log(task.name, hour, minute);
                     var earlyTag = flattenedTags.byName("EARLY") || new Tag("EARLY");
                     var amTag = flattenedTags.byName("AM") || new Tag("AM");
                     var pmTag = flattenedTags.byName("PM") || new Tag("PM");
@@ -45,19 +44,14 @@ var _ = (function() {
                     ]);
 
                     if (hour < 9) {
-                        console.log('EARLY', task.name, task.taskStatus);
                         task.addTag(earlyTag);
                     } else if (hour < 12) {
-                        console.log('AM', task.name, task.taskStatus);
                         task.addTag(amTag);
                     } else if (hour < 18) {
-                        console.log('PM', task.name, task.taskStatus);
                         task.addTag(pmTag);
                     } else if (hour < 23 || (hour == 23 && minute < 59)) {
-                        console.log('EVENING', task.name, task.taskStatus);
                         task.addTag(eveningTag);
                     } else {
-                        console.log('ALL DAY', task.name, task.taskStatus);
                         task.addTag(allDayTag);
                     }
 
