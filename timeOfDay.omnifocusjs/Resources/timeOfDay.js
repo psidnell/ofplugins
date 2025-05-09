@@ -8,15 +8,6 @@ var _ = (function() {
             date.getDate() == today.getDate();
     }
 
-    var isEarly = function(date) {
-        var today = new Date()
-        return date &&
-            date.getFullYear() == today.getFullYear() &&
-            date.getMonth() == today.getMonth() &&
-            date.getDate() == today.getDate() &&
-            date.getHours() < 9;
-    }
-
     var action = new PlugIn.Action(function(selection, sender){
 
         flattenedTasks.forEach(task => {
@@ -24,7 +15,6 @@ var _ = (function() {
                 task.taskStatus != Task.Status.Dropped &&
                 task.taskStatus != Task.Status.Completed &&
                 isToday(task.effectiveDueDate)) {
-
 
                     var hour = task.effectiveDueDate.getHours();
                     var minute = task.effectiveDueDate.getMinutes();
@@ -35,27 +25,36 @@ var _ = (function() {
                     var eveningTag = flattenedTags.byName("EVENING") || new Tag("EVENING");
                     var allDayTag = flattenedTags.byName("ALL DAY") || new Tag("ALL DAY");
 
-                    task.removeTags([
+                    var timeTags = [
                         earlyTag,
                         amTag,
                         pmTag,
                         eveningTag,
                         allDayTag
-                    ]);
+                    ];
+
+                    var newTag;
 
                     if (hour < 9) {
-                        task.addTag(earlyTag);
+                        newTag = earlyTag;
                     } else if (hour < 12) {
-                        task.addTag(amTag);
+                       newTag = amTag;
                     } else if (hour < 18) {
-                        task.addTag(pmTag);
+                        newTag = pmTag;
                     } else if (hour < 23 || (hour == 23 && minute < 59)) {
-                        task.addTag(eveningTag);
+                        newTag = eveningTag;
                     } else {
-                        task.addTag(allDayTag);
+                        newTag = allDayTag;
                     }
 
-
+                    // Avoid removing and re-adding the tag we want
+                    // so as to avoid re-ordering when using tags order
+                    // or unnecessarily re-order the tags
+                    var tagsToRemove = task.tags.filter(t => t !== newTag);
+                    task.removeTags(tagsToRemove);
+                    if (task.tags.indexOf(newTag) == -1) {
+                        task.addTag(newTag);
+                    }
             }
         });
 	});
