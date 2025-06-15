@@ -8,6 +8,17 @@ var _ = (function() {
             date.getDate() == today.getDate();
     }
 
+    var addTagExclusive = function(task, newTag, exclusiveTags) {
+        // Avoid removing and re-adding the tag we want
+        // so as to avoid re-ordering when using tags order
+        // or unnecessarily re-order the tags
+        var tagsToRemove = exclusiveTags.filter(t => t !== newTag);
+        task.removeTags(tagsToRemove);
+        if (task.tags.indexOf(newTag) == -1) {
+            task.addTag(newTag);
+        }
+    }
+
     var action = new PlugIn.Action(function(selection, sender){
 
         flattenedTasks.forEach(task => {
@@ -24,6 +35,7 @@ var _ = (function() {
                     var pmTag = flattenedTags.byName("PM") || new Tag("PM");
                     var eveningTag = flattenedTags.byName("EVENING") || new Tag("EVENING");
                     var allDayTag = flattenedTags.byName("ALL DAY") || new Tag("ALL DAY");
+                    var forecastTag = Tag.forecastTag;
 
                     var timeTags = [
                         earlyTag,
@@ -47,14 +59,12 @@ var _ = (function() {
                         newTag = allDayTag;
                     }
 
-                    // Avoid removing and re-adding the tag we want
-                    // so as to avoid re-ordering when using tags order
-                    // or unnecessarily re-order the tags
-                    var tagsToRemove = task.tags.filter(t => t !== newTag);
-                    task.removeTags(tagsToRemove);
-                    if (task.tags.indexOf(newTag) == -1) {
-                        task.addTag(newTag);
-                    }
+                   addTagExclusive(task, newTag, timeTags);
+
+                   if (task.tags.indexOf(forecastTag) == -1) {
+                       task.addTag(forecastTag);
+                   }
+
             }
         });
 	});
