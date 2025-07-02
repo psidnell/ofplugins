@@ -74,6 +74,7 @@ var _ = (function() {
                 task.taskStatus != Task.Status.Dropped &&
                 task.taskStatus != Task.Status.Completed &&
                 (!task.effectiveDueDate || !isToday(task.effectiveDueDate)) &&
+                task.tags.indexOf(allDayTag) == -1 &&
                 task.tags.indexOf(earlyTag) == -1 &&
                 task.tags.indexOf(amTag) == -1 &&
                 task.tags.indexOf(pmTag) == -1 &&
