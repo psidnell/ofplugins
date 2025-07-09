@@ -4,9 +4,11 @@ var _ = (function() {
         var time;
         if (item.dueDate) {
             time = item.dueDate.getTime()
+        } else if (item.plannedDate) {
+            time = item.plannedDate.getTime();
         } else if (item.deferDate) {
-            time = item.deferDate.getTime();
-        } else {
+            time = item.deferDate.getTime();}
+        else {
             time = now.getTime();
         }
         // console.log ('smartTime ' + item.name + ' ' + new Date(time) + ' = ' + time);
