@@ -40,7 +40,7 @@ var _ = (function() {
 
         flattenedTasks.forEach(task => {
 
-            // Items with a due of today
+            // Items with a due of today get a time of day tag
             if (task.taskStatus != Task.Status.Blocked &&
                 task.taskStatus != Task.Status.Dropped &&
                 task.taskStatus != Task.Status.Completed &&
@@ -63,13 +63,9 @@ var _ = (function() {
                 }
 
                addTagExclusive(task, newTag, timeTags);
-
-               if (task.tags.indexOf(forecastTag) == -1) {
-                   task.addTag(forecastTag);
-               }
             }
 
-            // Items flagged or with today tag
+            // Items flagged or with today tag get ANYTIME
             if (task.taskStatus != Task.Status.Blocked &&
                 task.taskStatus != Task.Status.Dropped &&
                 task.taskStatus != Task.Status.Completed &&
@@ -86,6 +82,14 @@ var _ = (function() {
                 if (task.tags.indexOf(anytimeTag) == -1) {
                     task.addTag(anytimeTag);
                 }
+
+            }
+
+            // Items flagged or due get forecast flag
+            if (task.taskStatus != Task.Status.Blocked &&
+                task.taskStatus != Task.Status.Dropped &&
+                task.taskStatus != Task.Status.Completed &&
+                (isToday(task.effectiveDueDate) || task.flagged)) {
 
                 if (task.tags.indexOf(forecastTag) == -1) {
                     task.addTag(forecastTag);
