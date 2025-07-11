@@ -7,7 +7,8 @@ var _ = (function() {
         document.windows[0].selectObjects([]);
 
         // Create new task
-        var taskCopy = duplicateTasks([task], task.containingProject)[0];
+        var dest = task.containingProject ? task.containingProject : inbox.ending;
+        var taskCopy = duplicateTasks([task], dest)[0];
         taskCopy.name = taskCopy.name + ' (copy)';
         taskCopy.repetitionRule = null;
 
@@ -21,7 +22,7 @@ var _ = (function() {
         return selection.tasks
             && selection.tasks.length == 1
             && selection.tasks[0].repetitionRule != null
-            && selection.tasks[0].containingProject != null
+            /*&& selection.tasks[0].containingProject != null*/
     };
 
     return action;
