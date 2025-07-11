@@ -8,6 +8,13 @@ var _ = (function() {
             date.getDate() == today.getDate();
     }
 
+    var isAvailable = function(task) {
+        return (
+            task.taskStatus != Task.Status.Blocked &&
+            task.taskStatus != Task.Status.Dropped &&
+            task.taskStatus != Task.Status.Completed);
+        }
+
     var addTagExclusive = function(task, newTag, exclusiveTags) {
         // Avoid removing and re-adding the tag we want
         // so as to avoid re-ordering when using tags order
@@ -41,9 +48,8 @@ var _ = (function() {
         flattenedTasks.forEach(task => {
 
             // Items with a due of today get a time of day tag
-            if (task.taskStatus != Task.Status.Blocked &&
-                task.taskStatus != Task.Status.Dropped &&
-                task.taskStatus != Task.Status.Completed &&
+            if (isAvailable(task) &&
+                task.tags.indexOf(forecastTag) == -1 &&
                 isToday(task.effectiveDueDate)) {
 
                 var hour = task.effectiveDueDate.getHours();
@@ -62,14 +68,13 @@ var _ = (function() {
                     newTag = allDayTag;
                 }
 
-               addTagExclusive(task, newTag, timeTags);
+                addTagExclusive(task, newTag, timeTags);
             }
 
-            // Items flagged or with today tag get ANYTIME
-            if (task.taskStatus != Task.Status.Blocked &&
-                task.taskStatus != Task.Status.Dropped &&
-                task.taskStatus != Task.Status.Completed &&
+            // Items flagged or with a due
+            if (isAvailable(task) &&
                 (!task.effectiveDueDate || !isToday(task.effectiveDueDate)) &&
+                task.tags.indexOf(forecastTag) == -1 &&
                 task.tags.indexOf(allDayTag) == -1 &&
                 task.tags.indexOf(earlyTag) == -1 &&
                 task.tags.indexOf(amTag) == -1 &&
@@ -77,7 +82,7 @@ var _ = (function() {
                 task.tags.indexOf(eveningTag) == -1 &&
                 task.tags.indexOf(anytimeTag) == -1 &&
                 task.tags.indexOf(maybeTag) == -1 &&
-                (task.tags.indexOf(forecastTag) != -1 || task.flagged)) {
+                (task.flagged || task.effectiveDueDate || isToday(task.plannedDate))) {
 
                 if (task.tags.indexOf(anytimeTag) == -1) {
                     task.addTag(anytimeTag);
@@ -85,16 +90,16 @@ var _ = (function() {
 
             }
 
-            // Items flagged or due get forecast flag
-            if (task.taskStatus != Task.Status.Blocked &&
-                task.taskStatus != Task.Status.Dropped &&
-                task.taskStatus != Task.Status.Completed &&
-                (isToday(task.effectiveDueDate) || task.flagged)) {
-
-                if (task.tags.indexOf(forecastTag) == -1) {
-                    task.addTag(forecastTag);
-                }
-            }
+//            // Items flagged or due get forecast flag
+//            if (task.taskStatus != Task.Status.Blocked &&
+//                task.taskStatus != Task.Status.Dropped &&
+//                task.taskStatus != Task.Status.Completed &&
+//                (isToday(task.effectiveDueDate) || task.flagged)) {
+//
+//                if (task.tags.indexOf(forecastTag) == -1) {
+//                    task.addTag(forecastTag);
+//                }
+//            }
 
         });
 	});
