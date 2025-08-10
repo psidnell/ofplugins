@@ -1,0 +1,37 @@
+/*{
+    "author": "Patrick",
+    "targets": ["omnifocus"],
+    "type": "action",
+    "identifier": "com.patrick.SetPlannedDateToToday",
+    "version": "1.0",
+    "description": "Set the Planned Date of the selected tasks to today",
+    "label": "Plan for Today",
+    "mediumLabel": "Plan for Today",
+    "longLabel": "Set Planned Date to Today",
+    "paletteLabel": "Plan for Today",
+    "image": "signpost.right"
+}*/
+(() => {
+  const action = new PlugIn.Action(selection => {
+    // 1. Fetch the default time string (e.g. "08:00" or "00:00:00")
+    let timeString = settings.objectForKey('DefaultPlannedTime') || "00:00:00";
+    const parts = timeString.split(":").map(Number);
+    const [h = 0, m = 0, s = 0] = parts;
+
+    // 2. Construct “today at default time”
+    const cal = Calendar.current;
+    const todayStart = cal.startOfDay(new Date());
+    const dc = new DateComponents();
+    dc.hour   = h;
+    dc.minute = m;
+    dc.second = s;
+    const plannedToday = cal.dateByAddingDateComponents(todayStart, dc);
+
+    // 3. Apply to every selected task
+    selection.tasks.forEach(task => {
+      task.plannedDate = plannedToday;
+    });
+  });
+
+  return action;
+})();
