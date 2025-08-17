@@ -28,18 +28,28 @@ var _ = (function() {
             Overdue (Task.Status r/o) • The task is incomplete overdue.
         */
         var rank = 0;
+
+        // If it's in an available state
         var status = item.taskStatus;
         switch (status) {
             case Task.Status.Overdue:
             case Task.Status.DueSoon:
             case Task.Status.Available:
-                rank += item.flagged ? Math.pow(10, 3) : 0;
+            case Task.Status.Next:
+
+                // Consider the flag
+                rank += item.flagged ? Math.pow(10, 2) : 0;
+
+                // Or one of the states I care about
+                // Overdue
+                rank += status === Task.Status.Overdue ? Math.pow(10, 1): 0;
+                // Or not
+                rank += status === Task.Status.DueSoon ? Math.pow(10, 0) : 0;
+                rank += status === Task.Status.Available ? Math.pow(10, 0) : 0;
+                rank += status === Task.Status.Next ? Math.pow(10, 0) : 0;
                 break;
         }
 
-        rank += status === Task.Status.Overdue ? Math.pow(10, 2): 0;
-        rank += status === Task.Status.DueSoon ? Math.pow(10, 1) : 0;
-        rank += status === Task.Status.Available ? Math.pow(10, 0) : 0;
         // console.log('rank ' + item.name + ' ' + item.taskStatus + ' f=' + item.flagged + ' = ' + rank);
         return rank;
     }
