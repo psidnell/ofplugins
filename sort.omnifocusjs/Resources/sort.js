@@ -1,6 +1,8 @@
 var _ = (function() {
 
-    var smartTime = (item, now) => {
+    const now = new Date();
+
+    var smartTime = (item) => {
         var time;
         if (item.dueDate) {
             time = item.dueDate.getTime()
@@ -31,21 +33,19 @@ var _ = (function() {
             case Task.Status.Overdue:
             case Task.Status.DueSoon:
             case Task.Status.Available:
-            case Task.Status.Next:
-                rank += item.flagged ? Math.pow(10, 4) : 0;
+                rank += item.flagged ? Math.pow(10, 3) : 0;
                 break;
         }
 
-        rank += status === Task.Status.Overdue ? Math.pow(10, 3): 0;
-        rank += status === Task.Status.DueSoon ? Math.pow(10, 2) : 0;
-        rank += status === Task.Status.Available ? Math.pow(10, 1) : 0;
-        rank += status === Task.Status.Next ? Math.pow(10, 0) : 0;
+        rank += status === Task.Status.Overdue ? Math.pow(10, 2): 0;
+        rank += status === Task.Status.DueSoon ? Math.pow(10, 1) : 0;
+        rank += status === Task.Status.Available ? Math.pow(10, 0) : 0;
         // console.log('rank ' + item.name + ' ' + item.taskStatus + ' f=' + item.flagged + ' = ' + rank);
         return rank;
     }
 
 	var compare = (left, right) => {
-	    const now = new Date();
+
 	    // Compare on rank
         const leftRank = rank(left);
         const rightRank = rank (right);
@@ -54,8 +54,8 @@ var _ = (function() {
         }
 
         // Compare on smart times
-        const leftSmartTime = smartTime(left, now);
-        const rightSmartTime = smartTime(right, now);
+        const leftSmartTime = smartTime(left);
+        const rightSmartTime = smartTime(right);
         if (leftSmartTime !== rightSmartTime) {
             return leftSmartTime - rightSmartTime;
         }
