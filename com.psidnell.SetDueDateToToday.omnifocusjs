@@ -1,0 +1,59 @@
+//Forked from "identifier": "com.patrick.SetPlannedDateToToday",
+/*{
+    "author": "P. Sidnell",
+    "targets": ["omnifocus"],
+    "type": "action",
+    "identifier": "com.psidnell.SetDueDateToToday",
+    "version": "1.0",
+    "description": "Toggle a due date of today",
+    "label": "Due Today",
+    "mediumLabel": "Due Today",
+    "longLabel": "Toggle a due date of today",
+    "paletteLabel": "Due Today",
+    "image": "calendar"
+}*/
+(() => {
+  const action = new PlugIn.Action(selection => {
+    // 1. Fetch the default time string (e.g. "08:00" or "00:00:00")
+    let timeString = settings.objectForKey('DefaultDueTime') || "23:59:00";
+    const parts = timeString.split(":").map(Number);
+    const [h = 23, m = 59, s = 0] = parts;
+
+    // 2. Construct “today at default time”
+    const cal = Calendar.current;
+    const todayStart = cal.startOfDay(new Date());
+    const dc = new DateComponents();
+    dc.hour   = h;
+    dc.minute = m;
+    dc.second = s;
+    const today = cal.dateByAddingDateComponents(todayStart, dc);
+
+    // 3. Apply to every selected task
+
+    var numSet = 0;
+
+    selection.tasks.forEach(task => {
+      if (task.dueDate) {
+        numSet++;
+      }
+    });
+
+
+    if (numSet != selection.tasks.length) {
+        selection.tasks.forEach(task => {
+          task.dueDate = today;
+        });
+    } else {
+        selection.tasks.forEach(task => {
+          task.dueDate = null;
+        });
+    }
+  });
+
+
+  action.validate = function(selection, sender){
+      return selection.tasks.length > 0;
+  };
+
+  return action;
+})();

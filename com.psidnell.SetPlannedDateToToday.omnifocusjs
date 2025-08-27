@@ -1,13 +1,14 @@
+//Forked from "identifier": "com.patrick.SetPlannedDateToToday",
 /*{
-    "author": "Patrick",
+    "author": "P. Sidnell",
     "targets": ["omnifocus"],
     "type": "action",
-    "identifier": "com.patrick.SetPlannedDateToToday",
+    "identifier": "com.psidnell.SetPlannedDateToToday",
     "version": "1.0",
-    "description": "Set the Planned Date of the selected tasks to today",
+    "description": "Toggle a planned date of today",
     "label": "Plan for Today",
     "mediumLabel": "Plan for Today",
-    "longLabel": "Set Planned Date to Today",
+    "longLabel": "Toggle a planned date of today",
     "paletteLabel": "Plan for Today",
     "image": "signpost.right"
 }*/
@@ -25,13 +26,34 @@
     dc.hour   = h;
     dc.minute = m;
     dc.second = s;
-    const plannedToday = cal.dateByAddingDateComponents(todayStart, dc);
+    const today = cal.dateByAddingDateComponents(todayStart, dc);
 
     // 3. Apply to every selected task
+
+    var numSet = 0;
+
     selection.tasks.forEach(task => {
-      task.plannedDate = plannedToday;
+      if (task.plannedDate) {
+        numSet++;
+      }
     });
+
+
+    if (numSet != selection.tasks.length) {
+        selection.tasks.forEach(task => {
+          task.plannedDate = today;
+        });
+    } else {
+        selection.tasks.forEach(task => {
+          task.plannedDate = null;
+        });
+    }
   });
+
+
+  action.validate = function(selection, sender){
+      return selection.tasks.length > 0;
+  };
 
   return action;
 })();

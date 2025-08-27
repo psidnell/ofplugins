@@ -1,0 +1,45 @@
+/*{
+    "author": "Paul Sidnell",
+    "targets": ["omnifocus"],
+    "type": "action",
+    "identifier": "com.sidnell.ToggleNext",
+    "version": "1.0",
+    "description": "Toggle the NEXT tag",
+    "label": "Toggle the NEXT tag",
+    "mediumLabel": "Plan for Today",
+    "longLabel": "Toggle the NEXT tag",
+    "paletteLabel": "Toggle the NEXT tag",
+    "image": "arrow.up.circle"
+}*/
+(() => {
+    const action = new PlugIn.Action(selection => {
+
+        var nextTag = flattenedTags.byName("/NEXT") || new Tag("/NEXT");
+
+        var numSet = 0
+        selection.tasks.forEach(task => {
+            if (task.tags.indexOf(nextTag) != -1) {
+                numSet++;
+            }
+        });
+
+        if (numSet === selection.tasks.length) {
+            // All are set so unset
+            selection.tasks.forEach(task => {
+                task.removeTag(nextTag);
+            });
+        } else {
+            // Some/none are set so set
+            selection.tasks.forEach(task => {
+                task.addTag(nextTag);
+            });
+        }
+
+    });
+
+    action.validate = function(selection, sender){
+        return selection.tasks.length > 0;
+    };
+
+    return action;
+})();
