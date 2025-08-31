@@ -33,9 +33,6 @@ var _ = (function() {
         var pmTag = flattenedTags.byName("PM") || new Tag("PM");
         var eveningTag = flattenedTags.byName("EVENING") || new Tag("EVENING");
         var allDayTag = flattenedTags.byName("ALL DAY") || new Tag("ALL DAY");
-        var anytimeTag = flattenedTags.byName("ANYTIME") || new Tag("ANYTIME");
-        var maybeTag = flattenedTags.byName("MAYBE") || new Tag("MAYBE");
-        var nextTag = Tag.forecastTag;
 
         var timeTags = [
             earlyTag,
@@ -46,14 +43,17 @@ var _ = (function() {
         ];
 
         flattenedTasks.forEach(task => {
+            // effectivePlannedDate currently broken/missing?
+            // And using planned date is really annoying as it's mostly 00:00
+            // var taskDate = task.plannedDate ? task.plannedDate : task.effectiveDueDate;
+            var taskDate = task.effectiveDueDate;
 
             // Items with a due of today get a time of day tag
             if (isAvailable(task) &&
-                /*task.tags.indexOf(nextTag) == -1 &&*/
-                isToday(task.effectiveDueDate)) {
+                isToday(taskDate)) {
 
-                var hour = task.effectiveDueDate.getHours();
-                var minute = task.effectiveDueDate.getMinutes();
+                var hour = taskDate.getHours();
+                var minute = taskDate.getMinutes();
 
                 var newTag;
                 if (hour < 9) {
@@ -70,37 +70,6 @@ var _ = (function() {
 
                 addTagExclusive(task, newTag, timeTags);
             }
-
-            // Items flagged or with a due
-//            if (isAvailable(task) &&
-//                (!task.effectiveDueDate || !isToday(task.effectiveDueDate)) &&
-//                task.tags.indexOf(nextTag) == -1 &&
-//                task.tags.indexOf(allDayTag) == -1 &&
-//                task.tags.indexOf(earlyTag) == -1 &&
-//                task.tags.indexOf(amTag) == -1 &&
-//                task.tags.indexOf(pmTag) == -1 &&
-//                task.tags.indexOf(eveningTag) == -1 &&
-//                task.tags.indexOf(anytimeTag) == -1 &&
-//                task.tags.indexOf(maybeTag) == -1 &&
-//                (task.flagged || task.plannedDate || isToday(task.plannedDate))) {
-//
-//                if (task.tags.indexOf(anytimeTag) == -1) {
-//                    task.addTag(anytimeTag);
-//                }
-//
-//            }
-
-//            // Items flagged or due get forecast flag
-//            if (task.taskStatus != Task.Status.Blocked &&
-//                task.taskStatus != Task.Status.Dropped &&
-//                task.taskStatus != Task.Status.Completed &&
-//                (isToday(task.effectiveDueDate) || task.flagged)) {
-//
-//                if (task.tags.indexOf(nextTag) == -1) {
-//                    task.addTag(nextTag);
-//                }
-//            }
-
         });
 	});
 
