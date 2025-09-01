@@ -6,7 +6,7 @@ var _ = (function() {
             return;
         }
         var project = task.containingProject;
-        var title = '🌀' + project.name;
+        var title = '(@)' + project.name;
 
         var noteLines = [];
         noteLines.push(task.containingProject.name + ': omnifocus:///project/' +

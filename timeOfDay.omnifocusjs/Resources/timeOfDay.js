@@ -44,7 +44,8 @@ var _ = (function() {
 
         flattenedTasks.forEach(task => {
             // effectivePlannedDate currently broken/missing?
-            var taskDate = task.effectiveDueDate ? task.effectiveDueDate : task.plannedDate;
+            //var taskDate = task.effectiveDueDate ? task.effectiveDueDate : task.plannedDate;
+            var taskDate = task.effectiveDueDate;
 
             // Items with a due of today get a time of day tag
             if (isAvailable(task) &&
