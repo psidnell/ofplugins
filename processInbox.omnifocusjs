@@ -26,9 +26,9 @@
 
     const CONTEXT_TAG_NAMES = ["CHORES", "DIY", "GARDEN", "ADMIN", "FUN", "EXERCISE"];
     const TIME_TAG_NAMES = [
-        "\"AM\" - for the morning",
-        "\"PM\" - for the afternoon",
-        "\"EVENING\" - for after 6pm"
+        "\"AM\" - for the morning between 00:00am and 11:59am",
+        "\"PM\" - for the afternoon between 12pm and 5:59pm",
+        "\"EVENING\" - for the evening between 6pm and 11:59pm"
     ];
 
 
@@ -48,36 +48,33 @@
             "tags": null,
         };
         console.log("Task properties:", JSON.stringify(taskProperties));
-        const prompt = "You're a GTD expert helping someone process their inbox items. " +
-            "There are several steps to this." +
+        const prompt = "You're a GTD expert helping someone process their inbox items." +
             "\n\n" +
-            "Step 1:" +
-            "\n" +
-            "The user has a set of category tags comprising:" +
+            "The user has 2 groups of tags." +
+            "\n\n" +
+            "The first is a set of category tags relating to the nature of the task:" +
             "\n" +
             "\"" + CONTEXT_TAG_NAMES.join("\",\"") + "\"" +
             "\n" +
-            "one of which should be applied to each task." +
-            "\n\n" +
-            "Step 2:" +
             "\n" +
-            "The user has a set of \"Time Of Day\" tags indicating when in the day the task should be done:" +
+            "The second is a set of tags indicating the time of day the day the task should be done:" +
             "\n" +
             TIME_TAG_NAMES.join(",\n")+
-            "\n" +
-            "one of which should be applied to each task, but only if there is a clear indication of when it should be done." +
             "\n\n" +
-            "Provide the most appropriate tags for the following JSON task: " +
+            "Where it is clear, provide a category and time tag in a comma separated list for the following single JSON task: " +
             JSON.stringify(taskProperties);
         console.log("Prompt:", prompt);
+        task.clearTags();
         task.addTag(PENDING_TAG);
         const responseJSON = await session.respondWithSchema(prompt, schema);
         console.log(responseJSON);
+        task.clearTags();
         const response = JSON.parse(responseJSON);
-        if (response.length == 1) {
+        if (response.length >= 1) {
             const tagNames = response[0].tags;
             console.log("tagNames:", JSON.stringify(tagNames));
             if (tagNames) {
+                task.clearTags();
                 for (const rawTagName of tagNames.split(",")) {
                     var tagName = rawTagName.trim();
                     console.log("tagName:", tagName);
@@ -86,7 +83,7 @@
                 }
             }
         }
-        task.removeTags([PENDING_TAG]);
+        //task.removeTags([PENDING_TAG]);
     }
 
 //    const addResponseItemToTask = (responseItem, task) => {
