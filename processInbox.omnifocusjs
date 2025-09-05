@@ -24,7 +24,7 @@
     });
     const session = new LanguageModel.Session();
 
-    const CONTEXT_TAG_NAMES = ["CHORES", "DIY", "GARDEN", "ADMIN", "FUN"];
+    const CONTEXT_TAG_NAMES = ["CHORES", "DIY", "GARDEN", "ADMIN", "FUN", "EXERCISE"];
     const TIME_TAG_NAMES = [
         "\"AM\" - for the morning",
         "\"PM\" - for the afternoon",
@@ -38,7 +38,15 @@
         console.log("Processing Task:", task.name);
         console.log("Schema:", schema);
         console.log("Session:", session);
-        const taskProperties = {"name": task.name, "note": task.note, tags: null};
+        const title = task.name +
+            (task.effectiveDueDate ?
+            " at " + Formatter.Date.withFormat('h:mma').stringFromDate(task.effectiveDueDate) :
+            "");
+        const taskProperties = {
+            "name": title,
+            "note": task.note,
+            "tags": null,
+        };
         console.log("Task properties:", JSON.stringify(taskProperties));
         const prompt = "You're a GTD expert helping someone process their inbox items. " +
             "There are several steps to this." +
@@ -53,8 +61,9 @@
             "\n\n" +
             "Step 2:" +
             "\n" +
-            "The user has a set of \"Time Of Day\" tags indicating when in the day the task should be done:\n" +
-            TIME_TAG_NAMES.join(",")+
+            "The user has a set of \"Time Of Day\" tags indicating when in the day the task should be done:" +
+            "\n" +
+            TIME_TAG_NAMES.join(",\n")+
             "\n" +
             "one of which should be applied to each task, but only if there is a clear indication of when it should be done." +
             "\n\n" +
@@ -65,16 +74,17 @@
         const responseJSON = await session.respondWithSchema(prompt, schema);
         console.log(responseJSON);
         const response = JSON.parse(responseJSON);
-        const tagNames = response[0].tags;
-        console.log("tagNames:", JSON.stringify(tagNames));
-        if (tagNames) {
-            for (const rawTagName of tagNames.split(",")) {
-                var tagName = rawTagName.trim();
-                console.log("tagName:", tagName);
-                var tag = flattenedTags.byName(tagName) || new Tag(tagName);
-                task.addTag(tag);
+        if (response.length == 1) {
+            const tagNames = response[0].tags;
+            console.log("tagNames:", JSON.stringify(tagNames));
+            if (tagNames) {
+                for (const rawTagName of tagNames.split(",")) {
+                    var tagName = rawTagName.trim();
+                    console.log("tagName:", tagName);
+                    var tag = flattenedTags.byName(tagName) || new Tag(tagName);
+                    task.addTag(tag);
+                }
             }
-
         }
         task.removeTags([PENDING_TAG]);
     }
