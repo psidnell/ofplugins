@@ -1,0 +1,81 @@
+/*{
+    "author": "Ken Case",
+    "targets": ["omnifocus"],
+    "type": "action",
+    "identifier": "com.omnigroup.kcase.help-me-plan",
+    "version": "1.0",
+    "description": "A plug-in that helps me plan a task",
+    "label": "Help Me Plan",
+    "mediumLabel": "Help Me Plan",
+    "longLabel": "Help Me Plan",
+    "paletteLabel": "Help Me Plan",
+    "image": "apple.intelligence"
+}*/
+(() => {
+    const schema = LanguageModel.Schema.fromJSON({
+        arrayOf: {
+            name: "task-schema",
+            properties: [
+                {name: "name", isOptional: false},
+                {name: "note", isOptional: true},
+            ]
+        }
+    });
+    const session = new LanguageModel.Session();
+
+    const helpMePlanTask = async (task, selection) => {
+        const temporaryItem = addResponseItemToTask({"name": "Thinking…", "note": ""}, task);
+        console.log("Processing Task:", task.name);
+        console.log("Schema:", schema);
+        console.log("Session:", session);
+        const taskProperties = {"name": task.name, "note": task.note};
+        console.log("Task properties:", taskProperties);
+        const prompt = "You're a GTD expert helping someone plan out a project in OmniFocus. Provide a list of steps for the following JSON task: " + JSON.stringify(taskProperties);
+        const responseJSON = await session.respondWithSchema(prompt, schema);
+        console.log(responseJSON);
+        const response = JSON.parse(responseJSON);
+        for (const responseItem of response) {
+            addResponseItemToTask(responseItem, task);
+        }
+        expandNotes(task, selection.window);
+        selection.database.deleteObject(temporaryItem);
+    }
+
+    const addResponseItemToTask = (responseItem, task) => {
+        let responseTask = new Task(responseItem.name, task);
+        responseTask.note = responseItem.note;
+        return responseTask
+    }
+
+    const expandNotes = (object, window) => {
+        console.log("expandNotes: object = ", object);
+        const contentTree = window.content;
+        const node = contentTree.nodeForObject(object);
+        node.expandNote(true);
+    }
+
+    const saveEdits = (selection) => {
+        const previousSelection = selection.databaseObjects;
+        selection.window.selectObjects([]);
+        selection.window.selectObjects(previousSelection);
+    }
+
+    const action = new PlugIn.Action(async (selection) => {
+        try {
+            console.log("Help me plan…");
+            saveEdits(selection);
+            const projects = selection.projects;
+            for (const project of projects) {
+                await helpMePlanTask(project.task, selection);
+            }
+            const tasks = selection.tasks;
+            for (const task of tasks) {
+                await helpMePlanTask(task, selection);
+            }
+        } catch (err) {
+            console.error(err.name, err.message)
+        }
+    });
+
+    return action;
+})();

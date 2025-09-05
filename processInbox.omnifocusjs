@@ -1,0 +1,94 @@
+/*{
+    "author": "Paul Sidnell",
+    "targets": ["omnifocus"],
+    "type": "action",
+    "identifier": "com.sidnell.processInbox",
+    "version": "1.0",
+    "description": "Process Inbox Items",
+    "label": "Process Inbox Items",
+    "mediumLabel": "Process Inbox Items",
+    "longLabel": "Process Inbox Items",
+    "paletteLabel": "Process Inbox Items",
+    "image": "apple.intelligence"
+}*/
+(() => {
+    const schema = LanguageModel.Schema.fromJSON({
+        arrayOf: {
+            name: "task-schema",
+            properties: [
+                {name: "name", isOptional: false},
+                {name: "note", isOptional: true},
+                {name: "tag", isOptional: true},
+            ]
+        }
+    });
+    const session = new LanguageModel.Session();
+
+    const CONTEXT_TAG_NAMES = ["CHORES", "DIY", "GARDEN", "ADMIN", "FUN"];
+
+    const processTask = async (task, selection) => {
+        const PENDING_TAG = flattenedTags.byName("PENDING...") || new Tag("PENDING...");
+
+        console.log("Processing Task:", task.name);
+        console.log("Schema:", schema);
+        console.log("Session:", session);
+        const taskProperties = {"name": task.name, "note": task.note, tag: null};
+        console.log("Task properties:", JSON.stringify(taskProperties));
+        const prompt = "You're a GTD expert helping someone process their inbox items. " +
+            "Firstly, the user has a set of tags comprising: " +
+            "\"" + CONTEXT_TAG_NAMES.join("\",\"") + "\" " +
+            "one of which should be applied to each task." +
+            "Provide the most appropriate tag for the following individual JSON task: " +
+            JSON.stringify(taskProperties);
+        console.log("Prompt:", prompt);
+        task.addTag(PENDING_TAG);
+        const responseJSON = await session.respondWithSchema(prompt, schema);
+        console.log(responseJSON);
+        const response = JSON.parse(responseJSON);
+        const tagName = response[0].tag;
+        console.log("tag:", tagName);
+        if (tagName) {
+            var tag = flattenedTags.byName(tagName) || new Tag(tagName);
+            task.addTag(tag);
+        }
+        task.removeTags([PENDING_TAG]);
+    }
+
+//    const addResponseItemToTask = (responseItem, task) => {
+//        let responseTask = new Task(responseItem.name, task);
+//        responseTask.note = responseItem.note;
+//        return responseTask
+//    }
+
+//    const expandNotes = (object, window) => {
+//        console.log("expandNotes: object = ", object);
+//        const contentTree = window.content;
+//        const node = contentTree.nodeForObject(object);
+//        node.expandNote(true);
+//    }
+
+    const saveEdits = (selection) => {
+        const previousSelection = selection.databaseObjects;
+        selection.window.selectObjects([]);
+        selection.window.selectObjects(previousSelection);
+    }
+
+    const action = new PlugIn.Action(async (selection) => {
+        try {
+            console.log("Help me plan…");
+            saveEdits(selection);
+//            const projects = selection.projects;
+//            for (const project of projects) {
+//                await helpMePlanTask(project.task, selection);
+//            }
+            const tasks = selection.tasks;
+            for (const task of tasks) {
+                await processTask(task, selection);
+            }
+        } catch (err) {
+            console.error(err.name, err.message)
+        }
+    });
+
+    return action;
+})();
