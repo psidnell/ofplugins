@@ -51,18 +51,16 @@
         console.log("Task properties:", JSON.stringify(taskProperties));
         const prompt = "You're a GTD expert helping someone process their inbox items." +
             "\n\n" +
-            "The user has 2 groups of tags." +
-            "\n\n" +
-            "The first tag group is a set of category tags relating to the nature of the task:" +
+            "The user has a group of category tags relating to the nature of the task:" +
             "\n" +
             "\"" + CONTEXT_TAG_NAMES.join("\",\"") + "\"" +
-            "\n" +
-            "\n" +
-            "The second tag group is a set of tags indicating the time of day the day the task should be done:" +
-            "\n" +
-            TIME_TAG_NAMES.join(",\n")+
+//            "\n" +
+//            "\n" +
+//            "The second tag group is a set of tags indicating the time of day the day the task should be done:" +
+//            "\n" +
+//            TIME_TAG_NAMES.join(",\n")+
             "\n\n" +
-            "Where the category and time are clear, add a category and time tags in a comma separated list for the following single JSON task: " +
+            "Where the category is clear, add a single category tag for the following single JSON task: " +
             JSON.stringify(taskProperties);
         console.log("Prompt:", prompt);
         task.clearTags();
