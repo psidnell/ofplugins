@@ -18,13 +18,19 @@
             properties: [
                 {name: "name", isOptional: false},
                 {name: "note", isOptional: true},
-                {name: "tag", isOptional: true},
+                {name: "tags", isOptional: true},
             ]
         }
     });
     const session = new LanguageModel.Session();
 
     const CONTEXT_TAG_NAMES = ["CHORES", "DIY", "GARDEN", "ADMIN", "FUN"];
+    const TIME_TAG_NAMES = [
+        "\"AM\" - for the morning",
+        "\"PM\" - for the afternoon",
+        "\"EVENING\" - for after 6pm"
+    ];
+
 
     const processTask = async (task, selection) => {
         const PENDING_TAG = flattenedTags.byName("PENDING...") || new Tag("PENDING...");
@@ -32,24 +38,43 @@
         console.log("Processing Task:", task.name);
         console.log("Schema:", schema);
         console.log("Session:", session);
-        const taskProperties = {"name": task.name, "note": task.note, tag: null};
+        const taskProperties = {"name": task.name, "note": task.note, tags: null};
         console.log("Task properties:", JSON.stringify(taskProperties));
         const prompt = "You're a GTD expert helping someone process their inbox items. " +
-            "Firstly, the user has a set of tags comprising: " +
-            "\"" + CONTEXT_TAG_NAMES.join("\",\"") + "\" " +
+            "There are several steps to this." +
+            "\n\n" +
+            "Step 1:" +
+            "\n" +
+            "The user has a set of category tags comprising:" +
+            "\n" +
+            "\"" + CONTEXT_TAG_NAMES.join("\",\"") + "\"" +
+            "\n" +
             "one of which should be applied to each task." +
-            "Provide the most appropriate tag for the following individual JSON task: " +
+            "\n\n" +
+            "Step 2:" +
+            "\n" +
+            "The user has a set of \"Time Of Day\" tags indicating when in the day the task should be done:\n" +
+            TIME_TAG_NAMES.join(",")+
+            "\n" +
+            "one of which should be applied to each task, but only if there is a clear indication of when it should be done." +
+            "\n\n" +
+            "Provide the most appropriate tags for the following JSON task: " +
             JSON.stringify(taskProperties);
         console.log("Prompt:", prompt);
         task.addTag(PENDING_TAG);
         const responseJSON = await session.respondWithSchema(prompt, schema);
         console.log(responseJSON);
         const response = JSON.parse(responseJSON);
-        const tagName = response[0].tag;
-        console.log("tag:", tagName);
-        if (tagName) {
-            var tag = flattenedTags.byName(tagName) || new Tag(tagName);
-            task.addTag(tag);
+        const tagNames = response[0].tags;
+        console.log("tagNames:", JSON.stringify(tagNames));
+        if (tagNames) {
+            for (const rawTagName of tagNames.split(",")) {
+                var tagName = rawTagName.trim();
+                console.log("tagName:", tagName);
+                var tag = flattenedTags.byName(tagName) || new Tag(tagName);
+                task.addTag(tag);
+            }
+
         }
         task.removeTags([PENDING_TAG]);
     }
