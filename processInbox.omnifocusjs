@@ -22,17 +22,18 @@
             ]
         }
     });
-    const session = new LanguageModel.Session();
 
     const CONTEXT_TAG_NAMES = ["CHORES", "DIY", "GARDEN", "ADMIN", "FUN", "EXERCISE"];
     const TIME_TAG_NAMES = [
-        "\"AM\" - for the morning between 00:00am and 11:59am",
+        "\"EARLY\" - for the morning between 00:00am and 8:59am",
+        "\"AM\" - for the morning between 9am and 11:59am",
         "\"PM\" - for the afternoon between 12pm and 5:59pm",
         "\"EVENING\" - for the evening between 6pm and 11:59pm"
     ];
 
-
     const processTask = async (task, selection) => {
+        const session = new LanguageModel.Session();
+
         const PENDING_TAG = flattenedTags.byName("PENDING...") || new Tag("PENDING...");
 
         console.log("Processing Task:", task.name);
@@ -52,16 +53,16 @@
             "\n\n" +
             "The user has 2 groups of tags." +
             "\n\n" +
-            "The first is a set of category tags relating to the nature of the task:" +
+            "The first tag group is a set of category tags relating to the nature of the task:" +
             "\n" +
             "\"" + CONTEXT_TAG_NAMES.join("\",\"") + "\"" +
             "\n" +
             "\n" +
-            "The second is a set of tags indicating the time of day the day the task should be done:" +
+            "The second tag group is a set of tags indicating the time of day the day the task should be done:" +
             "\n" +
             TIME_TAG_NAMES.join(",\n")+
             "\n\n" +
-            "Where it is clear, provide a category and time tag in a comma separated list for the following single JSON task: " +
+            "Where the category and time are clear, add a category and time tags in a comma separated list for the following single JSON task: " +
             JSON.stringify(taskProperties);
         console.log("Prompt:", prompt);
         task.clearTags();
@@ -78,26 +79,14 @@
                 for (const rawTagName of tagNames.split(",")) {
                     var tagName = rawTagName.trim();
                     console.log("tagName:", tagName);
-                    var tag = flattenedTags.byName(tagName) || new Tag(tagName);
-                    task.addTag(tag);
+                    var tag = flattenedTags.byName(tagName);
+                    if (tag) {
+                        task.addTag(tag);
+                    }
                 }
             }
         }
-        //task.removeTags([PENDING_TAG]);
     }
-
-//    const addResponseItemToTask = (responseItem, task) => {
-//        let responseTask = new Task(responseItem.name, task);
-//        responseTask.note = responseItem.note;
-//        return responseTask
-//    }
-
-//    const expandNotes = (object, window) => {
-//        console.log("expandNotes: object = ", object);
-//        const contentTree = window.content;
-//        const node = contentTree.nodeForObject(object);
-//        node.expandNote(true);
-//    }
 
     const saveEdits = (selection) => {
         const previousSelection = selection.databaseObjects;
@@ -107,12 +96,7 @@
 
     const action = new PlugIn.Action(async (selection) => {
         try {
-            console.log("Help me plan…");
             saveEdits(selection);
-//            const projects = selection.projects;
-//            for (const project of projects) {
-//                await helpMePlanTask(project.task, selection);
-//            }
             const tasks = selection.tasks;
             for (const task of tasks) {
                 await processTask(task, selection);
@@ -121,6 +105,13 @@
             console.error(err.name, err.message)
         }
     });
+
+    action.validate = function(selection, sender){
+          // console.log('-->', selection.tasks.length);
+          // Broken?
+          //return selection.tasks.length > 0;
+          return true;
+    };
 
     return action;
 })();
