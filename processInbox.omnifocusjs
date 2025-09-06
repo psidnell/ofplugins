@@ -22,14 +22,15 @@
     });
 
     const CONTEXT_TAG_NAMES = [
-        "CHORES",
-        "DIY",
-        "GARDEN",
-        "ADMIN",
-        "FUN",
-        "EXERCISE",
-        "THINK",
-        "SHOPPING"];
+        "\"CHORES\" - for household cleaning tasks",
+        "\"DIY\" - for home improvement or construction tasks where tools may be required",
+        "\"GARDEN\" - anything to be done in the garden",
+        "\"ADMIN\" - paperwork and administrative tasks",
+        "\"FUN\" - hobbies, trips, holidays etc.",
+        "\"EXERCISE\"",
+        "\"THINK\" - anything requiring consideration or research",
+        "\"SHOPPING\"",
+    ];
 
     const processTask = async (task, selection) => {
         const session = new LanguageModel.Session();
@@ -53,7 +54,7 @@
             "\n" +
             "The user wants you to one of the following tags to their inbox items:" +
             "\n\n" +
-            "\"" + CONTEXT_TAG_NAMES.join("\", \"") + "\"" +
+            "" + CONTEXT_TAG_NAMES.join("\n") +
             "\n\n" +
             "What is the most obvious tag from the provided list for the following JSON task?" +
             "\n\n" +
