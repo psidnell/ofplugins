@@ -16,20 +16,20 @@
         arrayOf: {
             name: "task-schema",
             properties: [
-                {name: "name", isOptional: false},
-                {name: "note", isOptional: true},
-                {name: "tags", isOptional: true},
+                {name: "tag", isOptional: true},
             ]
         }
     });
 
-    const CONTEXT_TAG_NAMES = ["CHORES", "DIY", "GARDEN", "ADMIN", "FUN", "EXERCISE"];
-    const TIME_TAG_NAMES = [
-        "\"EARLY\" - for the morning between 00:00am and 8:59am",
-        "\"AM\" - for the morning between 9am and 11:59am",
-        "\"PM\" - for the afternoon between 12pm and 5:59pm",
-        "\"EVENING\" - for the evening between 6pm and 11:59pm"
-    ];
+    const CONTEXT_TAG_NAMES = [
+        "CHORES",
+        "DIY",
+        "GARDEN",
+        "ADMIN",
+        "FUN",
+        "EXERCISE",
+        "THINK",
+        "SHOPPING"];
 
     const processTask = async (task, selection) => {
         const session = new LanguageModel.Session();
@@ -46,21 +46,17 @@
         const taskProperties = {
             "name": title,
             "note": task.note,
-            "tags": null,
+            "project": task.containingProject ? task.containingProject.name : null
         };
         console.log("Task properties:", JSON.stringify(taskProperties));
-        const prompt = "You're a GTD expert helping someone process their inbox items." +
-            "\n\n" +
-            "The user has a group of category tags relating to the nature of the task:" +
+        const prompt = "You're a GTD expert." +
             "\n" +
-            "\"" + CONTEXT_TAG_NAMES.join("\",\"") + "\"" +
-//            "\n" +
-//            "\n" +
-//            "The second tag group is a set of tags indicating the time of day the day the task should be done:" +
-//            "\n" +
-//            TIME_TAG_NAMES.join(",\n")+
+            "The user wants you to one of the following tags to their inbox items:" +
             "\n\n" +
-            "Where the category is clear, add a single category tag for the following single JSON task: " +
+            "\"" + CONTEXT_TAG_NAMES.join("\", \"") + "\"" +
+            "\n\n" +
+            "What is the most obvious tag from the provided list for the following JSON task?" +
+            "\n\n" +
             JSON.stringify(taskProperties);
         console.log("Prompt:", prompt);
         task.clearTags();
@@ -70,17 +66,14 @@
         task.clearTags();
         const response = JSON.parse(responseJSON);
         if (response.length >= 1) {
-            const tagNames = response[0].tags;
-            console.log("tagNames:", JSON.stringify(tagNames));
-            if (tagNames) {
+            const tagName = response[0].tag;
+            console.log("tagName:", tagName);
+            if (tagName) {
                 task.clearTags();
-                for (const rawTagName of tagNames.split(",")) {
-                    var tagName = rawTagName.trim();
-                    console.log("tagName:", tagName);
-                    var tag = flattenedTags.byName(tagName);
-                    if (tag) {
-                        task.addTag(tag);
-                    }
+                console.log("tagName:", tagName);
+                var tag = flattenedTags.byName(tagName);
+                if (tag) {
+                    task.addTag(tag);
                 }
             }
         }
