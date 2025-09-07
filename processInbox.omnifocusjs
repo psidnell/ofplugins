@@ -99,7 +99,7 @@
     });
 
     action.validate = function(selection, sender){
-           console.log('-->', selection.tasks.length);
+           //console.log('-->', selection.tasks.length);
           // Broken?
           return selection.tasks.length > 0;
           //return true;

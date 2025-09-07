@@ -47,9 +47,14 @@ var _ = (function() {
             //var taskDate = task.effectiveDueDate ? task.effectiveDueDate : task.effectivePlannedDate;
             var taskDate = task.effectiveDueDate;
 
-            // Items with a due of today get a time of day tag
+
             if (isAvailable(task) &&
-                isToday(taskDate)) {
+                isToday(taskDate) &&
+                task.tags.filter(tag => timeTags.includes(tag)).length == 0) {
+
+                console.log('Candidate:', task.name);
+
+                // Items with a due of today get a time of day tag
 
                 var hour = taskDate.getHours();
                 var minute = taskDate.getMinutes();
