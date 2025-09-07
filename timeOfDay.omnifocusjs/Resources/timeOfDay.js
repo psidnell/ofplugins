@@ -50,7 +50,7 @@ var _ = (function() {
 
             if (isAvailable(task) &&
                 isToday(taskDate) &&
-                task.tags.filter(tag => timeTags.includes(tag)).length == 0) {
+                task.tags.length == 0) {
 
                 console.log('Candidate:', task.name);
 
