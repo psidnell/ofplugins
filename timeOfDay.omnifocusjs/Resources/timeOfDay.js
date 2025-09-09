@@ -52,7 +52,7 @@ var _ = (function() {
                 isToday(taskDate) &&
                 task.tags.length == 0) {
 
-                console.log('Candidate:', task.name);
+                //console.log('Candidate:', task.name);
 
                 // Items with a due of today get a time of day tag
 
