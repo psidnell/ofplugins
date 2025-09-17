@@ -2,14 +2,14 @@
     "author": "Paul Sidnell",
     "targets": ["omnifocus"],
     "type": "action",
-    "identifier": "com.sidnell.processInbox",
+    "identifier": "com.psidnell.processInbox",
     "version": "1.0",
     "description": "Process Inbox Items",
     "label": "Process Inbox Items",
     "mediumLabel": "Process Inbox Items",
     "longLabel": "Process Inbox Items",
     "paletteLabel": "Process Inbox Items",
-    "image": "apple.intelligence"
+    "image": "tag"
 }*/
 (() => {
     const schema = LanguageModel.Schema.fromJSON({
