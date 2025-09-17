@@ -28,14 +28,14 @@
 		        line += ' (due: ' + fmtr.stringFromDate(task.effectiveDueDate) + ')';
 		    }
 
+            lines.push(line);
+
 		    if (task.note) {
 		        var note = task.note.split('\n');
 		        note.forEach(function(noteLine){
 		            lines.push ('  ' + noteLine);
 		        });
 		    }
-
-			lines.push(line);
 		});
 		Pasteboard.general.string = lines.join("\n");
 	});
