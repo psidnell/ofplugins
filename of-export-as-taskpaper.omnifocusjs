@@ -1,0 +1,44 @@
+/*{
+	"type": "action",
+	"targets": ["omnifocus"],
+	"author": "Otto Automator",
+	"identifier": "com.omni-automation.of.export-as-taskpaper",
+	"version": "1.1",
+	"description": "This action will export the window contents as a single TaskPaper file, and then attempt to open the created file in TaskPaper.",
+	"label": "Export Contents or Selection as TaskPaper",
+	"shortLabel": "Export to TaskPaper",
+	"paletteLabel": "Export to TaskPaper",
+	"image": "doc.text"
+}*/
+(() => {
+	const action = new PlugIn.Action(async function(selection, sender){
+		try {
+			fileTypeID = "com.omnigroup.omnifocus2.export-filetype.plain-text"
+			baseName = "Tasky-Export"
+			wrapper = await document.makeFileWrapper(baseName, fileTypeID)
+			wrapper.preferredFilename = "Taskpaper-Export.taskpaper"
+			wrapperContents = wrapper.contents.toString()
+			console.log(wrapperContents)
+			filesaver = new FileSaver()
+			fileURL = await filesaver.show(wrapper)
+			console.log(fileURL.string)
+			alert = new Alert("FILE URL", fileURL.string)
+			alert.addOption("Open File")
+			alert.addOption("Done")
+			buttonIndex = await alert.show()
+			if(buttonIndex === 0){fileURL.open()}
+		}
+		catch(err){
+			if(!err.causedByUserCancelling){
+				console.error(err.name, err.message)
+				new Alert(err.name, err.message).show()
+			}
+		}
+	});
+
+	action.validate = function(selection, sender){
+		return true
+	};
+	
+	return action;
+})();

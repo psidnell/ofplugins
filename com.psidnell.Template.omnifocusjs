@@ -80,11 +80,12 @@
 
 	// Process the template
 	const expandTaskPaper = (template, taskPaper, templateVariables, variableValues) => {
-		// console.log('Processing Template ' + template.name);
+		console.log('Processing Template ' + template.name);
 		var expandedTaskPaper = replaceVariables(taskPaper, templateVariables, variableValues);
-		// console.log(expandedTaskPaper);
+		console.log(expandedTaskPaper);
 
         var path = buildFolderPath(template.parentFolder);
+        console.log('Pasting Taskpaper to', path);
 
         encodeURIComponent(template.assignedContainer);
         var urlStr = "omnifocus:///paste" +
@@ -164,26 +165,10 @@
         win.perspective = Perspective.BuiltIn.Projects
         win.focus = [template];
 
-        // Should contain com.omnigroup.omnifocus2.export-filetype.plain-text
-        // But doesn't in OF4 on iOS
-        var types = document.writableTypes.map(type => {
-            return "\"" + type + "\""
-        })
-        types = "[" + types.join(",\n") + "]";
-        // console.log("Supported file types: " + types);
-
-        // Where supported fetch the taskpaper of the selected project
-        // otherwise (e.g. the test flight of OF4 on iOS) you must copy
-        // the project as taskpsper
-        var taskPaper;
-        if (types.indexOf("com.omnigroup.omnifocus2.export-filetype.plain-text") != -1) {
-            const fileTypeID = "com.omnigroup.omnifocus2.export-filetype.plain-text"
-            const baseName = "Tasky-Export"
-            const wrapper = await document.makeFileWrapper(baseName, fileTypeID);
-            taskPaper = wrapper.contents.toString();
-        } else {
-            taskPaper = Pasteboard.general.string;
-        }
+        const fileTypeID = "com.omnigroup.omnifocus2.export-filetype.plain-text";
+        const baseName = "Tasky-Export";
+        const wrapper = await document.makeFileWrapper(baseName, fileTypeID);
+        const taskPaper = wrapper.contents.toString();
 
         // Unfocus again
         win.focus = [];
@@ -194,8 +179,8 @@
     action.validate = (selection, sender) => {
         return selection.projects.length === 1 &&
             (selection.projects[0].status === Project.Status.OnHold ||
-                selection.projects[0].status === Project.Status.Active);
-                 //&& selection.projects[0].name.indexOf('[[') != -1;
+            selection.projects[0].status === Project.Status.Active) &&
+            selection.projects[0].name.indexOf('[[') != -1;
     };
 
     return action;
