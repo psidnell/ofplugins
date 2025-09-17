@@ -1,8 +1,20 @@
-var _ = function() {
-	var lib = new PlugIn.Library(new Version("0.1"));
+/*{
+    "author": "Paul Sidnell",
+    "targets": ["omnifocus"],
+    "type": "action",
+    "identifier": "com.psidnell.Template",
+    "version": "1.0",
+    "description": "Expand: Selected Template",
+    "label": "Expand: Selected Template",
+    "mediumLabel": "Expand: Selected Template",
+    "longLabel": "Expand: Selected Template",
+    "paletteLabel": "Expand: Selected Template",
+    "image": "sparkle.text.clipboard"
+}*/
+(() => {
 
 	// Find variables in text (thanks to Thomas Kern)
-	lib.findVariables = (text) => {
+	const findVariables = (text) => {
 	    var variablesFound = [];
 		substrings = text.match(/\[\[[^\]]*\]\]/gm);
 		if (substrings != null) {
@@ -20,7 +32,7 @@ var _ = function() {
 	};
 
 	// Replace variables in the string with those from the form
-	lib.replaceVariables = (text, templateVariables, variableValues) => {
+	const replaceVariables = (text, templateVariables, variableValues) => {
 		var result = text;
 		for (var i = 0; i < templateVariables.length; i++) {
 		    var variableSpec = templateVariables[i];
@@ -57,7 +69,7 @@ var _ = function() {
 		return result;
 	};
 
-    lib.buildFolderPath = (folder) => {
+    const buildFolderPath = (folder) => {
         var names = [];
         while (folder != null) {
             names.unshift(folder.name);
@@ -67,12 +79,12 @@ var _ = function() {
     }
 
 	// Process the template
-	lib.expandTaskPaper = (template, taskPaper, templateVariables, variableValues) => {
+	const expandTaskPaper = (template, taskPaper, templateVariables, variableValues) => {
 		// console.log('Processing Template ' + template.name);
-		var expandedTaskPaper = lib.replaceVariables(taskPaper, templateVariables, variableValues);
+		var expandedTaskPaper = replaceVariables(taskPaper, templateVariables, variableValues);
 		// console.log(expandedTaskPaper);
 
-        var path = lib.buildFolderPath(template.parentFolder);
+        var path = buildFolderPath(template.parentFolder);
 
         encodeURIComponent(template.assignedContainer);
         var urlStr = "omnifocus:///paste" +
@@ -84,7 +96,7 @@ var _ = function() {
 		url.call(reply => {});
 	};
 
-   	lib.addFormField = (inputForm, variableSpec, position) => {
+   	const addFormField = (inputForm, variableSpec, position) => {
    	    var parts = variableSpec.split(':');
    	    var variableName = parts[0];
    	    var variableType = parts.length > 0 ? parts[1] : 'text';
@@ -122,26 +134,69 @@ var _ = function() {
    	}
 
 
-	lib.expand = (template, taskPaper) => {
-        var templateVariables = lib.findVariables(taskPaper);
+	const expand = (template, taskPaper) => {
+        var templateVariables = findVariables(taskPaper);
 
         if (templateVariables.length == 0) {
-            lib.expandTaskPaper(template, taskPaper, templateVariables, new Object())
+            expandTaskPaper(template, taskPaper, templateVariables, new Object())
         } else {
             // Open a form to collect values for variables in the template
             var inputForm = new Form();
             for (var i = 0; i < templateVariables.length; i++) {
                 var variable = templateVariables[i];
-                lib.addFormField(inputForm, variable, i);
+                addFormField(inputForm, variable, i);
             }
             var formPrompt = template.name;
             var buttonTitle = "OK";
             inputForm.show(formPrompt, buttonTitle).then(
-                (form) => lib.expandTaskPaper(template, taskPaper, templateVariables, form.values),
+                (form) => expandTaskPaper(template, taskPaper, templateVariables, form.values),
                 (error) => console.log(error));
         }
 	};
 
-	return lib;
-}();
-_;
+
+    const action = new PlugIn.Action(async function(selection, sender){
+        var template = selection.projects[0];
+
+        // Open the template project exclusively in project view to avoid
+        // issues collecting the TaskPaper
+        var win = document.windows[0]
+        win.perspective = Perspective.BuiltIn.Projects
+        win.focus = [template];
+
+        // Should contain com.omnigroup.omnifocus2.export-filetype.plain-text
+        // But doesn't in OF4 on iOS
+        var types = document.writableTypes.map(type => {
+            return "\"" + type + "\""
+        })
+        types = "[" + types.join(",\n") + "]";
+        // console.log("Supported file types: " + types);
+
+        // Where supported fetch the taskpaper of the selected project
+        // otherwise (e.g. the test flight of OF4 on iOS) you must copy
+        // the project as taskpsper
+        var taskPaper;
+        if (types.indexOf("com.omnigroup.omnifocus2.export-filetype.plain-text") != -1) {
+            const fileTypeID = "com.omnigroup.omnifocus2.export-filetype.plain-text"
+            const baseName = "Tasky-Export"
+            const wrapper = await document.makeFileWrapper(baseName, fileTypeID);
+            taskPaper = wrapper.contents.toString();
+        } else {
+            taskPaper = Pasteboard.general.string;
+        }
+
+        // Unfocus again
+        win.focus = [];
+
+        expand(template, taskPaper);
+    });
+
+    action.validate = (selection, sender) => {
+        return selection.projects.length === 1 &&
+            (selection.projects[0].status === Project.Status.OnHold ||
+                selection.projects[0].status === Project.Status.Active);
+                 //&& selection.projects[0].name.indexOf('[[') != -1;
+    };
+
+    return action;
+})();
