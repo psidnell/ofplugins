@@ -2,7 +2,7 @@
     "author": "Paul Sidnell",
     "targets": ["omnifocus"],
     "type": "action",
-    "identifier": "com.sidnell.ToggleNext",
+    "identifier": "com.psidnell.ToggleNext",
     "version": "1.0",
     "description": "Toggle the NEXT tag",
     "label": "Toggle the NEXT tag",
