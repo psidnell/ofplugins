@@ -1,0 +1,48 @@
+/*{
+	"type": "action",
+	"targets": ["omnifocus"],
+	"author": "Paul Sidnell",
+	"identifier": "com.psidnell.CopyAsText",
+	"version": "1.1",
+	"description": "Copy As Text",
+	"label": "Copy As Text",
+	"shortLabel": "Copy As Text",
+	"paletteLabel": "Copy As Text",
+	"image": "doc.text"
+}*/
+(() => {
+        const action = new PlugIn.Action(function(selection, sender){
+
+		var fmtr = Formatter.Date.withFormat('yyyy-MM-dd HH:mm');
+
+		var lines = [];
+
+		selection.tasks.forEach(function(task){
+		    var line = '- ' + task.name;
+
+            if (task.effectivePlannedDate) {
+                line += ' (planned: ' + fmtr.stringFromDate(task.effectivePlannedDate) + ')';
+            }
+
+		    if (task.effectiveDueDate) {
+		        line += ' (due: ' + fmtr.stringFromDate(task.effectiveDueDate) + ')';
+		    }
+
+		    if (task.note) {
+		        var note = task.note.split('\n');
+		        note.forEach(function(noteLine){
+		            lines.push ('  ' + noteLine);
+		        });
+		    }
+
+			lines.push(line);
+		});
+		Pasteboard.general.string = lines.join("\n");
+	});
+
+	action.validate = function(selection, sender){
+		return selection.tasks.length > 0;
+	};
+	
+	return action;
+})();
