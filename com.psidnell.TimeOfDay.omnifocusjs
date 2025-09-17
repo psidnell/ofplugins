@@ -41,6 +41,9 @@
 
     const action = new PlugIn.Action(function(selection, sender){
 
+        console.log('Running');
+
+        var calendarTag = flattenedTags.byName("CALENDAR") || new Tag("CALENDAR");
         var earlyTag = flattenedTags.byName("EARLY") || new Tag("EARLY");
         var amTag = flattenedTags.byName("AM") || new Tag("AM");
         var pmTag = flattenedTags.byName("PM") || new Tag("PM");
@@ -58,14 +61,16 @@
         flattenedTasks.forEach(task => {
             // Not actually what I wanted, given likely default planned date
             //var taskDate = task.effectiveDueDate ? task.effectiveDueDate : task.effectivePlannedDate;
-            var taskDate = task.effectiveDueDate;
+            // A bug? effectiveDuedate broken?
+            //var taskDate = task.effectiveDueDate;
+            var taskDate = task.dueDate;
 
-
-            if (isAvailable(task) &&
+            if (!!taskDate &&
+                isAvailable(task) &&
                 isToday(taskDate) &&
-                task.tags.length == 0) {
+                ((task.tags.length == 0) || (task.tags.indexOf(calendarTag) != -1))) {
 
-                //console.log('Candidate:', task.name);
+                //console.log('Candidate:', task.name, !!taskDate);
 
                 // Items with a due of today get a time of day tag
 
@@ -86,8 +91,11 @@
                 }
 
                 addTagExclusive(task, newTag, timeTags);
+
+                //console.log('Set tag:', newTag.name);
             }
         });
+        //console.log ('Finished');
 	});
 
 	action.validate = function(selection, sender){
