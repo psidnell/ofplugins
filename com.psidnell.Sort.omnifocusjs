@@ -1,4 +1,17 @@
-var _ = (function() {
+/*{
+    "author": "Paul Sidnell",
+    "targets": ["omnifocus"],
+    "type": "action",
+    "identifier": "com.psidnell.Sort",
+    "version": "1.0",
+    "description": "Smart Sort",
+    "label": "Smart Sort",
+    "mediumLabel": "Smart Sort",
+    "longLabel": "Smart Sort",
+    "paletteLabel": "Smart Sort",
+    "image": "arrow.up.arrow.down"
+}*/
+(() => {
 
     const now = new Date();
 
@@ -80,7 +93,7 @@ var _ = (function() {
         return left.id.primaryKey.localeCompare(right.id.primaryKey);
 	};
 
-	var action = new PlugIn.Action(function(selection, sender){
+	const action = new PlugIn.Action(function(selection, sender){
 		project = selection.projects[0];
 		var tasks = [];
 		for (var i = 0; i < project.task.children.length; i++) {
@@ -96,4 +109,3 @@ var _ = (function() {
 
 	return action;
 })();
-_;

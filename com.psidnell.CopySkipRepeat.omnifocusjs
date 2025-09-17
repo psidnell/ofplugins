@@ -1,5 +1,18 @@
-var _ = (function() {
-    var action = new PlugIn.Action((selection, sender) => {
+/*{
+    "author": "P. Sidnell",
+    "targets": ["omnifocus"],
+    "type": "action",
+    "identifier": "com.psidnell.CopySkipRepeat",
+    "version": "1.0",
+    "description": "Copy and Skip Repeat: Selected Task",
+    "label": "Copy and Skip Repeat: Selected Task",
+    "mediumLabel": "Copy and Skip Repeat: Selected Task",
+    "longLabel": "Copy and Skip Repeat: Selected Task",
+    "paletteLabel": "Copy and Skip Repeat: Selected Task",
+    "image": "repeat.badge.xmark"
+}*/
+(() => {
+    const action = new PlugIn.Action((selection, sender) => {
 
         var task = selection.tasks[0];
 
@@ -27,4 +40,4 @@ var _ = (function() {
 
     return action;
 })();
-_;
+
