@@ -13,7 +13,7 @@
 }*/
 (() => {
 
-    var isToday = function(date) {
+    const isToday = function(date) {
         var today = new Date()
         return date &&
             date.getFullYear() == today.getFullYear() &&
@@ -21,14 +21,14 @@
             date.getDate() == today.getDate();
     }
 
-    var isAvailable = function(task) {
+    const isAvailable = function(task) {
         return (
             task.taskStatus != Task.Status.Blocked &&
             task.taskStatus != Task.Status.Dropped &&
             task.taskStatus != Task.Status.Completed);
         }
 
-    var addTagExclusive = function(task, newTag, exclusiveTags) {
+    const addTagExclusive = function(task, newTag, exclusiveTags) {
         // Avoid removing and re-adding the tag we want
         // so as to avoid re-ordering when using tags order
         // or unnecessarily re-order the tags
@@ -37,6 +37,10 @@
         if (task.tags.indexOf(newTag) == -1) {
             task.addTag(newTag);
         }
+    }
+
+    const containsTags = function(actualTags, subsetTags) {
+      return actualTags.some(tag => subsetTags.includes(tag));
     }
 
     const action = new PlugIn.Action(function(selection, sender){
@@ -68,7 +72,7 @@
             if (!!taskDate &&
                 isAvailable(task) &&
                 isToday(taskDate) &&
-                ((task.tags.length == 0) || (task.tags.indexOf(calendarTag) != -1))) {
+                ((task.tags.length == 0) || !containsTags(task.tags, timeTags))) {
 
                 //console.log('Candidate:', task.name, !!taskDate);
 
