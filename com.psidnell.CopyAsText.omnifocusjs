@@ -18,7 +18,7 @@
 		var lines = [];
 
 		selection.tasks.forEach(function(task){
-		    var line = '- ' + task.name;
+		    var line = task.name;
 
             if (task.effectivePlannedDate) {
                 line += ' (planned: ' + fmtr.stringFromDate(task.effectivePlannedDate) + ')';
@@ -36,6 +36,8 @@
 		            lines.push ('  ' + noteLine);
 		        });
 		    }
+
+		    lines.push(`---`);
 		});
 		Pasteboard.general.string = lines.join("\n");
 	});
