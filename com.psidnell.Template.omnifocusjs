@@ -163,6 +163,7 @@
         // issues collecting the TaskPaper
         var win = document.windows[0]
         win.perspective = Perspective.BuiltIn.Projects
+        var focus = win.focus;
         win.focus = [template];
 
         const fileTypeID = "com.omnigroup.omnifocus2.export-filetype.plain-text";
@@ -170,8 +171,8 @@
         const wrapper = await document.makeFileWrapper(baseName, fileTypeID);
         const taskPaper = wrapper.contents.toString();
 
-        // Unfocus again
-        win.focus = [];
+        // Restore focus
+        win.focus = focus;
 
         expand(template, taskPaper);
     });
