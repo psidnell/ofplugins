@@ -13,28 +13,21 @@
 }*/
 (() => {
     const action = new PlugIn.Action((selection, sender) => {
-
-        let timeString = settings.objectForKey('DefaultPlannedTime') || "00:00:00";
-        const parts = timeString.split(":").map(Number);
-        const [h = 0, m = 0, s = 0] = parts;
-        const cal = Calendar.current;
-        const todayStart = cal.startOfDay(new Date());
-        const dc = new DateComponents();
-        dc.hour   = h;
-        dc.minute = m;
-        dc.second = s;
-        const today = cal.dateByAddingDateComponents(todayStart, dc);
-
-        var task = selection.tasks[0];
-        if (!task.containingProject) {
-            return;
+        var project;
+        if (selection.tasks.length == 1) {
+            var task = selection.tasks[0];
+            if (!task.containingProject) {
+                return;
+            }
+            project = task.containingProject;
+        } else {
+            project = selection.projects[0];
         }
-        var project = task.containingProject;
-        var title = '(@)' + project.name;
 
+        var title = '(@)' + project.name;
         var noteLines = [];
-        noteLines.push(task.containingProject.name + ': omnifocus:///project/' +
-                task.containingProject.id.primaryKey);
+        noteLines.push(project.name + ': omnifocus:///project/' +
+                project.id.primaryKey);
         noteLines.push('');
         var note = noteLines.join('\n');
 
@@ -42,16 +35,14 @@
         if (project) {
             moveTasks([newTask], project);
         }
+
         newTask.addTag(Tag.forecastTag);
-        newTask.plannedDate = today;
         newTask.flagged = true;
         newTask.note = note;
-        var formatter = Formatter.Date.withStyle(Formatter.Date.Style.Short);
-        newTask.deferDate = formatter.dateFromString('00:00');
     });
 
     action.validate = (selection, sender) => {
-        return selection.tasks.length == 1
+        return selection.tasks.length == 1 || selection.projects.length == 1
     };
 
     return action;
