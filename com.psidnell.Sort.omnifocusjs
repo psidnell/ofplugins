@@ -13,8 +13,6 @@
 }*/
 (() => {
 
-    const now = new Date();
-
     var smartTime = (item) => {
         var time;
         if (item.dueDate) {
@@ -24,8 +22,9 @@
         } else if (item.deferDate) {
             time = item.deferDate.getTime();}
         else {
-            time = now.getTime();
+            time = item.added.getTime();
         }
+
         // console.log ('smartTime ' + item.name + ' ' + new Date(time) + ' = ' + time);
         return time;
     }
@@ -72,7 +71,7 @@
 	    // Compare on rank
         const leftRank = rank(left);
         const rightRank = rank (right);
-        if (leftRank != rightRank) {
+        if (leftRank !== rightRank) {
             return rightRank - leftRank;
         }
 
@@ -83,9 +82,11 @@
             return leftSmartTime - rightSmartTime;
         }
 
+        // Unlikely to get this far...
+
 		// Compare on name
 		var cmp = left.name.localeCompare(right.name);
-		if (cmp != 0) {
+		if (cmp !== 0) {
 		    return cmp;
 		};
 
@@ -94,7 +95,14 @@
 	};
 
 	const action = new PlugIn.Action(function(selection, sender){
-		project = selection.projects[0];
+		project = selection.projects.length == 1 ?
+            selection.projects[0] :
+            selection.tasks[0].containingProject;
+
+        // Need to select the project (if a task was selected)
+        // otherwise the sorted project doesn't redraw
+        document.windows[0].selectObjects([project]);
+
 		var tasks = [];
 		for (var i = 0; i < project.task.children.length; i++) {
 			tasks.push(project.task.children[i]);
@@ -104,7 +112,10 @@
 	});
 
 	action.validate = function(selection, sender){
-		return (selection.projects.length === 1)
+		return (
+            selection.projects.length === 1 ||
+            (selection.tasks.length === 1 && selection.tasks[0].containingProject != null)
+        );
 	};
 
 	return action;
