@@ -24,7 +24,7 @@
             project = selection.projects[0];
         }
 
-        var title = '(@)' + project.name;
+        var title = '(@) ' + project.name;
         var noteLines = [];
         noteLines.push(project.name + ': omnifocus:///project/' +
                 project.id.primaryKey);
