@@ -5,8 +5,8 @@
     "identifier": "com.psidnell.ProjLink",
     "version": "1.0",
     "description": "Create a link task for the project",
-    "label": "Project Link",
-    "mediumLabel": "DProject Link",
+    "label": "Link",
+    "mediumLabel": "Project Link",
     "longLabel": "Project Link",
     "paletteLabel": "Project Link",
     "image": "link.badge.plus"

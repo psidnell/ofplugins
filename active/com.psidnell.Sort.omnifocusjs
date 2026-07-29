@@ -5,10 +5,10 @@
     "identifier": "com.psidnell.Sort",
     "version": "1.0",
     "description": "Smart Sort",
-    "label": "Smart Sort",
-    "mediumLabel": "Smart Sort",
-    "longLabel": "Smart Sort",
-    "paletteLabel": "Smart Sort",
+    "label": "Sort",
+    "mediumLabel": "Sort 2",
+    "longLabel": "Smart Sort 3",
+    "paletteLabel": "Smart Sort 4",
     "image": "arrow.up.arrow.down"
 }*/
 (() => {
