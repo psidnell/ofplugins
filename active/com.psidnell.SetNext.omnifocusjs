@@ -1,0 +1,50 @@
+//Forked from "identifier": "com.patrick.SetPlannedDateToToday",
+/*{
+    "author": "P. Sidnell",
+    "targets": ["omnifocus"],
+    "type": "action",
+    "identifier": "com.psidnell.SetNext",
+    "version": "1.0",
+    "description": "Toggle NEXT tag",
+    "label": "Next",
+    "mediumLabel": "Next",
+    "longLabel": "Toggle NEXT tag",
+    "paletteLabel": "Next",
+    "image": "tag.fill"
+}*/
+(() => {
+  const action = new PlugIn.Action(selection => {
+    // 1. Get NEXT tag
+    var nextTagName = 'NEXT';
+    var nextTag = tagNamed(nextTagName) || new Tag(nextTagName);
+
+
+    // 2. Apply to every selected task
+
+    var numSet = 0;
+
+    selection.tasks.forEach(task => {
+      if (task.tags.includes(nextTag)) {
+        numSet++;
+      }
+    });
+
+
+    if (numSet != selection.tasks.length) {
+        selection.tasks.forEach(task => {
+          task.addTag(nextTag);
+        });
+    } else {
+        selection.tasks.forEach(task => {
+          task.removeTag(nextTag);
+        });
+    }
+  });
+
+
+  action.validate = function(selection, sender){
+      return selection.tasks.length > 0;
+  };
+
+  return action;
+})();
