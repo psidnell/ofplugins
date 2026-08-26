@@ -6,10 +6,10 @@
     "identifier": "com.psidnell.SetNext",
     "version": "1.0",
     "description": "Toggle NEXT tag",
-    "label": "Next",
-    "mediumLabel": "Next",
+    "label": "Apply NEXT",
+    "mediumLabel": "Apply NEXT",
     "longLabel": "Toggle NEXT tag",
-    "paletteLabel": "Next",
+    "paletteLabel": "Apply NEXT",
     "image": "tag.fill"
 }*/
 (() => {
