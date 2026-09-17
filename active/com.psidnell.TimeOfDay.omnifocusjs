@@ -13,36 +13,6 @@
 }*/
 (() => {
 
-    // const isToday = function(date) {
-    //     var today = new Date()
-    //     return date &&
-    //         date.getFullYear() == today.getFullYear() &&
-    //         date.getMonth() == today.getMonth() &&
-    //         date.getDate() == today.getDate();
-    // }
-    //
-    // const isAvailable = function(task) {
-    //     return (
-    //         task.taskStatus != Task.Status.Blocked &&
-    //         task.taskStatus != Task.Status.Dropped &&
-    //         task.taskStatus != Task.Status.Completed);
-    //     }
-
-    // const addTagExclusive = function(task, newTag, exclusiveTags) {
-    //     // Avoid removing and re-adding the tag we want
-    //     // so as to avoid re-ordering when using tags order
-    //     // or unnecessarily re-order the tags
-    //     var tagsToRemove = exclusiveTags.filter(t => t !== newTag);
-    //     task.removeTags(tagsToRemove);
-    //     if (task.tags.indexOf(newTag) == -1) {
-    //         task.addTag(newTag);
-    //     }
-    // }
-
-    // const containsTags = function(actualTags, subsetTags) {
-    //   return actualTags.some(tag => subsetTags.includes(tag));
-    // }
-
     const action = new PlugIn.Action(function(selection, sender){
 
         //console.log('Running');
@@ -54,23 +24,12 @@
         var pmTag = flattenedTags.byName("☀️ PM") || new Tag("☀️ PM");
         var eveningTag = flattenedTags.byName("🌓 EVENING") || new Tag("🌓 EVENING");
 
-        var timeTags = [
-            wakeUpTag,
-            earlyTag,
-            amTag,
-            pmTag,
-            eveningTag,
-            allDayTag
-        ];
-
         selection.tasks.forEach(task => {
             const taskDate = task.dueDate;
 
             if (!!taskDate) {
 
                 //console.log('Candidate:', task.name, !!taskDate);
-
-                // Items with a due of today get a time of day tag
 
                 var hour = taskDate.getHours();
                 var minute = taskDate.getMinutes();
@@ -90,7 +49,6 @@
                     newTag = allDayTag;
                 }
 
-                //addTagExclusive(task, newTag, timeTags);
                 task.addTag(newTag);
 
                 // console.log('Set tag:', newTag.name);
