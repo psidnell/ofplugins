@@ -1,0 +1,108 @@
+/*{
+    "author": "Paul Sidnell",
+    "targets": ["omnifocus"],
+    "type": "action",
+    "identifier": "com.psidnell.TimeOfDay",
+    "version": "1.0",
+    "description": "Add Time Of Day Tags",
+    "label": "Time",
+    "mediumLabel": "Time",
+    "longLabel": "Add Time Of Day Tags",
+    "paletteLabel": "Add Time Of Day Tags",
+    "image": "clock.badge.checkmark"
+}*/
+(() => {
+
+    // const isToday = function(date) {
+    //     var today = new Date()
+    //     return date &&
+    //         date.getFullYear() == today.getFullYear() &&
+    //         date.getMonth() == today.getMonth() &&
+    //         date.getDate() == today.getDate();
+    // }
+    //
+    // const isAvailable = function(task) {
+    //     return (
+    //         task.taskStatus != Task.Status.Blocked &&
+    //         task.taskStatus != Task.Status.Dropped &&
+    //         task.taskStatus != Task.Status.Completed);
+    //     }
+
+    // const addTagExclusive = function(task, newTag, exclusiveTags) {
+    //     // Avoid removing and re-adding the tag we want
+    //     // so as to avoid re-ordering when using tags order
+    //     // or unnecessarily re-order the tags
+    //     var tagsToRemove = exclusiveTags.filter(t => t !== newTag);
+    //     task.removeTags(tagsToRemove);
+    //     if (task.tags.indexOf(newTag) == -1) {
+    //         task.addTag(newTag);
+    //     }
+    // }
+
+    // const containsTags = function(actualTags, subsetTags) {
+    //   return actualTags.some(tag => subsetTags.includes(tag));
+    // }
+
+    const action = new PlugIn.Action(function(selection, sender){
+
+        //console.log('Running');
+
+        var allDayTag = flattenedTags.byName("🗓️ CALENDAR") || new Tag("🗓️ CALENDAR");
+        var wakeUpTag = flattenedTags.byName("⏰ WAKEUP") || new Tag("⏰ WAKEUP");
+        var earlyTag = flattenedTags.byName("☕️ EARLY") || new Tag("☕️ EARLY");
+        var amTag = flattenedTags.byName("🌤️ AM") || new Tag("🌤️ AM");
+        var pmTag = flattenedTags.byName("☀️ PM") || new Tag("☀️ PM");
+        var eveningTag = flattenedTags.byName("🌓 EVENING") || new Tag("🌓 EVENING");
+
+        var timeTags = [
+            wakeUpTag,
+            earlyTag,
+            amTag,
+            pmTag,
+            eveningTag,
+            allDayTag
+        ];
+
+        selection.tasks.forEach(task => {
+            const taskDate = task.dueDate;
+
+            if (!!taskDate) {
+
+                //console.log('Candidate:', task.name, !!taskDate);
+
+                // Items with a due of today get a time of day tag
+
+                var hour = taskDate.getHours();
+                var minute = taskDate.getMinutes();
+
+                var newTag;
+                if (hour < 8) {
+                    newTag = wakeUpTag;
+                } else if (hour < 9) {
+                    newTag = earlyTag;
+                } else if (hour < 12) {
+                   newTag = amTag;
+                } else if (hour < 18) {
+                    newTag = pmTag;
+                } else if (hour < 23 || (hour === 23 && minute < 59)) {
+                    newTag = eveningTag;
+                } else {
+                    newTag = allDayTag;
+                }
+
+                //addTagExclusive(task, newTag, timeTags);
+                task.addTag(newTag);
+
+                // console.log('Set tag:', newTag.name);
+            }
+        });
+        //console.log ('Finished');
+	});
+
+	action.validate = function(selection, sender){
+		return (selection.tasks.length > 0);
+	};
+
+	return action;
+})();
+

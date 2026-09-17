@@ -6,9 +6,9 @@
     "version": "1.0",
     "description": "Smart Sort",
     "label": "Sort",
-    "mediumLabel": "Sort 2",
-    "longLabel": "Smart Sort 3",
-    "paletteLabel": "Smart Sort 4",
+    "mediumLabel": "Sort",
+    "longLabel": "Smart Sort",
+    "paletteLabel": "Smart Sort",
     "image": "arrow.up.arrow.down"
 }*/
 (() => {
