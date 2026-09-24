@@ -1,0 +1,56 @@
+/*{
+    "author": "P. Sidnell",
+    "targets": ["omnifocus"],
+    "type": "action",
+    "identifier": "com.psidnell.Bump",
+    "version": "1.0",
+    "description": "Bump Dates 1 day",
+    "label": "Bump",
+    "mediumLabel": "Bump Dates 1 day",
+    "longLabel": "Bump Dates 1 day",
+    "paletteLabel": "Bump Dates 1 day",
+    "image": "calendar.badge.plus"
+}*/
+(() => {
+    const action = new PlugIn.Action((selection, sender) => {
+
+        let today = new Date();
+        today.setHours(0);
+        today.setMinutes(0);
+        today.setSeconds(0);
+
+
+        selection.tasks.forEach(task => {
+
+            if (!task.effectiveDeferDate) {
+                task.deferDate = today;
+            }
+
+            if (task.effectiveDueDate) {
+                let date = task.effectiveDueDate;
+                date.setDate(date.getDate() + 1);
+                task.dueDate = date;
+            }
+
+            if (task.effectivePlannedDate) {
+                let date = task.effectivePlannedDate;
+                date.setDate(date.getDate() + 1);
+                task.plannedDate = date;
+            }
+
+            if (task.effectiveDeferDate) {
+                let date = task.effectiveDeferDate;
+                date.setDate(date.getDate() + 1);
+                task.deferDate = date;
+            }
+        });
+    });
+
+    action.validate = (selection, sender) => {
+        return selection.tasks
+            && selection.tasks.length >= 1;
+    };
+
+    return action;
+})();
+
