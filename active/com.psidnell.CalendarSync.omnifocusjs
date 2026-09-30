@@ -14,7 +14,7 @@
 (() => {
 
     function padNumber (n, size) {
-        str = n.toString();
+        let str = n.toString();
         while (str.length < size) {
             str = '0' + str;
         }
@@ -70,8 +70,8 @@
         );
     }
 
-    function createTask(title, shownDate, shortId, calendarProject, deferDate, plannedDate,
-                        dueDate, calendar, startDate, endDate, isAllDay, id, formattedNow,
+    function createTask(title, deferDate, plannedDate, dueDate, shownDate, shortId,
+                        calendarProject, calendar, startDate, endDate, isAllDay, id, formattedNow,
                         calendarDate, dateCase, url, location, notes) {
         //console.log("Creating", title, 'Case ' + case);
 
@@ -123,64 +123,53 @@ CreationData:
         const startDate = new Date(startDateISO8601);
         const endDate = new Date(endDateISO8601);
         const calendarDate = formatDate(startDate);
-        let deferDate = null;
-
         let calendarProject = flattenedProjects.byName('#Calendar');
-        let shownDate = '';
         let formattedNow = formatDateTime(new Date());
 
         //console.log('Parameters', JSON.stringify(d));
 
         if (isTimedSingleDayEvent(startDate, endDate, isAllDay)) {
             let dateCase = 1;
-            shownDate = formatDateTime(startDate);
-            deferDate = new Date(startDate.getTime());
+            let shownDate = formatDateTime(startDate);
+            let deferDate = new Date(startDate.getTime());
             deferDate.setHours(0);
             deferDate.setMinutes(0);
             let plannedDate = null;
             let dueDate = new Date(startDate.getTime());
-            createTask(title, shownDate, shortId, calendarProject, deferDate, plannedDate,
-                dueDate, calendar, startDate, endDate, isAllDay, id, formattedNow,
-                calendarDate, dateCase, url, location, notes);
+            createTask(title, deferDate, plannedDate, dueDate, shownDate, shortId, calendarProject, calendar, startDate, endDate, isAllDay, id, formattedNow, calendarDate, dateCase, url, location, notes);
         } else if (isTimedMultiDayEvent(startDate, endDate, isAllDay)) {
             let dateCase = 2;
-            shownDate = formatDateTime(startDate);
-            deferDate = new Date(startDate.getTime());
+            let shownDate = formatDateTime(startDate);
+            let deferDate = new Date(startDate.getTime());
             deferDate.setHours(0);
             deferDate.setMinutes(0);
             let plannedDate = null;
             let dueDate = new Date(startDate.getTime());
-            createTask(title, shownDate, shortId, calendarProject, deferDate, plannedDate,
-                dueDate, calendar, startDate, endDate, isAllDay, id, formattedNow,
-                calendarDate, dateCase, url, location, notes);
+            createTask(title, deferDate, plannedDate, dueDate, shownDate, shortId, calendarProject, calendar, startDate, endDate, isAllDay, id, formattedNow, calendarDate, dateCase, url, location, notes);
         } else if (isAllDaySingleDayEvent(startDate, endDate, isAllDay)) {
             console.log(3, startDate, endDate, isAllDay)
             let dateCase = 3;
-            shownDate = formatDate(startDate);
-            deferDate = new Date(startDate.getTime());
+            let shownDate = formatDate(startDate);
+            let deferDate = new Date(startDate.getTime());
             deferDate.setHours(0);
             deferDate.setMinutes(0);
             let plannedDate = null;
             let dueDate = new Date(startDate.getTime());
             dueDate.setHours(23);
             dueDate.setMinutes(59);
-            createTask(title, shownDate, shortId, calendarProject, deferDate, plannedDate,
-                dueDate, calendar, startDate, endDate, isAllDay, id, formattedNow,
-                calendarDate, dateCase, url, location, notes);
+            createTask(title, deferDate, plannedDate, dueDate, shownDate, shortId, calendarProject, calendar, startDate, endDate, isAllDay, id, formattedNow, calendarDate, dateCase, url, location, notes);
 
         } else if (isAllDayMultiDayEvent(startDate, endDate, isAllDay)) {
             let dateCase = 4;
-            shownDate = formatDate(startDate);
-            deferDate = new Date(startDate.getTime());
+            let shownDate = formatDate(startDate);
+            let deferDate = new Date(startDate.getTime());
             deferDate.setHours(0);
             deferDate.setMinutes(0);
             let plannedDate = null;
             let dueDate = new Date(startDate.getTime());
             dueDate.setHours(23);
             dueDate.setMinutes(59);
-            createTask(title, shownDate, shortId, calendarProject, deferDate, plannedDate,
-                dueDate, calendar, startDate, endDate, isAllDay, id, formattedNow,
-                calendarDate, dateCase, url, location, notes);
+            createTask(title, deferDate, plannedDate, dueDate, shownDate, shortId, calendarProject, calendar, startDate, endDate, isAllDay, id, formattedNow, calendarDate, dateCase, url, location, notes);
         }
     });
 
