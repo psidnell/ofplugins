@@ -23,8 +23,8 @@
 
     function formatDate(date) {
         return padNumber(date.getFullYear(), 4) + '-' +
-            padNumber(date.getMonth(), 2) + '-' +
-            padNumber(date.getDate());
+            padNumber(1 + date.getMonth(), 2) + '-' +
+            padNumber(date.getDate(), 2);
     }
 
     function formatDOW(date) {
@@ -41,31 +41,33 @@
     }
 
     function isTimedSingleDayEvent(startDate, endDate, isAllDay) {
-        return startDate.getFullYear() == endDate.getFullYear() &&
+        return !isAllDay &&
+            startDate.getFullYear() == endDate.getFullYear() &&
             startDate.getMonth() == endDate.getMonth() &&
-            startDate.getDate() == endDate.getDate() &&
-            !isAllDay;
+            startDate.getDate() == endDate.getDate();
     }
 
     function isTimedMultiDayEvent(startDate, endDate, isAllDay) {
-        return (startDate.getFullYear() != endDate.getFullYear() ||
-                startDate.getMonth() != endDate.getMonth() ||
-                startDate.getDate() != endDate.getDate()) &&
-            !isAllDay;
+        return !isAllDay && (
+            startDate.getFullYear() != endDate.getFullYear() ||
+            startDate.getMonth() != endDate.getMonth() ||
+            startDate.getDate() != endDate.getDate()
+        );
     }
 
     function isAllDaySingleDayEvent(startDate, endDate, isAllDay) {
-        return startDate.getFullYear() == endDate.getFullYear() ||
-            startDate.getMonth() == endDate.getMonth() ||
-            startDate.getDate() == endDate.getDate() &&
-            isAllDay;
+        return isAllDay &&
+            startDate.getFullYear() == endDate.getFullYear() &&
+            startDate.getMonth() == endDate.getMonth() &&
+            startDate.getDate() == endDate.getDate();
     }
 
     function isAllDayMultiDayEvent(startDate, endDate, isAllDay) {
-        return (startDate.getFullYear() != endDate.getFullYear() ||
-                startDate.getMonth() != endDate.getMonth() ||
-                startDate.getDate() != endDate.getDate()) &&
-            isAllDay;
+        return isAllDay && (
+            startDate.getFullYear() != endDate.getFullYear() ||
+            startDate.getMonth() != endDate.getMonth() ||
+            startDate.getDate() != endDate.getDate()
+        );
     }
 
     function createTask(title, shownDate, shortId, calendarProject, deferDate, plannedDate,
@@ -122,10 +124,7 @@ CreationData:
         const endDate = new Date(endDateISO8601);
         const calendarDate = formatDate(startDate);
         let deferDate = null;
-        let plannedDate = null;
-        let dueDate = null;
-        let create = false;
-        let dateCase = '';
+
         let calendarProject = flattenedProjects.byName('#Calendar');
         let shownDate = '';
         let formattedNow = formatDateTime(new Date());
@@ -133,46 +132,52 @@ CreationData:
         //console.log('Parameters', JSON.stringify(d));
 
         if (isTimedSingleDayEvent(startDate, endDate, isAllDay)) {
-            dateCase = 1;
+            let dateCase = 1;
             shownDate = formatDateTime(startDate);
             deferDate = new Date(startDate.getTime());
             deferDate.setHours(0);
             deferDate.setMinutes(0);
-            dueDate = new Date(startDate.getTime());
-            create = true;
+            let plannedDate = null;
+            let dueDate = new Date(startDate.getTime());
+            createTask(title, shownDate, shortId, calendarProject, deferDate, plannedDate,
+                dueDate, calendar, startDate, endDate, isAllDay, id, formattedNow,
+                calendarDate, dateCase, url, location, notes);
         } else if (isTimedMultiDayEvent(startDate, endDate, isAllDay)) {
-            dateCase = 2;
+            let dateCase = 2;
             shownDate = formatDateTime(startDate);
             deferDate = new Date(startDate.getTime());
             deferDate.setHours(0);
             deferDate.setMinutes(0);
-            dueDate = new Date(startDate.getTime());
-            create = true;
-
+            let plannedDate = null;
+            let dueDate = new Date(startDate.getTime());
+            createTask(title, shownDate, shortId, calendarProject, deferDate, plannedDate,
+                dueDate, calendar, startDate, endDate, isAllDay, id, formattedNow,
+                calendarDate, dateCase, url, location, notes);
         } else if (isAllDaySingleDayEvent(startDate, endDate, isAllDay)) {
-            dateCase = 3;
+            console.log(3, startDate, endDate, isAllDay)
+            let dateCase = 3;
             shownDate = formatDate(startDate);
             deferDate = new Date(startDate.getTime());
             deferDate.setHours(0);
             deferDate.setMinutes(0);
-            dueDate = new Date(startDate.getTime());
+            let plannedDate = null;
+            let dueDate = new Date(startDate.getTime());
             dueDate.setHours(23);
             dueDate.setMinutes(59);
-            create = true;
+            createTask(title, shownDate, shortId, calendarProject, deferDate, plannedDate,
+                dueDate, calendar, startDate, endDate, isAllDay, id, formattedNow,
+                calendarDate, dateCase, url, location, notes);
 
         } else if (isAllDayMultiDayEvent(startDate, endDate, isAllDay)) {
-            dateCase = 4;
+            let dateCase = 4;
             shownDate = formatDate(startDate);
             deferDate = new Date(startDate.getTime());
             deferDate.setHours(0);
             deferDate.setMinutes(0);
-            dueDate = new Date(startDate.getTime());
+            let plannedDate = null;
+            let dueDate = new Date(startDate.getTime());
             dueDate.setHours(23);
             dueDate.setMinutes(59);
-            create = true;
-        }
-
-        if (create) {
             createTask(title, shownDate, shortId, calendarProject, deferDate, plannedDate,
                 dueDate, calendar, startDate, endDate, isAllDay, id, formattedNow,
                 calendarDate, dateCase, url, location, notes);
