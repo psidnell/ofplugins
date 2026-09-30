@@ -13,16 +13,32 @@
 }*/
 (() => {
     const action = new PlugIn.Action((selection, sender) => {
+        // Extract data passed in from Dictionary
         let d = argument.input;
+        let title = d.Title;
         let startDate = new Date(d.StartDate);
         let endDate = new Date(d.EndDate);
+        let isAllDay = d.IsAllDay;
         let notes = d.Notes;
+        let shortId = d.ShortId;
+        let calendar = d.Calendar;
+        let formattedStartTime = d.FormattedStartTime;
+        let formattedStartDate = d.FormattedStartDate;
+        let formattedEndTime = d.FormattedEndTime;
+        let url = d.URL;
+        let location = d.Location;
+        let formattedEndDate = d.FormattedEndDate;
+        let id = d.Id;
+        let formattedNow = d.FormattedNow;
+        let calendarDate = d.CalendarDate;
+
         let deferDate = null;
         let plannedDate = null;
         let dueDate = null;
         let create = false;
         let dateCase = '';
-        let calendarProject = flattenedProjects.byName(d.CalendarProjectName);
+        let calendarProject = flattenedProjects.byName('#Calendar');
+
         let shownDate = '';
 
         console.log('Parameters', JSON.stringify(d));
@@ -31,14 +47,16 @@
 
         // Handle the date cases
 
+
+
         if (startDate.getFullYear() == endDate.getFullYear() &&
             startDate.getMonth() == endDate.getMonth() &&
             startDate.getDate() == endDate.getDate() &&
-            !d.IsAllDay) {
+            !isAllDay) {
 
             // 1. Start & end on same day, not all day
 
-            shownDate = d.FormattedStartTime + ' ' + d.FormattedStartDate;
+            shownDate = formattedStartTime + ' ' + formattedStartDate;
 
             deferDate = new Date(startDate.getTime());
             deferDate.setHours(0);
@@ -51,11 +69,11 @@
         } else if ((startDate.getFullYear() != endDate.getFullYear() ||
                 startDate.getMonth() != endDate.getMonth() ||
                 startDate.getDate() != endDate.getDate()) &&
-            !d.IsAllDay) {
+            !isAllDay) {
 
             // 2. Start & end on different days, not all day
 
-            shownDate = d.FormattedStartTime + ' ' + d.FormattedStartDate;
+            shownDate = formattedStartTime + ' ' + formattedStartDate;
 
             deferDate = new Date(startDate.getTime());
             deferDate.setHours(0);
@@ -68,11 +86,11 @@
         } else if (startDate.getFullYear() == endDate.getFullYear() ||
             startDate.getMonth() == endDate.getMonth() ||
             startDate.getDate() == endDate.getDate() &&
-            d.IsAllDay) {
+            isAllDay) {
 
             // 3. All day single day
 
-            shownDate = d.FormattedStartDate;
+            shownDate = formattedStartDate;
 
             deferDate = new Date(startDate.getTime());
             deferDate.setHours(0);
@@ -87,11 +105,11 @@
         } else if ((startDate.getFullYear() != endDate.getFullYear() ||
                 startDate.getMonth() != endDate.getMonth() ||
                 startDate.getDate() != endDate.getDate()) &&
-            d.IsAllDay) {
+            isAllDay) {
 
             // 4. All day multi day
 
-            shownDate = d.FormattedStartDate;
+            shownDate = formattedStartDate;
 
             deferDate = new Date(startDate.getTime());
             deferDate.setHours(0);
@@ -113,30 +131,37 @@
         if (create) {
 
             // Create the task
-            task = new Task(d.Title + ' | ' + shownDate + ' (' + d.ShortId + ')', calendarProject);
+
+
+            task = new Task(title + ' | ' + shownDate + ' (' + shortId + ')', calendarProject);
             task.deferDate = deferDate;;
             task.plannedDate = plannedDate;
             task.dueDate = dueDate;
             task.flagged = true;
 
             // The Note
+
+
+
             task.note = `
-Calendar: ${d.Calendar}
-Start:  ${d.FormattedStartTime} ${d.FormattedStartDate}
-End: ${d.FormattedEndTime} ${d.FormattedEndDate}
-Is All Day: ${d.IsAllDay}
-ID: ${d.Id}
-Added: ${d.FormattedNow}
-Open Calendar: shortcuts://run-shortcut?name=Open%20Calendar%20On%20Date&input=${d.CalendarDate}
+Calendar: ${calendar}
+Start:  ${formattedStartTime} ${formattedStartDate}
+End: ${formattedEndTime} ${formattedEndDate}
+Is All Day: ${isAllDay}
+ID: ${id}
+Added: ${formattedNow}
+Open Calendar: shortcuts://run-shortcut?name=Open%20Calendar%20On%20Date&input=${calendarDate}
 Case: ${dateCase}
 `
 
-            if (d.URL && d.URL.length > 0) {
-                task.note += '\nURL: ' + d.URL;
+
+            if (url && url.length > 0) {
+                task.note += '\nURL: ' + url;
             }
 
-            if (d.Location && d.Location.length > 0) {
-                task.note += '\n\nLocation:\n' + d.Location;
+
+            if (location && location.length > 0) {
+                task.note += '\n\nLocation:\n' + location;
             }
 
             if (notes.length > 0) {
