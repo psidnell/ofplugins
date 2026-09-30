@@ -157,7 +157,6 @@ CreationData:
             createTask(title + ' | end', deferDate2, plannedDate, dueDate2,
                 shownDate2, shortId, calendarProject, calendar, startDate, endDate, isAllDay, id, formattedNow, calendarDate, dateCase, url, location, notes);
         } else if (isAllDaySingleDayEvent(startDate, endDate, isAllDay)) {
-            console.log(3, startDate, endDate, isAllDay)
             let dateCase = 3;
             let shownDate = formatDate(startDate);
             let deferDate = new Date(startDate.getTime());
