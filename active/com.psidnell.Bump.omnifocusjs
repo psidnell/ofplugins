@@ -12,6 +12,20 @@
     "image": "calendar.badge.plus"
 }*/
 (() => {
+
+    function days_between(date1, date2) {
+
+        // The number of milliseconds in one day
+        const ONE_DAY = 1000 * 60 * 60 * 24;
+
+        // Calculate the difference in milliseconds
+        const differenceMs = date2 - date1;
+
+        // Convert back to days and return
+        return Math.round(differenceMs / ONE_DAY);
+
+    }
+
     const action = new PlugIn.Action((selection, sender) => {
 
         let today = new Date();
@@ -19,28 +33,39 @@
         today.setMinutes(0);
         today.setSeconds(0);
 
+        let tomorrow = new Date(today.getTime());
+        tomorrow.setDate(today.getDate() + 1);
 
         selection.tasks.forEach(task => {
 
+            // Set today as defer date if there is none
             if (!task.effectiveDeferDate) {
                 task.deferDate = today;
             }
 
+            // How many days do we need to bump by
+            // to push the task to at least tomorrow?
+            // Then bump by one day.
+            let daysToBump = days_between(task.effectiveDeferDate, tomorrow);
+            if (daysToBump < 1) {
+                daysToBump = 1;
+            }
+
             if (task.effectiveDueDate) {
                 let date = task.effectiveDueDate;
-                date.setDate(date.getDate() + 1);
+                date.setDate(date.getDate() + daysToBump);
                 task.dueDate = date;
             }
 
             if (task.effectivePlannedDate) {
                 let date = task.effectivePlannedDate;
-                date.setDate(date.getDate() + 1);
+                date.setDate(date.getDate() + daysToBump);
                 task.plannedDate = date;
             }
 
             if (task.effectiveDeferDate) {
                 let date = task.effectiveDeferDate;
-                date.setDate(date.getDate() + 1);
+                date.setDate(date.getDate() + daysToBump);
                 task.deferDate = date;
             }
         });
