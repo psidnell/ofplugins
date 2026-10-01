@@ -73,7 +73,7 @@
     function createTask(title, deferDate, plannedDate, dueDate, shownDate, shortId,
                         calendarProject, calendar, startDate, endDate, isAllDay, id, formattedNow,
                         calendarDate, dateCase, url, location, notes) {
-        //console.log("Creating", title, 'Case ' + case);
+        //console.log("Creating", title, 'Case ' + dateCase);
 
         task = new Task(title + ' | ' + shownDate + ' (' + shortId + ')', calendarProject);
         task.deferDate = deferDate;
@@ -194,7 +194,9 @@ CreationData:
     });
 
     action.validate = (selection, sender) => {
-        return true;
+        let valid = typeof selection == 'undefined';
+        //console.log('Valid', valid);
+        return valid;
     };
 
     return action;
