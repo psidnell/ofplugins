@@ -63,11 +63,12 @@
                 task.plannedDate = date;
             }
 
-            if (task.effectiveDeferDate) {
-                let date = task.effectiveDeferDate;
-                date.setDate(date.getDate() + daysToBump);
-                task.deferDate = date;
-            }
+            // Don't modify the due date
+            // if (task.effectiveDeferDate) {
+            //     let date = task.effectiveDeferDate;
+            //     date.setDate(date.getDate() + daysToBump);
+            //     task.deferDate = date;
+            // }
         });
     });
 
