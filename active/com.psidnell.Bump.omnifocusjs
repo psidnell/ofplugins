@@ -51,10 +51,10 @@
                 daysToBump = 1;
             }
 
-            if (task.effectiveDueDate) {
-                let date = task.effectiveDueDate;
+            if (task.effectiveDeferDate) {
+                let date = task.effectiveDeferDate;
                 date.setDate(date.getDate() + daysToBump);
-                task.dueDate = date;
+                task.deferDate = date;
             }
 
             if (task.effectivePlannedDate) {
@@ -63,11 +63,11 @@
                 task.plannedDate = date;
             }
 
-            // Don't modify the due date
-            // if (task.effectiveDeferDate) {
-            //     let date = task.effectiveDeferDate;
+            // Don't bump the due date
+            // if (task.effectiveDueDate) {
+            //     let date = task.effectiveDueDate;
             //     date.setDate(date.getDate() + daysToBump);
-            //     task.deferDate = date;
+            //     task.dueDate = date;
             // }
         });
     });
