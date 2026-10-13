@@ -17,10 +17,10 @@
 
         //console.log('Running');
 
-        var allDayTag = flattenedTags.byName("🗓️ CALENDAR") || new Tag("🗓️ CALENDAR");
-        var amTag = flattenedTags.byName("🌤️ AM") || new Tag("🌤️ AM");
-        var pmTag = flattenedTags.byName("☀️ PM") || new Tag("☀️ PM");
-        var eveningTag = flattenedTags.byName("🌓 EVENING") || new Tag("🌓 EVENING");
+        var allDayTag = flattenedTags.byName("CALENDAR") || new Tag("CALENDAR");
+        var amTag = flattenedTags.byName("AM") || new Tag("AM");
+        var pmTag = flattenedTags.byName("PM") || new Tag("PM");
+        var eveningTag = flattenedTags.byName("EVENING") || new Tag("EVENING");
 
         selection.tasks.forEach(task => {
             const taskDate = task.dueDate;
