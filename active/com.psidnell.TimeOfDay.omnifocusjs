@@ -18,8 +18,6 @@
         //console.log('Running');
 
         var allDayTag = flattenedTags.byName("🗓️ CALENDAR") || new Tag("🗓️ CALENDAR");
-        var wakeUpTag = flattenedTags.byName("⏰ WAKEUP") || new Tag("⏰ WAKEUP");
-        var earlyTag = flattenedTags.byName("☕️ EARLY") || new Tag("☕️ EARLY");
         var amTag = flattenedTags.byName("🌤️ AM") || new Tag("🌤️ AM");
         var pmTag = flattenedTags.byName("☀️ PM") || new Tag("☀️ PM");
         var eveningTag = flattenedTags.byName("🌓 EVENING") || new Tag("🌓 EVENING");
@@ -35,11 +33,7 @@
                 var minute = taskDate.getMinutes();
 
                 var newTag;
-                if (hour < 8) {
-                    newTag = wakeUpTag;
-                } else if (hour < 9) {
-                    newTag = earlyTag;
-                } else if (hour < 12) {
+                if (hour < 12) {
                    newTag = amTag;
                 } else if (hour < 18) {
                     newTag = pmTag;
