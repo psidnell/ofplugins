@@ -17,6 +17,8 @@
 
         //console.log('Running');
 
+        const today = new Date();
+
         var allDayTag = flattenedTags.byName("CALENDAR") || new Tag("CALENDAR");
         var amTag = flattenedTags.byName("AM") || new Tag("AM");
         var pmTag = flattenedTags.byName("PM") || new Tag("PM");
@@ -25,15 +27,20 @@
         let tasks = selection.tasks;
         if (tasks.length === 0) {
             tasks = flattenedTasks.filter(task => {
-                return task.taskStatus === Task.Status.Available ||
+                return !!task.effectiveDueDate &&
+                       task.effectiveDueDate.getFullYear() === today.getFullYear() &&
+                       task.effectiveDueDate.getMonth() === today.getMonth() &&
+                       task.effectiveDueDate.getDate() === today.getDate() &&
+                       (task.taskStatus === Task.Status.Available ||
                        task.taskStatus === Task.Status.Next ||
-                       task.taskStatus === Task.Status.Overdue
+                       task.taskStatus === Task.Status.DueSoon ||
+                       task.taskStatus === Task.Status.Overdue)
             });
-            // console.log('Available:', tasks.length);
+            console.log('Available:', tasks.length);
         }
 
         tasks.forEach(task => {
-            const taskDate = task.dueDate;
+            const taskDate = task.effectiveDueDate;
 
             if (!!taskDate) {
 
