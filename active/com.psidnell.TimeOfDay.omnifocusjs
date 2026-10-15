@@ -36,7 +36,7 @@
                        task.taskStatus === Task.Status.DueSoon ||
                        task.taskStatus === Task.Status.Overdue)
             });
-            console.log('Available:', tasks.length);
+            // console.log('Available:', tasks.length);
         }
 
         tasks.forEach(task => {
