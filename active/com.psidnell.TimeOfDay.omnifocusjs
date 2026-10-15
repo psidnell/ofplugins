@@ -22,7 +22,17 @@
         var pmTag = flattenedTags.byName("PM") || new Tag("PM");
         var eveningTag = flattenedTags.byName("EVENING") || new Tag("EVENING");
 
-        selection.tasks.forEach(task => {
+        let tasks = selection.tasks;
+        if (tasks.length === 0) {
+            tasks = flattenedTasks.filter(task => {
+                return task.taskStatus === Task.Status.Available ||
+                       task.taskStatus === Task.Status.Next ||
+                       task.taskStatus === Task.Status.Overdue
+            });
+            // console.log('Available:', tasks.length);
+        }
+
+        tasks.forEach(task => {
             const taskDate = task.dueDate;
 
             if (!!taskDate) {
@@ -52,7 +62,7 @@
 	});
 
 	action.validate = function(selection, sender){
-		return (selection.tasks.length > 0);
+		return true;
 	};
 
 	return action;
