@@ -19,21 +19,27 @@
     today.setMinutes(0);
     today.setSeconds(0);
 
-    var task = selection.tasks[0];
-    var deferDate = task.effectiveDeferDate ? task.effectiveDeferDate : today;
+    selection.tasks.forEach(task => {
+      var deferDate = task.effectiveDeferDate ? task.effectiveDeferDate : today;
 
-    // 3 days to 1 month - ish
-    var randomDays = 3 + Math.floor(Math.random() * 25);
+      // 3 days to 1 month - ish
+      var randomDays = 3 + Math.floor(Math.random() * 25);
 
-    // console.log(randomDays);
+      // console.log(randomDays);
 
-    deferDate.setDate(deferDate.getDate() + randomDays);
-    task.deferDate = deferDate;
+      deferDate.setDate(deferDate.getDate() + randomDays);
+      task.deferDate = deferDate;
+
+      // console.log(randomDays);
+
+      deferDate.setDate(deferDate.getDate() + randomDays);
+      task.deferDate = deferDate;
+    });
   });
 
 
   action.validate = function(selection, sender){
-      return selection.tasks.length === 1;
+      return selection.tasks.length >= 1;
   };
 
   return action;
