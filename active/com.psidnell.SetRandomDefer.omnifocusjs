@@ -1,0 +1,40 @@
+//Forked from "identifier": "com.patrick.SetRandomDefer",
+/*{
+    "author": "P. Sidnell",
+    "targets": ["omnifocus"],
+    "type": "action",
+    "identifier": "com.psidnell.SetRandomDefer",
+    "version": "1.0",
+    "description": "Set a Random Defer Date",
+    "label": "Rnd Defer",
+    "mediumLabel": "Rnd Defer",
+    "longLabel": "Set a Random Defer Date",
+    "paletteLabel": "Rnd Defer",
+    "image": "dice"
+}*/
+(() => {
+  const action = new PlugIn.Action(selection => {
+    const today = new Date();
+    today.setHours(0);
+    today.setMinutes(0);
+    today.setSeconds(0);
+
+    var task = selection.tasks[0];
+    var deferDate = task.effectiveDeferDate ? task.effectiveDeferDate : today;
+
+    // 3 days to 1 month - ish
+    var randomDays = 3 + Math.floor(Math.random() * 25);
+
+    // console.log(randomDays);
+
+    deferDate.setDate(deferDate.getDate() + randomDays);
+    task.deferDate = deferDate;
+  });
+
+
+  action.validate = function(selection, sender){
+      return selection.tasks.length === 1;
+  };
+
+  return action;
+})();
