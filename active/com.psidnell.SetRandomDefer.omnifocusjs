@@ -17,8 +17,8 @@
     today.setHours(0, 0, 0, 0);
 
     selection.tasks.forEach(task => {
-      const deferDate = task.effectiveDeferDate || today;
-
+      const deferDate = task.effectiveDeferDate  && task.effectiveDeferDate.getTime() > today.getTime() ?
+        task.effectiveDeferDate : today;
 
       const minDays = 3;
       const maxDays = 31;
