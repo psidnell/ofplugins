@@ -1,0 +1,48 @@
+//Forked from "identifier": "com.patrick.SetPlannedDateToToday",
+/*{
+    "author": "P. Sidnell",
+    "targets": ["omnifocus"],
+    "type": "action",
+    "identifier": "com.psidnell.SetDeferDateToToday",
+    "version": "1.0",
+    "description": "Toggle a defer date of today",
+    "label": "Defer Today",
+    "mediumLabel": "Defer Today",
+    "longLabel": "Toggle a defer date of today",
+    "paletteLabel": "Defer Today",
+    "image": "calendar"
+}*/
+(() => {
+  const action = new PlugIn.Action(selection => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    // 3. Apply to every selected task
+
+    var numSet = 0;
+
+    selection.tasks.forEach(task => {
+      if (task.deferDate) {
+        numSet++;
+      }
+    });
+
+
+    if (numSet != selection.tasks.length) {
+        selection.tasks.forEach(task => {
+          task.deferDate = today;
+        });
+    } else {
+        selection.tasks.forEach(task => {
+          task.deferDate = null;
+        });
+    }
+  });
+
+
+  action.validate = function(selection, sender){
+      return selection.tasks.length > 0;
+  };
+
+  return action;
+})();
