@@ -20,8 +20,8 @@
       const deferDate = task.effectiveDeferDate  && task.effectiveDeferDate.getTime() > today.getTime() ?
         task.effectiveDeferDate : today;
 
-      const minDays = 3;
-      const maxDays = 31;
+      const minDays = 7;
+      const maxDays = 56;
       const randomDays = minDays + Math.floor(Math.random() * (maxDays - minDays));
 
       deferDate.setDate(deferDate.getDate() + randomDays);
