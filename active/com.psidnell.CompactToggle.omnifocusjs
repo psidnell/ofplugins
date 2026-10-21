@@ -1,0 +1,42 @@
+/*{
+    "author": "P. Sidnell",
+    "targets": ["omnifocus"],
+    "type": "action",
+    "identifier": "com.psidnell.CompactToggle",
+    "version": "1.0",
+    "description": "Show/Hide sidebars",
+    "label": "Compact",
+    "mediumLabel": "Show/Hide sidebars",
+    "longLabel": "Show/Hide sidebars",
+    "paletteLabel": "Show/Hide sidebars",
+    "image": "window.casement"
+}*/
+(() => {
+
+    function shouldShow(){
+        window = document.windows[0];
+
+        if (window.sidebarVisible && window.inspectorVisible)
+            return false;
+        if (window.sidebarVisible || window.inspectorVisible)
+            return true;
+        return true;
+    }
+
+    function showWindowPanels(shouldShow){
+        window = document.windows[0];
+        window.sidebarVisible = shouldShow;
+        window.inspectorVisible = shouldShow;
+    }
+
+    const action = new PlugIn.Action((selection, sender) => {
+        showWindowPanels(shouldShow());
+    });
+
+    action.validate = (selection, sender) => {
+        return true;
+    };
+
+    return action;
+})();
+
