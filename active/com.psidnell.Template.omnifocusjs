@@ -70,12 +70,17 @@
 	};
 
     const buildFolderPath = (folder) => {
-        var names = [];
-        while (folder != null) {
-            names.unshift(folder.name);
-            folder = folder.parent;
-        }
-        return names.length == 0 ? 'projects' : '/folder/' + names.join(':');
+        // The format of the target is poorly documented (as far as I can find) and
+        // has caused loads of bugs with focus and perspectives.
+        // Just dumping the new project in the root for now
+        //
+        // var names = [];
+        // while (folder != null) {
+        //     names.unshift(folder.name);
+        //     folder = folder.parent;
+        // }
+        // return names.length == 0 ? 'projects' : '/folder/' + names.join(':');
+        return 'projects';
     }
 
 	// Process the template
