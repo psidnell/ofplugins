@@ -16,9 +16,9 @@
     function shouldShow(){
         window = document.windows[0];
 
-        if (window.sidebarVisible && window.inspectorVisible)
+        if (window.sidebarVisible && window.inspectorVisible && window.toolbarVisible)
             return false;
-        if (window.sidebarVisible || window.inspectorVisible)
+        if (window.sidebarVisible || window.inspectorVisible || window.toolbarVisible)
             return true;
         return true;
     }
@@ -27,6 +27,7 @@
         window = document.windows[0];
         window.sidebarVisible = shouldShow;
         window.inspectorVisible = shouldShow;
+        window.toolbarVisible = shouldShow;
     }
 
     const action = new PlugIn.Action((selection, sender) => {
@@ -34,7 +35,7 @@
     });
 
     action.validate = (selection, sender) => {
-        return true;
+        return app.platformName === 'macOS';
     };
 
     return action;
