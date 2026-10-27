@@ -123,7 +123,7 @@ CreationData:
         const startDate = new Date(startDateISO8601);
         const endDate = new Date(endDateISO8601);
         const calendarDate = formatDate(startDate);
-        let calendarProject = flattenedProjects.byName('#Calendar');
+        let calendarProject = flattenedProjects.byName('Calendar');
         let formattedNow = formatDateTime(new Date());
 
         //console.log('Parameters', JSON.stringify(d));
