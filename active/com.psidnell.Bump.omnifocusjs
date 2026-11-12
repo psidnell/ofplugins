@@ -23,20 +23,30 @@
 
         // Convert back to days and return
         return Math.round(differenceMs / ONE_DAY);
+    }
 
+    function safeBumpDate(oldDate, dueDate, newDate){
+        if (!dueDate) {
+            return newDate;
+        }
+
+        if (newDate > dueDate){
+            return oldDate
+        }
+
+        return newDate;
     }
 
     const action = new PlugIn.Action((selection, sender) => {
 
-        let today = new Date();
-        today.setHours(0);
-        today.setMinutes(0);
-        today.setSeconds(0);
-
-        let tomorrow = new Date(today.getTime());
-        tomorrow.setDate(today.getDate() + 1);
-
         selection.tasks.forEach(task => {
+            let today = new Date();
+            today.setHours(0);
+            today.setMinutes(0);
+            today.setSeconds(0);
+
+            let tomorrow = new Date(today.getTime());
+            tomorrow.setDate(today.getDate() + 1);
 
             // Set today as defer date if there is none
             if (!task.effectiveDeferDate) {
@@ -46,21 +56,24 @@
             // How many days do we need to bump by
             // to push the task to at least tomorrow?
             // Then bump by one day.
-            let daysToBump = days_between(task.effectiveDeferDate, tomorrow);
-            if (daysToBump < 1) {
+            let daysToBump;
+            if (task.effectiveDeferDate.getDate() < today.getDate()) {
+                // First bring it to today
+                daysToBump = days_between(task.effectiveDeferDate, today);
+            } else {
                 daysToBump = 1;
             }
 
             if (task.effectiveDeferDate) {
-                let date = task.effectiveDeferDate;
-                date.setDate(date.getDate() + daysToBump);
-                task.deferDate = date;
+                let newDate = task.effectiveDeferDate;
+                newDate.setDate(newDate.getDate() + daysToBump);
+                task.deferDate = safeBumpDate(task.effectiveDeferDate, task.effectiveDueDate, newDate);
             }
 
             if (task.effectivePlannedDate) {
-                let date = task.effectivePlannedDate;
-                date.setDate(date.getDate() + daysToBump);
-                task.plannedDate = date;
+                let newDate = task.effectivePlannedDate;
+                newDate.setDate(newDate.getDate() + daysToBump);
+                task.plannedDate = safeBumpDate(task.effectivePlannedDate, task.effectiveDueDate, newDate);
             }
 
             // Don't bump the due date
