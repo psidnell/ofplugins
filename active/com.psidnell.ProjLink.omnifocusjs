@@ -33,7 +33,8 @@
             link = 'omnifocus:///inbox/';
         } else if (currentPerspective.name === 'Projects' || currentPerspective.name === 'Tags') {
             // Link to the project
-            // Could link to selected tag, folder etc - but could be complicated
+            // Could link to selected tag(s), folder(s) etc - but could be complicated
+            // And then there's focus mode...
             name = projectForNewTask.name;
             link = 'omnifocus:///project/' +projectForNewTask.id.primaryKey;
         } else {
