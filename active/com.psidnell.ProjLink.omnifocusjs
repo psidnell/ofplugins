@@ -14,6 +14,8 @@
 (() => {
     const action = new PlugIn.Action((selection, sender) => {
 
+        var currentPerspective = document.windows[0].perspective;
+
         var projectForNewTask = null;
         if (selection.tasks.length === 1) {
             var task = selection.tasks[0];
