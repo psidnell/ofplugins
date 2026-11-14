@@ -15,6 +15,7 @@
     const action = new PlugIn.Action((selection, sender) => {
 
         var currentPerspective = document.windows[0].perspective;
+        // console.log("Current perspective", currentPerspective.name);
 
         var projectForNewTask = null;
         if (selection.tasks.length === 1) {
@@ -31,7 +32,12 @@
             // Link to the inbox
             name = currentPerspective.name;
             link = 'omnifocus:///inbox/';
-        } else if (currentPerspective.name === 'Projects' || currentPerspective.name === 'Tags') {
+            projectForNewTask = selection.projects[0];
+        } else if (currentPerspective.name === 'Forecast' && projectForNewTask) {
+            // Can't link to a specific day - use project
+            name = projectForNewTask.name;
+            link = 'omnifocus:///project/' +projectForNewTask.id.primaryKey;
+        } else if ((currentPerspective.name === 'Projects' || currentPerspective.name === 'Tags') && projectForNewTask) {
             // Link to the project
             // Could link to selected tag(s), folder(s) etc - but could be complicated
             // And then there's focus mode...
