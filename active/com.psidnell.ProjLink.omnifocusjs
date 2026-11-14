@@ -13,27 +13,43 @@
 }*/
 (() => {
     const action = new PlugIn.Action((selection, sender) => {
-        var project;
-        if (selection.tasks.length == 1) {
+
+        var projectForNewTask = null;
+        if (selection.tasks.length === 1) {
             var task = selection.tasks[0];
-            if (!task.containingProject) {
-                return;
-            }
-            project = task.containingProject;
+            // Null if in the inbox
+            projectForNewTask = task.containingProject;
         } else {
-            project = selection.projects[0];
+            projectForNewTask = selection.projects[0];
         }
 
-        var title = '(@) ' + project.name;
+        var link;
+        var name;
+        if (currentPerspective.name === 'Inbox') {
+            // Link to the inbox
+            name = currentPerspective.name;
+            link = 'omnifocus:///inbox/';
+        } else if (currentPerspective.name === 'Projects' || currentPerspective.name === 'Tags') {
+            // Link to the project
+            // Could link to selected tag, folder etc - but could be complicated
+            name = projectForNewTask.name;
+            link = 'omnifocus:///project/' +projectForNewTask.id.primaryKey;
+        } else {
+            // Link to the perspective
+            name = currentPerspective.name;
+            link = 'omnifocus:///perspective/' + currentPerspective.identifier;
+        }
+
+
+        var title = '(@) ' + name;
         var noteLines = [];
-        noteLines.push(project.name + ': omnifocus:///project/' +
-                project.id.primaryKey);
+        noteLines.push(link);
         noteLines.push('');
         var note = noteLines.join('\n');
 
         var newTask = new Task(title, inbox.beginning);
-        if (project) {
-            moveTasks([newTask], project);
+        if (projectForNewTask) {
+            moveTasks([newTask], projectForNewTask);
         }
 
         newTask.addTag(Tag.forecastTag);
