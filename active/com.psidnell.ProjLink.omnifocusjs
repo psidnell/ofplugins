@@ -17,7 +17,7 @@
         return ['Inbox', 'omnifocus:///inbox/', null];
     }
 
-    function taskLink (task) {
+    function taskParentProjectLink (task) {
         let project = task.containingProject;
         if ((!!project)) {
             return projectLink(project);
@@ -49,6 +49,7 @@
         let folder = selection.folders.length === 1 ? selection.folders[0] : null;
         let tag = selection.tags.length === 1 ? selection.tags[0] : null;
         let currentPerspective = document.windows[0].perspective;
+        let perspectiveName = currentPerspective.name;
 
         // console.log("Current perspective", currentPerspective.name);
 
@@ -57,17 +58,20 @@
         let name = null;
         let projectForNewTask = null;
         // Go through the different things that might have been selected
-        if (currentPerspective.name === 'Inbox') {
+        if (perspectiveName === 'Inbox') {
             [name, link, projectForNewTask] = inboxLink();
-        } else if (!!task) {
-            [name, link, projectForNewTask] = taskLink(task);
+        } else if (!!task && (
+            perspectiveName === 'Projects' ||
+            perspectiveName === 'Tags' ||
+            perspectiveName === 'Forecast')) {
+            [name, link, projectForNewTask] = taskParentProjectLink(task);
         } else if (!!project) {
             [name, link, projectForNewTask] = projectLink(project);
         } else if (!!folder) {
             [name, link, projectForNewTask] = folderLink(folder);
         } else if (!!tag) {
             [name, link, projectForNewTask] = tagLink(tag);
-        } else if (!!currentPerspective) {
+        } else {
             [name, link, projectForNewTask] = perspectiveLink(currentPerspective);
         }
 
