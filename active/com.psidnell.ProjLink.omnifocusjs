@@ -12,43 +12,68 @@
     "image": "link.badge.plus"
 }*/
 (() => {
+
+    function inboxLink () {
+        return ['Inbox', 'omnifocus:///inbox/', null];
+    }
+
+    function taskLink (task) {
+        let project = task.containingProject;
+        if ((!!project)) {
+            return projectLink(project);
+        } else {
+            return [null, null, null];
+        }
+    }
+
+    function projectLink (project) {
+        return [project.name, 'omnifocus:///project/' + project.id.primaryKey, project];
+    }
+
+    function folderLink (folder) {
+        return [folder.name, 'omnifocus:///folder/' + folder.id.primaryKey, null];
+    }
+
+    function tagLink (tag) {
+        return [tag.name, 'omnifocus:///tag/' + tag.id.primaryKey, null];
+    }
+
+    function perspectiveLink (perspective) {
+        return [perspective.name, 'omnifocus:///perspective/' + perspective.identifier, null];
+    }
+
     const action = new PlugIn.Action((selection, sender) => {
 
-        var currentPerspective = document.windows[0].perspective;
+        let task = selection.tasks.length === 1 ? selection.tasks[0] : null;
+        let project = selection.projects.length === 1 ? selection.projects[0] : null;
+        let folder = selection.folders.length === 1 ? selection.folders[0] : null;
+        let tag = selection.tags.length === 1 ? selection.tags[0] : null;
+        let currentPerspective = document.windows[0].perspective;
+
         // console.log("Current perspective", currentPerspective.name);
 
-        var projectForNewTask = null;
-        if (selection.tasks.length === 1) {
-            var task = selection.tasks[0];
-            // Null if in the inbox
-            projectForNewTask = task.containingProject;
-        } else {
-            projectForNewTask = selection.projects[0];
-        }
 
-        var link;
-        var name;
+        let link = null;
+        let name = null;
+        let projectForNewTask = null;
+        // Go through the different things that might have been selected
         if (currentPerspective.name === 'Inbox') {
-            // Link to the inbox
-            name = currentPerspective.name;
-            link = 'omnifocus:///inbox/';
-            projectForNewTask = selection.projects[0];
-        } else if (currentPerspective.name === 'Forecast' && projectForNewTask) {
-            // Can't link to a specific day - use project
-            name = projectForNewTask.name;
-            link = 'omnifocus:///project/' +projectForNewTask.id.primaryKey;
-        } else if ((currentPerspective.name === 'Projects' || currentPerspective.name === 'Tags') && projectForNewTask) {
-            // Link to the project
-            // Could link to selected tag(s), folder(s) etc - but could be complicated
-            // And then there's focus mode...
-            name = projectForNewTask.name;
-            link = 'omnifocus:///project/' +projectForNewTask.id.primaryKey;
-        } else {
-            // Link to the perspective
-            name = currentPerspective.name;
-            link = 'omnifocus:///perspective/' + currentPerspective.identifier;
+            [name, link, projectForNewTask] = inboxLink();
+        } else if (!!task) {
+            [name, link, projectForNewTask] = taskLink(task);
+        } else if (!!project) {
+            [name, link, projectForNewTask] = projectLink(project);
+        } else if (!!folder) {
+            [name, link, projectForNewTask] = folderLink(folder);
+        } else if (!!tag) {
+            [name, link, projectForNewTask] = tagLink(tag);
+        } else if (!!currentPerspective) {
+            [name, link, projectForNewTask] = perspectiveLink(currentPerspective);
         }
 
+        if (!name || !link) {
+            return;
+        }
 
         var title = '(@) ' + name;
         var noteLines = [];
@@ -67,7 +92,33 @@
     });
 
     action.validate = (selection, sender) => {
-        return selection.tasks.length == 1 || selection.projects.length == 1
+        // Selected: One of something, or nothing
+        return (
+                selection.tasks.length === 1 &&
+                selection.projects.length === 0 &&
+                selection.folders.length === 0 &&
+                selection.tags.length === 0
+            ) || (
+                selection.tasks.length === 0 &&
+                selection.projects.length === 1 &&
+                selection.folders.length === 0 &&
+                selection.tags.length === 0
+            ) || (
+                selection.tasks.length === 0 &&
+                selection.projects.length === 0 &&
+                selection.folders.length === 1 &&
+                selection.tags.length === 0
+            ) || (
+                selection.tasks.length === 0 &&
+                selection.projects.length === 0 &&
+                selection.folders.length === 0 &&
+                selection.tags.length === 1
+            ) || (
+                selection.tasks.length === 0 &&
+                selection.projects.length === 0 &&
+                selection.folders.length === 0 &&
+                selection.tags.length === 0
+            );
     };
 
     return action;

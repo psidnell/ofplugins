@@ -45,6 +45,7 @@
         }
 
         tasks.forEach(task => {
+            // Use due date if present, otherwise planned date
             const taskDate = !!task.effectiveDueDate ? task.effectiveDueDate : task.effectivePlannedDate;
 
             if (!!taskDate) {
