@@ -56,13 +56,16 @@
         let link = null;
         let name = null;
         let projectForNewTask = null;
-        // Go through the different things that might have been selected
+        // Go through the different things that might have been selected.
+        // Link to the selection, otherwise link to the current perspective
         if (perspectiveName === 'Inbox') {
             [name, link, projectForNewTask] = inboxLink();
         } else if (!!task && (
             perspectiveName === 'Projects' ||
             perspectiveName === 'Tags' ||
             perspectiveName === 'Forecast')) {
+            [name, link, projectForNewTask] = taskParentProjectLink(task);
+        }  else if (!!task) {
             [name, link, projectForNewTask] = taskParentProjectLink(task);
         } else if (!!project) {
             [name, link, projectForNewTask] = projectLink(project);
@@ -84,14 +87,23 @@
         noteLines.push('');
         var note = noteLines.join('\n');
 
+        // Create the new task
         var newTask = new Task(title, inbox.beginning);
+
+
+        let forecastTag = Tag.forecastTag;
+        newTask.addTag(forecastTag);
+        newTask.flagged = true;
+        newTask.note = note;
+
+        // Put it in it's target project or leave in inbox
         if (projectForNewTask) {
             moveTasks([newTask], projectForNewTask);
         }
 
-        newTask.addTag(Tag.forecastTag);
-        newTask.flagged = true;
-        newTask.note = note;
+        // Open on forecast tag to show it
+        let url = URL.fromString("omnifocus:///tag/" + forecastTag.id.primaryKey);
+        url.open();
     });
 
     action.validate = (selection, sender) => {
