@@ -108,32 +108,12 @@
 
     action.validate = (selection, sender) => {
         // Selected: One of something, or nothing
-        return (
-                selection.tasks.length === 1 &&
-                selection.projects.length === 0 &&
-                selection.folders.length === 0 &&
-                selection.tags.length === 0
-            ) || (
-                selection.tasks.length === 0 &&
-                selection.projects.length === 1 &&
-                selection.folders.length === 0 &&
-                selection.tags.length === 0
-            ) || (
-                selection.tasks.length === 0 &&
-                selection.projects.length === 0 &&
-                selection.folders.length === 1 &&
-                selection.tags.length === 0
-            ) || (
-                selection.tasks.length === 0 &&
-                selection.projects.length === 0 &&
-                selection.folders.length === 0 &&
-                selection.tags.length === 1
-            ) || (
-                selection.tasks.length === 0 &&
-                selection.projects.length === 0 &&
-                selection.folders.length === 0 &&
-                selection.tags.length === 0
-            );
+        let count =
+            selection.tasks.length +
+            selection.projects.length +
+            selection.folders.length +
+            selection.tags.length;
+        return count <= 1;
     };
 
     return action;
