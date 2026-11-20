@@ -58,8 +58,8 @@
             // Then bump by one day.
             let daysToBump;
             if (task.effectiveDeferDate.getDate() < today.getDate()) {
-                // First bring it to today
-                daysToBump = days_between(task.effectiveDeferDate, today);
+                // First bring it to today, but it might be less than a whole day
+                daysToBump = Math.max(1, days_between(task.effectiveDeferDate, today));
             } else {
                 daysToBump = 1;
             }
