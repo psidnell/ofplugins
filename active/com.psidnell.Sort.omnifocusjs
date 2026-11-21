@@ -13,23 +13,24 @@
 }*/
 (() => {
 
-    var smartTime = (item) => {
-        var time;
-        if (item.dueDate) {
-            time = item.dueDate.getTime()
-        } else if (item.plannedDate) {
-            time = item.plannedDate.getTime();
-        } else if (item.deferDate) {
-            time = item.deferDate.getTime();}
-        else {
-            time = item.added.getTime();
+    var isRemaining = (item) => {
+        // If it's in an available state
+        var status = item.taskStatus;
+        switch (status) {
+            case Task.Status.Overdue:
+            case Task.Status.DueSoon:
+            case Task.Status.Available:
+            case Task.Status.Next:
+            case Task.Status.Blocked:
+                // console.log(item.name + ' Remaining ' + item.taskStatus);
+                return true;
         }
 
-        // console.log ('smartTime ' + item.name + ' ' + new Date(time) + ' = ' + time);
-        return time;
+        // console.log(item.name + ' Done ' + item.taskStatus);
+        return false;
     }
 
-    var isRemaining = (item) => {
+    var isAvailable = (item) => {
         // If it's in an available state
         var status = item.taskStatus;
         switch (status) {
@@ -58,13 +59,48 @@
         return false;
     }
 
+    var dateCompare = (left, right) => {
+        if (!!left && !!right) {
+            return left.getTime() - right.getTime();
+        } else if (!!left) {
+            return -1;
+        } else if (!!right) {
+            return 1
+        }
+        return 0;
+    }
+
 	var compare = (left, right) => {
+        let dateCmp = 0;
 
         // Compare on isRemaining
         const leftIsRemaining = isRemaining(left);
         const rightIsRemaining = isRemaining(right);
         if (leftIsRemaining !== rightIsRemaining) {
             if (leftIsRemaining) {
+                return -1;
+            } else {
+                return 1;
+            }
+        }
+
+        // Compare due
+        dateCmp = dateCompare(left.dueDate, right.dueDate);
+        if (dateCmp !== 0) {
+            return dateCmp
+        }
+
+        // Compare planned
+        dateCmp = dateCompare(left.plannedDate, right.plannedDate);
+        if (dateCmp !== 0) {
+            return dateCmp
+        }
+
+        // Compare on isAvailable
+        const leftIsAvailable = isAvailable(left);
+        const rightIsAvailable = isAvailable(right);
+        if (leftIsAvailable !== rightIsAvailable) {
+            if (leftIsAvailable) {
                 return -1;
             } else {
                 return 1;
@@ -93,35 +129,16 @@
             }
         }
 
-        // Compare having a due
-        const leftHasDue = !!left.dueDate;
-        const rightHasDue= !!right.dueDate;
-        if (leftHasDue !== rightHasDue) {
-            if (leftHasDue) {
-                return -1;
-            } else {
-                return 1;
-            }
+        // Compare defer
+        dateCmp = dateCompare(left.deferDate, right.deferDate);
+        if (dateCmp !== 0) {
+            return dateCmp
         }
 
-        // Compare having a planned
-        const leftHasPlanned = !!left.plannedDate;
-        const rightHasPlanned= !!right.plannedDate;
-        if (leftHasPlanned !== rightHasPlanned) {
-            if (leftHasPlanned) {
-                return -1;
-            } else {
-                return 1;
-            }
-        }
-
-        // Don't compare on having a defer
-
-        // Compare on smart times (any date on the task)
-        const leftSmartTime = smartTime(left);
-        const rightSmartTime = smartTime(right);
-        if (leftSmartTime !== rightSmartTime) {
-            return leftSmartTime - rightSmartTime;
+        // Compare added
+        dateCmp = dateCompare(left.added, right.added);
+        if (dateCmp !== 0) {
+            return dateCmp
         }
 
         // Unlikely to get here...
