@@ -38,7 +38,7 @@
             case Task.Status.DueSoon:
             case Task.Status.Available:
             case Task.Status.Next:
-            case Task.Status.Blocked:
+            //case Task.Status.Blocked:
                 // console.log(item.name + ' Remaining ' + item.taskStatus);
                 return true;
         }
@@ -68,6 +68,13 @@
             return 1
         }
         return 0;
+    }
+
+    var getDueOrPlannedDate = (task) => {
+        if (!!task.dueDate) {
+            return task.dueDate;
+        }
+        return task.plannedDate;
     }
 
     var cmpByRemaining = (left, right) => {
@@ -122,6 +129,10 @@
         return 0;
     }
 
+    var cmpByDueOrPlannedDate = (left, right) => {
+        return dateCompare(getDueOrPlannedDate(left), getDueOrPlannedDate(right));
+    }
+
     var cmpByDue = (left, right) => {
         return dateCompare(left.dueDate, right.dueDate);
     }
@@ -134,18 +145,24 @@
         return dateCompare(left.deferDate, right.deferDate);
     }
 
+    var cmpByAdded = (left, right) => {
+        return dateCompare(left.added, right.added);
+    }
+
     var cmpById = (left, right) => {
         return left.id.primaryKey.localeCompare(right.id.primaryKey);
     }
 
     const FUNCTIONS = [
         cmpByRemaining,
-        cmpByDue,
-        cmpByPlanned,
         cmpByAvailable,
+        cmpByDueOrPlannedDate,
+        //cmpByDue,
+        //cmpByPlanned,
         cmpByFlagged,
         cmpByOnHoldTag,
         cmpByDefer,
+        cmpByAdded,
         cmpById
     ];
 
