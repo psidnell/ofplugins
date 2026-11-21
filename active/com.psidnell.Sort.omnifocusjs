@@ -162,7 +162,7 @@
 	};
 
 	const action = new PlugIn.Action(function(selection, sender){
-		project = selection.projects.length == 1 ?
+		project = selection.projects.length === 1 ?
             selection.projects[0] :
             selection.tasks[0].containingProject;
 
