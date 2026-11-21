@@ -29,31 +29,55 @@
         return time;
     }
 
-    var isAvailable = (item) => {
+    var isRemaining = (item) => {
         // If it's in an available state
-        //console.log('isAvailable ' + item.name + ' ' + item.taskStatus + ' f=' + item.flagged);
-
         var status = item.taskStatus;
         switch (status) {
             case Task.Status.Overdue:
             case Task.Status.DueSoon:
             case Task.Status.Available:
             case Task.Status.Next:
-            return true;
+            case Task.Status.Blocked:
+                console.log(item.name + ' Remaining ' + item.taskStatus);
+                return true;
         }
 
+        console.log(item.name + ' Done ' + item.taskStatus);
+        return false;
+    }
+
+    var hasOnHoldTag = (item) => {
+        for (let i = 0; i < item.tags.length; i++) {
+            let tag = item.tags[i];
+            if (tag.status === Tag.Status.OnHold) {
+                console.log(item.name + ' ON HOLD ' + tag.name);
+                return true;
+            }
+        }
+        console.log(item.name + ' NOT ON HOLD');
         return false;
     }
 
 	var compare = (left, right) => {
-        // Compare on isAvailable (and not blogged by an on hold tag)
-        const leftIsRemaining = isAvailable(left);
-        const rightIsRemaining = isAvailable (right);
+        // Compare on isRemaining (and not blogged by an on hold tag)
+        const leftIsRemaining = isRemaining(left);
+        const rightIsRemaining = isRemaining(right);
         if (leftIsRemaining !== rightIsRemaining) {
             if (leftIsRemaining) {
                 return -1;
             } else {
                 return 1;
+            }
+        }
+
+        // Compare on having an on hold tag
+        const leftHasOnHold = hasOnHoldTag(left);
+        const rightHasOnHold= hasOnHoldTag(right);
+        if (leftHasOnHold !== rightHasOnHold) {
+            if (leftHasOnHold) {
+                return 1;
+            } else {
+                return -1;
             }
         }
 
