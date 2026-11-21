@@ -70,10 +70,7 @@
         return 0;
     }
 
-	var compare = (left, right) => {
-        let dateCmp = 0;
-
-        // Compare on isRemaining
+    var cmpByRemaining = (left, right) => {
         const leftIsRemaining = isRemaining(left);
         const rightIsRemaining = isRemaining(right);
         if (leftIsRemaining !== rightIsRemaining) {
@@ -83,20 +80,10 @@
                 return 1;
             }
         }
+        return 0;
+    }
 
-        // Compare due
-        dateCmp = dateCompare(left.dueDate, right.dueDate);
-        if (dateCmp !== 0) {
-            return dateCmp
-        }
-
-        // Compare planned
-        dateCmp = dateCompare(left.plannedDate, right.plannedDate);
-        if (dateCmp !== 0) {
-            return dateCmp
-        }
-
-        // Compare on isAvailable
+    var cmpByAvailable = (left, right) => {
         const leftIsAvailable = isAvailable(left);
         const rightIsAvailable = isAvailable(right);
         if (leftIsAvailable !== rightIsAvailable) {
@@ -106,8 +93,10 @@
                 return 1;
             }
         }
+        return 0;
+    }
 
-        // Compare on having an on hold tag
+    var cmpByOnHoldTag = (left, right) => {
         const leftHasOnHold = hasOnHoldTag(left);
         const rightHasOnHold= hasOnHoldTag(right);
         if (leftHasOnHold !== rightHasOnHold) {
@@ -117,8 +106,10 @@
                 return -1;
             }
         }
+        return 0;
+    }
 
-        // Compare on flagged
+    var cmpByFlagged = (left, right) => {
         const leftIsFlagged = left.flagged;
         const rightIsFlagged= right.flagged;
         if (leftIsFlagged !== rightIsFlagged) {
@@ -128,23 +119,46 @@
                 return 1;
             }
         }
+        return 0;
+    }
 
-        // Compare defer
-        dateCmp = dateCompare(left.deferDate, right.deferDate);
-        if (dateCmp !== 0) {
-            return dateCmp
-        }
+    var cmpByDue = (left, right) => {
+        return dateCompare(left.dueDate, right.dueDate);
+    }
+    
+    var cmpByPlanned = (left, right) => {
+        return dateCompare(left.plannedDate, right.plannedDate);
+    }
 
-        // Compare added
-        dateCmp = dateCompare(left.added, right.added);
-        if (dateCmp !== 0) {
-            return dateCmp
-        }
+    var cmpByDefer = (left, right) => {
+        return dateCompare(left.deferDate, right.deferDate);
+    }
 
-        // Unlikely to get here...
-
-		// Fallback: Compare on id
+    var cmpById = (left, right) => {
         return left.id.primaryKey.localeCompare(right.id.primaryKey);
+    }
+
+    const FUNCTIONS = [
+        cmpByRemaining,
+        cmpByDue,
+        cmpByPlanned,
+        cmpByAvailable,
+        cmpByFlagged,
+        cmpByOnHoldTag,
+        cmpByDefer,
+        cmpById
+    ];
+
+	var compare = (left, right) => {
+        for (let i = 0; i < FUNCTIONS.length; i++) {
+            let fn = FUNCTIONS[i];
+            let cmp = fn(left, right);
+            if (cmp !== 0) {
+                return cmp;
+            }
+        }
+        // Shouldn't get here;
+        return 0;
 	};
 
 	const action = new PlugIn.Action(function(selection, sender){
