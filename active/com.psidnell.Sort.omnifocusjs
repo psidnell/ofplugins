@@ -70,11 +70,22 @@
         return 0;
     }
 
-    var getDueOrPlannedDate = (task) => {
-        if (!!task.dueDate) {
-            return task.dueDate;
+    var earliest = (date1, date2) => {
+        if (!!date1 && !!date2) {
+            if (date1.getTime() < date2.getTime()) {
+                return date1;
+            } else return date2;
         }
-        return task.plannedDate;
+
+        if (!!date1) {
+            return date1;
+        }
+
+        return date2;
+    }
+
+    var getDueOrPlannedDate = (task) => {
+        return earliest(task.plannedDate, task.dueDate);
     }
 
     var cmpByRemaining = (left, right) => {

@@ -1,0 +1,49 @@
+/*{
+    "author": "P. Sidnell",
+    "targets": ["omnifocus"],
+    "type": "action",
+    "identifier": "com.psidnell.Future",
+    "version": "1.0",
+    "description": "Bump Defer to Due/Planned",
+    "label": "Future",
+    "mediumLabel": "Bump Defer to Due/Planned",
+    "longLabel": "Bump Defer to Due/Planned",
+    "paletteLabel": "Bump Defer to Due/Planned",
+    "image": "chevron.forward.to.line"
+}*/
+(() => {
+
+    function earliest(date1, date2) {
+        if (!!date1 && !!date2) {
+            if (date1.getTime() < date2.getTime()) {
+                return date1;
+            } else return date2;
+        }
+
+        if (!!date1) {
+            return date1;
+        }
+
+        return date2;
+    }
+
+    const action = new PlugIn.Action((selection, sender) => {
+        let task = selection.tasks[0];
+
+        let date = earliest(task.effectiveDueDate, task.effectivePlannedDate);
+        date.setHours(0);
+        date.setMinutes(0);
+        date.setSeconds(0);
+        task.deferDate = date;
+    });
+
+    action.validate = (selection, sender) => {
+        return selection.tasks &&
+            selection.tasks.length === 1 &&
+            (selection.tasks[0].effectiveDueDate ||
+                selection.tasks[0].effectivePlannedDate);
+    };
+
+    return action;
+})();
+
