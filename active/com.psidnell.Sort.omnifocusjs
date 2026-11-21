@@ -38,11 +38,11 @@
             case Task.Status.Available:
             case Task.Status.Next:
             case Task.Status.Blocked:
-                console.log(item.name + ' Remaining ' + item.taskStatus);
+                // console.log(item.name + ' Remaining ' + item.taskStatus);
                 return true;
         }
 
-        console.log(item.name + ' Done ' + item.taskStatus);
+        // console.log(item.name + ' Done ' + item.taskStatus);
         return false;
     }
 
@@ -50,16 +50,17 @@
         for (let i = 0; i < item.tags.length; i++) {
             let tag = item.tags[i];
             if (tag.status === Tag.Status.OnHold) {
-                console.log(item.name + ' ON HOLD ' + tag.name);
+                // console.log(item.name + ' ON HOLD ' + tag.name);
                 return true;
             }
         }
-        console.log(item.name + ' NOT ON HOLD');
+        // console.log(item.name + ' NOT ON HOLD');
         return false;
     }
 
 	var compare = (left, right) => {
-        // Compare on isRemaining (and not blogged by an on hold tag)
+
+        // Compare on isRemaining
         const leftIsRemaining = isRemaining(left);
         const rightIsRemaining = isRemaining(right);
         if (leftIsRemaining !== rightIsRemaining) {
