@@ -29,68 +29,79 @@
         return time;
     }
 
-    var rank = (item) => {
-        /* Statuses to consider
-            Available (Task.Status r/o) • The task is available to work on.
-            Blocked (Task.Status r/o) • The task is not available to work on currently, due to a future defer date, a preceeding task in a sequential project, or having an on-hold tag associated.
-            Completed (Task.Status r/o) • The task is already completed.
-            Dropped (Task.Status r/o) • The task will not be worked on.
-            DueSoon (Task.Status r/o) • The task is incomplete and due soon.
-            Next (Task.Status r/o) • The task is the first available task in a project.
-            Overdue (Task.Status r/o) • The task is incomplete overdue.
-        */
-        var rank = 0;
-
+    var isAvailable = (item) => {
         // If it's in an available state
+        //console.log('isAvailable ' + item.name + ' ' + item.taskStatus + ' f=' + item.flagged);
+
         var status = item.taskStatus;
         switch (status) {
             case Task.Status.Overdue:
             case Task.Status.DueSoon:
             case Task.Status.Available:
             case Task.Status.Next:
-
-                // Consider the flag
-                rank += item.flagged ? Math.pow(10, 2) : 0;
-
-                // Or one of the states I care about
-                // Overdue
-                rank += status === Task.Status.Overdue ? Math.pow(10, 1): 0;
-                // Or not
-                rank += status === Task.Status.DueSoon ? Math.pow(10, 0) : 0;
-                rank += status === Task.Status.Available ? Math.pow(10, 0) : 0;
-                rank += status === Task.Status.Next ? Math.pow(10, 0) : 0;
-                break;
+            return true;
         }
 
-        // console.log('rank ' + item.name + ' ' + item.taskStatus + ' f=' + item.flagged + ' = ' + rank);
-        return rank;
+        return false;
     }
 
 	var compare = (left, right) => {
-
-	    // Compare on rank
-        const leftRank = rank(left);
-        const rightRank = rank (right);
-        if (leftRank !== rightRank) {
-            return rightRank - leftRank;
+        // Compare on isAvailable (and not blogged by an on hold tag)
+        const leftIsRemaining = isAvailable(left);
+        const rightIsRemaining = isAvailable (right);
+        if (leftIsRemaining !== rightIsRemaining) {
+            if (leftIsRemaining) {
+                return -1;
+            } else {
+                return 1;
+            }
         }
 
-        // Compare on smart times
+        // Compare on flagged
+        const leftIsFlagged = left.flagged;
+        const rightIsFlagged= right.flagged;
+        if (leftIsFlagged !== rightIsFlagged) {
+            if (leftIsFlagged) {
+                return -1;
+            } else {
+                return 1;
+            }
+        }
+
+        // Compare having a due
+        const leftHasDue = !!left.dueDate;
+        const rightHasDue= !!right.dueDate;
+        if (leftHasDue !== rightHasDue) {
+            if (leftHasDue) {
+                return -1;
+            } else {
+                return 1;
+            }
+        }
+
+        // Compare having a planned
+        const leftHasPlanned = !!left.plannedDate;
+        const rightHasPlanned= !!right.plannedDate;
+        if (leftHasPlanned !== rightHasPlanned) {
+            if (leftHasPlanned) {
+                return -1;
+            } else {
+                return 1;
+            }
+        }
+
+        // Don't compare on having a defer
+
+        // Compare on smart times (any date on the task)
         const leftSmartTime = smartTime(left);
         const rightSmartTime = smartTime(right);
         if (leftSmartTime !== rightSmartTime) {
             return leftSmartTime - rightSmartTime;
         }
 
-        // Unlikely to get this far...
+        // Unlikely to get here...
 
-		// Compare on name
-		var cmp = left.name.localeCompare(right.name);
-		if (cmp !== 0) {
-		    return cmp;
-		};
-
-		// Compare on id
+		// Fallback: Compare on id
         return left.id.primaryKey.localeCompare(right.id.primaryKey);
 	};
 
