@@ -127,6 +127,21 @@
         return 0;
     }
 
+    var cmpByForecastTag = (left, right) => {
+        let forecastTag = Tag.forecastTag;
+
+        const leftHasTag = left.tags.includes(forecastTag);
+        const rightHasTag= right.tags.includes(forecastTag);
+        if (leftHasTag !== rightHasTag) {
+            if (leftHasTag) {
+                return -1;
+            } else {
+                return 1;
+            }
+        }
+        return 0;
+    }
+
     var cmpByFlagged = (left, right) => {
         const leftIsFlagged = left.flagged;
         const rightIsFlagged= right.flagged;
@@ -167,6 +182,7 @@
     const FUNCTIONS = [
         cmpByRemaining,
         cmpByAvailable,
+        cmpByForecastTag,
         cmpByDueOrPlannedDate,
         //cmpByDue,
         //cmpByPlanned,
